@@ -124,11 +124,11 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
         <label for="user__d">USERNAME</label>
         <input id="user__d" type="text" placeholder="username" value="Ahmad Bhai" /><br>
         <label for="prof__d">AMOUNT</label>
-        <input id="prof__d" type="text" placeholder="amount" value="2530" /><br>
+        <input id="prof__d" type="text" placeholder="amount" value="100" /><br>
         <label for="width__d">LINE</label>
-        <input id="width__d" type="text" placeholder="line width" value="100" /><br>
+        <input id="width__d" type="text" placeholder="line width" value="57" /><br>
         <label for="pos__d">POSITION</label>
-        <input id="pos__d" type="text" placeholder="position" value="43" /><br>
+        <input id="pos__d" type="text" placeholder="position" value="987" /><br>
         <label for="pl__d">PROFIT/LOSS</label>
         <input id="pl__d" type="text" placeholder="P/L" value="P" /><br><br>
         <div>
@@ -136,7 +136,7 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
             <button
                 style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">RUN CODE</button>
         </div><br>
-          <div style="color:#05c55e;font-size:12px;text-align:left">Monthly payment is your responsibility,Work honestly, move forward.🥰😘 </div>
+          <div style="color:#ff6251;font-size:12px;text-align:left">👋 HELLO ROYAL QUOTEX TRADER, PAY 10$ UNTIL THIS THURSDAY OTHERWISE THIS SCRIPT WILL BE LOCKED 🔒</div>
         <hr style="border-color:#fff">
         <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
     </div>`;

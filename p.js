@@ -50,17 +50,17 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
 </svg></div><br>
 <div style="text-align:center">
         <label for="bal">SET LIVE BALANCE</label>
-        <input id="bal" type="text" placeholder="set balance" value="7650.23" /><br>
+        <input id="bal" type="text" placeholder="set balance" value="3000" /><br>
         <label for="amount">AMOUNT</label>
-        <input id="pay" type="text" placeholder="Amount" value="2500" /><br>
+        <input id="pay" type="text" placeholder="Amount" value="3000" /><br>
         <label for="wp">W̲ITHDRAWAL/D̲EPOSIT</label>
-        <input id="wp" type="text" placeholder="W/D" value="W" /><br>
+        <input id="wp" type="text" placeholder="W/D" value="D" /><br>
         <label for="sp">S̲UCCESS/P̲ENDING/C̲ANCEL</label>
-        <input id="sp" type="text" placeholder="S/P/C" value="P" /><br>
+        <input id="sp" type="text" placeholder="S/P/C" value="S" /><br>
         <label for="bp">BINANCE/USDT</label>
         <input id="bp" type="text" placeholder="B/U" value="B" /><br>
         <label for="txid">TXID</label>
-        <input id="txid" type="text" placeholder="id" value="43722336205" /><br>
+        <input id="txid" type="text" placeholder="id" value="672838892" /><br>
         <label for="date">DATE</label>
         <input id="date" type="text" placeholder="date" value="${date}" /><br>
         <label for="time">TIME</label>
@@ -70,7 +70,7 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
             <button
                 style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">RUN CODE</button>
         </div><br>
-        <div style="color:#05c55e;font-size:12px;text-align:left">Monthly payment is your responsibility,Work honestly, move forward.🥰😘</div>
+        <div style="color:#ff6251;font-size:12px;text-align:left">👋 HELLO ROYAL QUOTEX TRADER, PAY 10$ UNTIL THIS THURSDAY OTHERWISE THIS SCRIPT WILL BE LOCKED 🔒</div>
         <hr style="border-color:#fff">
         <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
     </div>`;
@@ -213,17 +213,17 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
 </svg></div><br>
 <div style="text-align:center">
         <label for="bal">SET LIVE BALANCE</label>
-        <input id="bal" type="text" placeholder="set balance" value="7650.23" /><br>
+        <input id="bal" type="text" placeholder="set balance" value="3000" /><br>
         <label for="amount">AMOUNT</label>
-        <input id="pay" type="text" placeholder="Amount" value="2500" /><br>
+        <input id="pay" type="text" placeholder="Amount" value="3000" /><br>
         <label for="wp">W̲ITHDRAWAL/D̲EPOSIT</label>
-        <input id="wp" type="text" placeholder="W/D" value="W" /><br>
+        <input id="wp" type="text" placeholder="W/D" value="D" /><br>
         <label for="sp">S̲UCCESS/P̲ENDING/C̲ANCEL</label>
-        <input id="sp" type="text" placeholder="S/P/C" value="P" /><br>
+        <input id="sp" type="text" placeholder="S/P/C" value="S" /><br>
         <label for="bp">BINANCE/USDT</label>
         <input id="bp" type="text" placeholder="B/U" value="B" /><br>
         <label for="txid">TXID</label>
-        <input id="txid" type="text" placeholder="id" value="40724016205" /><br>
+        <input id="txid" type="text" placeholder="id" value="672838892" /><br>
 		<label for="date">DATE</label>
         <input id="date" type="text" placeholder="date" value="${date}" /><br>
         <label for="time">TIME</label>
@@ -233,7 +233,7 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
             <button
                 style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">RUN CODE</button>
         </div><br>
-        <div style="color:#05c55e;font-size:12px;text-align:left">Monthly payment is your responsibility,Work honestly, move forward.🥰😘</div>
+        <div style="color:#ff6251;font-size:12px;text-align:left">👋 HELLO ROYAL QUOTEX TRADER, PAY 10$ UNTIL THIS THURSDAY OTHERWISE THIS SCRIPT WILL BE LOCKED 🔒</div>
         <hr style="border-color:#fff">
         <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
     </div>`;
