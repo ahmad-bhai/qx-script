@@ -57,7 +57,7 @@ border-top:5px solid #05c55e">
   <br>
 
   <div style="color:#ff6251;font-size:12px;text-align:center">
-    📝 CONTACT +923120883884 FOR ALL FEATURES !!! 🤖
+    📝 CONTACT +923120883884 FOR ALL FEATURES !!! 👽👾
   </div>
   <hr style="border-color:#fff">
   <div style="text-align:center;font-weight:100;color:#fff">
