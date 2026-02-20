@@ -1,9 +1,4 @@
-// main.js
-(function () {
-
-  /* ====== YOUR FULL CODE START ====== */
-
-  let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
     var dialogs = document.querySelectorAll("dialog");
     if (dialogs.length) {
       dialogs.forEach(dia => dia.remove())
@@ -121,22 +116,22 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
     
   </div>
 </span><br>
-        <label for="user__d">USERNAME</label>
-        <input id="user__d" type="text" placeholder="username" value="Ahmad Bhai" /><br>
-        <label for="prof__d">AMOUNT</label>
-        <input id="prof__d" type="text" placeholder="amount" value="100" /><br>
-        <label for="width__d">LINE</label>
-        <input id="width__d" type="text" placeholder="line width" value="57" /><br>
-        <label for="pos__d">POSITION</label>
-        <input id="pos__d" type="text" placeholder="position" value="987" /><br>
-        <label for="pl__d">PROFIT/LOSS</label>
-        <input id="pl__d" type="text" placeholder="P/L" value="P" /><br><br>
+        <label for="username">USERNAME</label>
+        <input id="username" type="text" placeholder="username" value="ROYAL QUOTEX TRADER" /><br>
+        <label for="amount">AMOUNT</label>
+        <input id="amount" type="text" placeholder="amount" value="2570" /><br>
+        <label for="length">LINE</label>
+        <input id="length" type="text" placeholder="line width" value="100" /><br>
+        <label for="position">POSITION</label>
+        <input id="position" type="text" placeholder="position" value="43" /><br>
+        <label for="pl">P̲ROFIT/L̲OSS</label>
+        <input id="pl" type="text" placeholder="P/L" value="P" /><br><br>
         <div>
         <div style="text-align: center;">
             <button
                 style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">RUN CODE</button>
         </div><br>
-          <div style="color:#05c55e;font-size:12px;text-align:left">✅ YOUR PAYMENT IS DONE !!! ENJOY PRO VERSION !!! 💚</div>
+          <div style="color:#ff6251;font-size:12px;text-align:left">👋 HELLO ROYAL QUOTEX TRADER, PAY 20$ UNTIL THIS THURSDAY OTHERWISE THIS SCRIPT WILL BE LOCKED 🔒</div>
         <hr style="border-color:#fff">
         <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
     </div>`;
@@ -154,7 +149,6 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
                 flag = code;
             });
         });
-        document.onclick = e => !e.target.closest('#s') && o.style.display != 'none' && (o.style.display = 'none');
         var styleElem = document.head.appendChild(document.createElement("style"));
         styleElem.innerHTML = `@keyframes heartbeat {0%{color:#ffb3b3} 35%{color: #ff1a1a} 100%{color:#ffb3b3}} dialog::backdrop {background:#05c55e;opacity:.25} ::selection {background:white;color:${color}} 
         .s {cursor: pointer;display: flex;align-items: center;padding: 5px;width: 180px;position: relative;}.o {display: none;position: absolute;top: 100%;left: 0;width: 180px;overflow-y: scroll;height: 200px;background: #fff;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); z-index: 1000;}.o div {padding: 5px;display: flex;align-items: center;cursor: pointer;background: #fff;}.o div:hover {background: #eee;}img {margin-right: 5px;}`;
@@ -171,35 +165,44 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
 
     myDialog.querySelector("button").addEventListener("click", () => {
       myDialog.close();
-      var user = document.querySelector("#user__d").value;
-      var prof = Number(document.querySelector("#prof__d").value).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
-      var pos = document.querySelector("#pos__d").value;
-      var width = document.querySelector("#width__d").value;
-      var pl = document.querySelector("#pl__d").value.toLowerCase();
+      var username = document.querySelector("#username").value.trim();
+        var prof = Number(document.querySelector("#amount").value.trim()).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        var pos = document.querySelector("#position").value.trim();
+        var width = document.querySelector("#length").value.trim();
+        var pl = document.querySelector("#pl").value.toLowerCase().trim();
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
 
-      history.pushState({}, null, "/en/trade");
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
 
-      document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__name--xN5cX").innerHTML = `<svg class="flag-${flag}"><use xlink:href="/profile/images/flags.svg#flag-${flag}"></use></svg>${user}`;
+        history.pushState({}, null, "/en/trade");
 
-      document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__loading--h38TV > span").style.width = width + "%";
+        document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__name--xN5cX").innerHTML = `<svg class="flag-${flag}"><use xlink:href="/profile/images/flags.svg#flag-${flag}"></use></svg>${username}`;
 
-      var pl_text = document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__money--BwWCZ.---react-features-Sidepanel-LeaderBoard-Position-styles-module__green--LD4pW");
-      if (pl === "p") {
-        pl_text.innerHTML = "$" + prof;
-        pl_text.style.color = "#0faf59";
-      }
-      else if (pl === "l") {
-        pl_text.innerHTML = "-" + prof + "$"
-        pl_text.style.color = "#db4635"
-      }
+        document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__loading--h38TV > span").style.width = width + "%";
 
-      document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__footer--iKtL6").innerHTML=  `<div class="---react-features-Sidepanel-LeaderBoard-Position-styles-module__title--ocuJC">Your position:</div>${pos}`;
+        const green = "---react-features-Sidepanel-LeaderBoard-Position-styles-module__green--LD4pW";
+        const red = "---react-features-Sidepanel-LeaderBoard-Position-styles-module__red--qUPWg";
+        var pl_text = document.querySelector(`div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__money--BwWCZ.${green}`)
+        if (pl === "p") {
+            if (pl_text?.classList?.contains(red)) {
+                pl_text.classList.remove(red)
+                pl_text.classList.add(green)
+            }
+            pl_text.innerText = "$" + prof
+        }
+        else if (pl === "l")  {
+            if (pl_text?.classList?.contains(green)) {
+                pl_text.classList.remove(green)
+                pl_text.classList.add(red)
+            }
+            pl_text.innerText = "-" + prof.replace(/-/g, "") + "$";
+        }
+
+        document.querySelector("div.---react-features-Sidepanel-LeaderBoard-Position-styles-module__footer--iKtL6").innerHTML = `<div class="---react-features-Sidepanel-LeaderBoard-Position-styles-module__title--ocuJC">Your position:</div>${pos}`;
+
 
     })
-  /* ====== YOUR FULL CODE END ====== */
-
-  // loader remove (optional)
-  const loader = document.getElementById("my_loader");
-  if (loader) loader.remove();
-
-})();
+

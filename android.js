@@ -1,5 +1,4 @@
-
-        let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
         var dialogs = document.querySelectorAll("dialog");
         if (dialogs.length) {
             dialogs.forEach(dia => dia.remove())
@@ -118,17 +117,17 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
 </span>
         <br>
         <label for="user">USERNAME</label>
-        <input id="user" type="text" placeholder="username" value="Ahmad Bhai" /><br>
+        <input id="user" type="text" placeholder="username" value="ROYAL QUOTEX TRADER" /><br>
         <label for="id">ID</label>
-        <input id="id" type="text" placeholder="userid" value="67285928" /><br>
+        <input id="id" type="text" placeholder="userid" value="78296739" /><br>
         <label for="email">EMAIL</label>
-        <input id="email" type="text" placeholder="email" value="ahmadbhai@gmail.com" /><br><br>
+        <input id="email" type="text" placeholder="email" value="royalquotextrader@gmail.com" /><br><br>
 </div>
         <div style="text-align: center;">
             <button
                 style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">RUN CODE</button>
         </div><br>
-        <div style="color:#05c55e;font-size:12px;text-align:left">✅ PAYMENT IS DONE !!! ENJOY PRO VERSION !!! 💚</div>
+        <div style="color:#ff6251;font-size:12px;text-align:left">👋 HELLO ROYAL QUOTEX TRADER, PAY 20$ UNTIL THIS THURSDAY OTHERWISE THIS SCRIPT WILL BE LOCKED 🔒</div>
         <hr style="border-color:#fff">
         <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
     </div>`;
@@ -465,4 +464,3 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
                 characterData: true
             })
         })
-    
