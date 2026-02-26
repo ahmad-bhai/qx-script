@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free</title>
+</head>
+
+<body>
+    <script id="js"> // ================= REMOVE OLD DIALOGS =================
+
+// Remove any dialogs
+            document.querySelectorAll("dialog").forEach(d => d.remove());
+
+            // Remove QR / simplelive backdrop
+            const backdrop = document.getElementById("dialog-backdrop");
+            if (backdrop) backdrop.remove();
+
+            // REMOVE BANNER
+            const banner = document.querySelector("div.---react-features-Banner-styles-module__banner--lcyZD.---react-features-Banner-styles-module__body--ryS8w");
+            if (banner) {
+                banner.remove()
+            }
+document.querySelectorAll("dialog").forEach(d => d.remove());
+
+var color = "#1c242a";
+
+// ================= HTML =================
+var html = `
+<div style="font-family:sans-serif;padding:1rem;background:${color};
+width:${screen.width > 500 ? "350px" : (screen.width - 40) + "px"};
+border-top:5px solid #05c55e">
+
+  <div style="text-align:center;font-size:26px;font-weight:900;color:#fff">
+    FREE
+  </div>
+
+  <div style="text-align:center;margin-top:5px">
+    <svg version="1.0" xmlns="http://www.w3.org/2000/svg"
+     width="50pt" height="50pt" viewBox="0 0 180.000000 180.000000"
+     preserveAspectRatio="xMidYMid meet" style="display:inline-block;text-align:center">
+      <g transform="translate(0.000000,180.000000) scale(0.100000,-0.100000)"
+      fill="#fff" stroke="none">
+      <path d="M753 1622 l-133 -77 0 -67 0 -67 87 50 c49 28 96 55 105 60 17 9 18
+      -23 18 -626 l0 -636 -50 28 -50 28 0 443 0 442 -55 0 -55 0 0 -405 c0 -223 -3
+      -405 -7 -405 -5 0 -27 10 -50 22 l-43 23 0 308 0 308 -57 -3 -58 -3 -5 -267
+      -5 -267 -40 22 -40 23 0 339 0 339 103 59 102 59 0 64 c0 35 -3 64 -6 64 -4 0
+      -78 -41 -165 -92 l-159 -92 0 -401 0 -401 342 -198 c189 -110 348 -199 353
+      -199 6 0 164 89 353 199 l342 199 0 400 0 400 -159 93 c-87 50 -161 92 -165
+      92 -3 0 -6 -29 -6 -64 l0 -63 103 -60 102 -59 0 -339 0 -340 -42 -23 -43 -23
+      0 270 0 271 -60 0 -60 0 0 -307 0 -308 -40 -22 c-21 -13 -41 -23 -44 -23 -4 0
+      -6 182 -6 405 l0 405 -60 0 -60 0 0 -443 0 -442 -46 -28 c-26 -15 -48 -26 -50
+      -24 -2 2 -3 288 -2 635 l3 632 103 -60 c57 -33 105 -60 108 -60 2 0 4 29 4 65
+      l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
+      </g>
+    </svg>
+  </div>
+
+  <br>
+  <div style="text-align:center">
+    <button id="runBtn"
+    style="padding:10px 20px;background:#05c55e;color:#fff;border:none;cursor:pointer;font-weight:bold">
+      RUN CODE
+    </button>
+  </div>
+  <br>
+
+  <div style="color:#ff6251;font-size:12px;text-align:center">
+    📝 CONTACT +923120883884 FOR ALL FEATURES !!! 👽👾
+  </div>
+  <hr style="border-color:#fff">
+  <div style="text-align:center;font-weight:100;color:#fff">
+    Made with <span class="heartbeat" style="cursor:pointer;color:#ffb3b3">♥</span> by @AhmadTrader3
+  </div>
+</div>
+`;
+
+// ================= DIALOG & STYLE =================
+var myDialog = document.createElement("dialog");
+myDialog.innerHTML = html;
+document.body.appendChild(myDialog);
+
+var styleElem = document.createElement("style");
+styleElem.innerHTML = `@keyframes heartbeat {0%{color:#ffb3b3} 35%{color:#ff1a1a} 100%{color:#ffb3b3}} .heartbeat{animation: heartbeat 1.4s infinite;} dialog::backdrop{background:#05c55e;opacity:.25}`;
+document.head.appendChild(styleElem);
+
+myDialog.showModal();
+
+// ================= RUN BUTTON CLICK =================
+document.getElementById("runBtn").onclick = function () {
+    myDialog.close();
+
+    const updateAllIcons = () => {
+        // Mobile aur Desktop dono types ke text/balance elements ko cover karne ke liye selectors
+        var levelText = document.querySelector(".---react-features-Usermenu-styles-module__demo--TmWTp") || 
+                        document.querySelector(".usermenu__info-demo"); // Fallback for desktop mode
+                        
+        var mainIcon = document.querySelector(".---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg > use") ||
+                       document.querySelector(".usermenu__info-levels > svg > use");
+
+        var balanceEl = document.querySelector(".---react-features-Usermenu-styles-module__infoBalance--pVBHU") ||
+                        document.querySelector(".usermenu__info-balance");
+
+        if (!levelText || !balanceEl) return;
+
+        // Fetch Balance
+        var balance = parseFloat(balanceEl.innerText.replace(/[^0-9.-]+/g, ""));
+        
+        // Agar desktop mode on hai ya bari screen hai
+        if (window.innerWidth > 991 || levelText.innerText.includes("ACCOUNT")) {
+            levelText.innerText = "LIVE ACCOUNT";
+        } else {
+            levelText.innerText = "LIVE";
+        }
+        
+        levelText.style.color = "#0faf59";
+        levelText.style.textTransform = "uppercase";
+
+        let iconPath = "";
+        let levelName = "";
+        let profit = "";
+
+        if (balance < 5000) {
+            iconPath = "/profile/images/spritemap.svg#icon-profile-level-standart";
+            levelName = "standard:";
+            profit = "+0% profit";
+        } else if (balance < 10000) {
+            iconPath = "/profile/images/spritemap.svg#icon-profile-level-pro";
+            levelName = "pro:";
+            profit = "+2% profit";
+        } else {
+            iconPath = "/profile/images/spritemap.svg#icon-profile-level-vip";
+            levelName = "vip:";
+            profit = "+4% profit";
+        }
+
+        // Update Main Icon
+        if (mainIcon) mainIcon.setAttribute("xlink:href", iconPath);
+
+        // Update Dropdown elements (Dono mobile/desktop selectors ke liye)
+        var dropIcon = document.querySelector(".---react-features-Usermenu-Dropdown-styles-module__levelIcon--lmj_k > svg > use") ||
+                       document.querySelector(".usermenu-dropdown__level-icon > svg > use");
+                       
+        var dropName = document.querySelector(".---react-features-Usermenu-Dropdown-styles-module__levelName--wFviC") ||
+                       document.querySelector(".usermenu-dropdown__level-name");
+                       
+        var dropProfit = document.querySelector(".---react-features-Usermenu-Dropdown-styles-module__levelProfit--UkDJi") ||
+                         document.querySelector(".usermenu-dropdown__level-profit");
+
+        if (dropIcon) dropIcon.setAttribute("xlink:href", iconPath);
+        if (dropName) dropName.innerText = levelName;
+        if (dropProfit) dropProfit.innerText = profit;
+    };
+
+    // Initial run
+    updateAllIcons();
+
+    // Auto update jab balance change ho
+    var balanceTarget = document.querySelector(".---react-features-Usermenu-styles-module__infoBalance--pVBHU") || 
+                        document.querySelector(".usermenu__info-balance");
+                        
+    if (balanceTarget) {
+        new MutationObserver(updateAllIcons).observe(balanceTarget, { subtree: true, characterData: true, childList: true });
+    }
+
+    // Auto update jab menu khule
+    var userMenu = document.querySelector(".---react-features-Usermenu-styles-module__usermenu--rymiA") ||
+                   document.querySelector(".usermenu");
+                   
+    if (userMenu) {
+        userMenu.addEventListener("click", () => {
+            setTimeout(updateAllIcons, 50); 
+        });
+    }
+};
+</script>
+</body>
+
+</html>
