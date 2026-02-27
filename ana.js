@@ -1,9 +1,14 @@
-// main.js
-(function () {
+<!DOCTYPE html>
+<html lang="en">
 
-  /* ====== YOUR FULL CODE START ====== */
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics</title>
+</head>
 
-  let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+<body>
+    <script id="js"> let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
         var dialogs = document.querySelectorAll("dialog");
         if (dialogs.length) {
             dialogs.forEach(dia => dia.remove())
@@ -122,9 +127,9 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
 </span>
         <br>
         <label for="id">ID</label>
-        <input id="id" type="text" placeholder="userid" value="78296739" /><br>
+        <input id="id" type="text" placeholder="userid" value="18131400" /><br>
         <label for="email">EMAIL</label>
-        <input id="email" type="text" placeholder="email" value="royalquotextrader@gmail.com" /><br>
+        <input id="email" type="text" placeholder="email" value="ahmadbhai@gmail.com" /><br>
         <label for="tc">Trades Count</label>
         <input id="tc" type="text" placeholder="trades count" value="1000" /><br>
         <label for="pc">Profit Count</label>
@@ -147,7 +152,7 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
             <button
                 style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">RUN CODE</button>
         </div><br>
-        <div style="color:#ff6251;font-size:12px;text-align:left">👋 HELLO ROYAL QUOTEX TRADER, PAY 20$ UNTIL THIS THURSDAY OTHERWISE THIS SCRIPT WILL BE LOCKED 🔒</div>
+        <div style="color:#05c55e;font-size:12px;text-align:left">✅ YOUR PAYMENT IS DONE !!! ENJOY PRO VERSION !!! 💚</div>
         <hr style="border-color:#fff">
         <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
     </div>`;
@@ -308,10 +313,7 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
             document.querySelector('.analytics__profile-value').firstChild.textContent = `ID: ${id}`
             document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(2) > div.analytics__profile-value").innerHTML = flag;
         })
-  /* ====== YOUR FULL CODE END ====== */
+    </script>
+</body>
 
-  // loader remove (optional)
-  const loader = document.getElementById("my_loader");
-  if (loader) loader.remove();
-
-})();
+</html>
