@@ -106,7 +106,7 @@ CLOSE
 <br>
 
 <div style="color:#ff6251;font-size:12px">
-📝 CONTACT +923120883884 TO UNLOCK !!!
+📝 CONTACT +923120883884 TO UNLOCK !!! 🔓
 </div>
 
 <hr style="border-color:#fff">
