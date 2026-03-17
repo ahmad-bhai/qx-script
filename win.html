@@ -8,8 +8,7 @@
 </head>
 
 <body>
-    <script id="js">
-        var dialogs = document.querySelectorAll("dialog");
+    <script id="js">var dialogs = document.querySelectorAll("dialog");
         if (dialogs.length) {
             dialogs.forEach(dia => dia.remove())
         }
@@ -55,23 +54,20 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
         document.querySelector("#percent").blur();
         myDialog.querySelector("button").addEventListener("click", () => {
             myDialog.close();
+			
+			        var trades = document.querySelectorAll("#root > div > div.mobile-trade-list > div > div.sxOpa.FjI2k > div > div > div.u7A5m")
+        trades.forEach(el => {
+            var calc = parseFloat(el.childNodes[1].nodeValue.split(" ")[0].replace(",",""))*(1  + (Number(document.querySelector("#percent").value) / 100))
 
-            var trades = document.querySelectorAll("div.deal-list__items.active > div:not(.trades-list__date)");
-
-            trades.forEach(element => {
-                const money = element.querySelector("div > div.trades-list-item__delta");
-                const res = parseFloat(money.innerText.split(" ")[0].replace(",", "")) * (1 + (Number(document.querySelector("#percent").value) / 100));
-                money.querySelector("div").innerText = "+" +
-                    res.toLocaleString("en",
-                        {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        }) + " $";
-                money.querySelector("div").style.color = "#0faf59";
-            })
+            el.childNodes[2].innerHTML =  "+" +
+                calc.toLocaleString("en",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    }) + " $";
+            el.childNodes[2].style.color = "#0faf59";
         })
-
-    </script>
+        })
+</script>
 </body>
-
-</html>
+    </html>
