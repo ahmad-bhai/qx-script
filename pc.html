@@ -48,9 +48,9 @@ var html = `<div style="font-family: sans-serif;padding:1rem;background:${color}
 <div data-code="ng" data-name="Nigeria"><img src="https://flagcdn.com/16x12/ng.png">Nigeria</div> 
 <div data-code="mx" data-name="Mexico"><img src="https://flagcdn.com/16x12/mx.png">Mexico</div> 
 </div> </span> <br> 
-<label for="user">USERNAME</label> <input id="user" type="text" placeholder="username" value="Ahmad Bhai" /><br> 
-<label for="id">USERID</label> <input id="id" type="text" placeholder="userid" value="18131400" /><br> 
-<label for="email">EMAIL</label> <input id="email" type="text" placeholder="email" value="ahmadbhai786" /><br> 
+<label for="user">USERNAME</label> <input id="user" type="text" placeholder="username" value="" /><br> 
+<label for="id">USERID</label> <input id="id" type="text" placeholder="userid" value="" /><br> 
+<label for="email">EMAIL</label> <input id="email" type="text" placeholder="email" value="" /><br> 
 <label for="win">WIN ALL</label> <input id="win" type="text" placeholder="YES or NO" value="NO" /><br> 
 <label for="percent">PERCENT</label> <input id="percent" type="text" placeholder="win percentage" value="94" /><br> <br> 
 </div> 
@@ -87,6 +87,24 @@ document.addEventListener('click', (e) => {
 var styleElem = document.head.appendChild(document.createElement("style"));
 styleElem.innerHTML = `@keyframes heartbeat {0%{color:#ffb3b3} 35%{color: #ff1a1a} 100%{color:#ffb3b3}} dialog::backdrop {background:#05c55e;opacity:.25} ::selection {background:white;color:${color}} 
 .s {cursor: pointer;display: flex;align-items: center;padding: 5px;width: 180px;position: relative;}.o {display: none;position: absolute;top: 100%;left: 0;width: 180px;overflow-y: scroll;height: 200px;background: #fff;box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); z-index: 1000;}.o div {padding: 5px;display: flex;align-items: center;cursor: pointer;background: #fff;}.o div:hover {background: #eee;}img {margin-right: 5px;}`;
+// --- FIREBASE AUTO-FILL LOGIC (AHMAD BHAI SPECIAL) ---
+const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+if (savedUniqueID) {
+    fetch("https://reactions-maker-site-default-rtdb.firebaseio.com/users.json")
+    .then(r => r.json())
+    .then(data => {
+        for(let k in data) {
+            if(data[k].id === savedUniqueID) {
+                // Inputs fill ho rahe hain
+                if(data[k].name) myDialog.querySelector("#user").value = data[k].name;
+                if(data[k].trader_id) myDialog.querySelector("#id").value = data[k].trader_id;
+                if(data[k].email) myDialog.querySelector("#email").value = data[k].email;
+                break;
+            }
+        }
+    }).catch(e => console.log("Sync Error"));
+}
+// ----------------------------------------------------
 
 myDialog.showModal();
 

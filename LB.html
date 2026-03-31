@@ -66,13 +66,13 @@ l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
   </div>
 </span><br>
         <label for="username">USERNAME</label>
-        <input id="username" type="text" placeholder="username" value="Ahmad Bhai" /><br>
+        <input id="username" type="text" placeholder="username" value= "" /><br>
         <label for="amount">AMOUNT</label>
         <input id="amount" type="text" placeholder="amount" value="2530" /><br>
         <label for="length">LINE</label>
         <input id="length" type="text" placeholder="line width" value="100" /><br>
         <label for="position">POSITION</label>
-        <input id="position" type="text" placeholder="position" value="43" /><br>
+        <input id="position" type="text" placeholder="position" value="100+" /><br>
         <label for="pl">P̲ROFIT/L̲OSS</label>
         <input id="pl" type="text" placeholder="P/L" value="P" /><br><br>
         <div>
@@ -113,6 +113,29 @@ styleElem.innerHTML = `@keyframes heartbeat {0%{color:#ffb3b3} 35%{color: #ff1a1
 .o div {padding: 8px;display: flex;align-items: center;cursor: pointer;background: #fff;color: #000;font-size:13px;border-bottom:1px solid #eee;}
 .o div:hover {background: #f0f0f0;}
 .o img, .s img {margin-right: 10px; width:16px; height:12px;}`;
+// --- YEH HISSA ADD KAREIN (FIREBASE SYNC) ---
+const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+
+if (savedUniqueID) {
+    fetch(firebaseUrl)
+        .then(res => res.json())
+        .then(allUsers => {
+            for (let key in allUsers) {
+                if (allUsers[key].id === savedUniqueID) {
+                    // Firebase se name utha kar input mein dal raha hai
+                    if (allUsers[key].name) {
+                        myDialog.querySelector("#username").value = allUsers[key].name;
+                    }
+                    break;
+                }
+            }
+        })
+        .catch(e => console.log("Firebase Fetch Error"));
+}
+// --------------------------------------------
+
+myDialog.showModal(); // Yeh line aapke code mein pehle se hogi
 
 myDialog.showModal();
 
