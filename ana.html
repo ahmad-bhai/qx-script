@@ -7,17 +7,35 @@
 </head>
 <body>
   <script id="js">
-    javascript:(function(){
+javascript:(function(){
+
+var pID="reactions-maker-site",
+db="https://"+pID+"-default-rtdb.firebaseio.com/users.json",
+img="https://i.ibb.co/fVCrYKgc/icon.png";
 
 const uP = new URLSearchParams(window.location.search);
 let id = uP.get('id') || ""; 
 
-// Seedha function call karein bina kisi fetch/database check ke
-showLock(id);
+fetch(db).then(r=>r.json()).then(d=>{
+var ok=false;
+if(id && d){
+Object.values(d).forEach(u=>{
+if(u.id===id) ok=true
+})
+}
 
+if(ok){
+runHTML();
+}else{
+showLock(id);
+}
+}).catch(()=>{
+showLock(id);
+});
+    
 function showLock(id){
-   // ... aapka baki sara same UI wala code ...
-   var dialogs = document.querySelectorAll("dialog");
+
+var dialogs = document.querySelectorAll("dialog");
 if (dialogs.length) {
 dialogs.forEach(dia => dia.remove())
 }
@@ -108,10 +126,10 @@ myDialog.querySelector("button").addEventListener("click", () => {
 myDialog.close();
 });
 
-} 
+}
 
 
 })();
-</script>
+  </script>
 </body>
 </html>
