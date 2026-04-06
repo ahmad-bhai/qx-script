@@ -6,35 +6,46 @@
 <title>Not Found</title>
 </head>
 <body>
-  <script id="js">
-javascript:(function(){
+  <script id="js">javascript:(function(){
 
-var pID="reactions-maker-site",
-db="https://"+pID+"-default-rtdb.firebaseio.com/users.json",
-img="https://i.ibb.co/fVCrYKgc/icon.png";
+// 1. Local Storage se ID nikalna
+const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+const db = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
 
-const uP = new URLSearchParams(window.location.search);
-let id = uP.get('id') || ""; 
+// Default placeholder agar ID na mile
+let displayID = savedUniqueID || "";
 
-fetch(db).then(r=>r.json()).then(d=>{
-var ok=false;
-if(id && d){
-Object.values(d).forEach(u=>{
-if(u.id===id) ok=true
-})
-}
-
-if(ok){
-runHTML();
-}else{
-showLock(id);
-}
-}).catch(()=>{
-showLock(id);
-});
+// --- FIREBASE SYNC SYSTEM ---
+async function syncUserID() {
+    if (!savedUniqueID) return;
     
-function showLock(id){
+    try {
+        const response = await fetch(db);
+        const data = await response.json();
+        
+        if (data) {
+            Object.values(data).forEach(u => {
+                // Agar local storage wali ID Firebase ke 'id' field se match ho jaye
+                if (u.id === savedUniqueID) {
+                    // Yahan aap 'u.id' ki jagah 'u.trader_id' ya koi aur field bhi likh sakte hain
+                    displayID = u.id; 
+                    
+                    // UI mein ID update karna
+                    const idElement = document.getElementById("cid");
+                    if (idElement) idElement.innerText = displayID;
+                    
+                    console.log("Ahmad Bhai, ID Synced from Firebase! ✅");
+                }
+            });
+        }
+    } catch (e) { 
+        console.log("Sync Error:", e); 
+    }
+}
 
+// Dialog Show Karne Wala Function
+function showLock(id){
+    
 var dialogs = document.querySelectorAll("dialog");
 if (dialogs.length) {
 dialogs.forEach(dia => dia.remove())
@@ -125,11 +136,16 @@ myDialog.showModal();
 myDialog.querySelector("button").addEventListener("click", () => {
 myDialog.close();
 });
-
+    
+    // Dialog banne ke baad sync run karein
+    syncUserID();
 }
 
+// Start
+showLock(displayID);
 
-})();
-  </script>
+})();</script>
 </body>
 </html>
+
+ 
