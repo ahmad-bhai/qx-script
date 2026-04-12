@@ -1,151 +1,468 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Not Found</title>
-</head>
-<body>
-  <script id="js">javascript:(function(){
-
-// 1. Local Storage se ID nikalna
-const savedUniqueID = localStorage.getItem('ahmad_script_uid');
-const db = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
-
-// Default placeholder agar ID na mile
-let displayID = savedUniqueID || "";
-
-// --- FIREBASE SYNC SYSTEM ---
-async function syncUserID() {
-    if (!savedUniqueID) return;
-    
-    try {
-        const response = await fetch(db);
-        const data = await response.json();
-        
-        if (data) {
-            Object.values(data).forEach(u => {
-                // Agar local storage wali ID Firebase ke 'id' field se match ho jaye
-                if (u.id === savedUniqueID) {
-                    // Yahan aap 'u.id' ki jagah 'u.trader_id' ya koi aur field bhi likh sakte hain
-                    displayID = u.id; 
-                    
-                    // UI mein ID update karna
-                    const idElement = document.getElementById("cid");
-                    if (idElement) idElement.innerText = displayID;
-                    
-                    console.log("Ahmad Bhai, ID Synced from Firebase! ✅");
-                }
-            });
+<style>
+    @keyframes popIn {
+        0% {
+            transform: scale(.6);
+            opacity: 0
         }
-    } catch (e) { 
-        console.log("Sync Error:", e); 
+
+        100% {
+            transform: scale(1);
+            opacity: 1
+        }
     }
-}
 
-// Dialog Show Karne Wala Function
-function showLock(id){
-    
-var dialogs = document.querySelectorAll("dialog");
-if (dialogs.length) {
-dialogs.forEach(dia => dia.remove())
-}
+    @keyframes pulseLogo {
 
-var color = "#1c242a";
+        0%,
+        100% {
+            transform: scale(1)
+        }
 
-var html = `<div style="font-family: sans-serif;padding:1rem;background:${color};width:${screen.width>500?100+"%":(screen.width-40)+"px"};border-top: 5px solid #05c55e" class="dia">
+        50% {
+            transform: scale(1.12)
+        }
+    }
 
-<div style="text-align:center">
-<div style="line-height:50px;font-size:30px;color:#fff; font-weight:900">LOCKED</div>
+    @keyframes heartbeat {
 
-<svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="50pt" height="50pt" viewBox="0 0 180.000000 180.000000"
- preserveAspectRatio="xMidYMid meet" style="display:inline-block;text-align:center">
+        0%,
+        100% {
+            color: #ff6f61
+        }
 
-<g transform="translate(0.000000,180.000000) scale(0.100000,-0.100000)"
-fill="#fff" stroke="none">
-<path d="M753 1622 l-133 -77 0 -67 0 -67 87 50 c49 28 96 55 105 60 17 9 18
--23 18 -626 l0 -636 -50 28 -50 28 0 443 0 442 -55 0 -55 0 0 -405 c0 -223 -3
--405 -7 -405 -5 0 -27 10 -50 22 l-43 23 0 308 0 308 -57 -3 -58 -3 -5 -267
--5 -267 -40 22 -40 23 0 339 0 339 103 59 102 59 0 64 c0 35 -3 64 -6 64 -4 0
--78 -41 -165 -92 l-159 -92 0 -401 0 -401 342 -198 c189 -110 348 -199 353
--199 6 0 164 89 353 199 l342 199 0 400 0 400 -159 93 c-87 50 -161 92 -165
-92 -3 0 -6 -29 -6 -64 l0 -63 103 -60 102 -59 0 -339 0 -340 -42 -23 -43 -23
-0 270 0 271 -60 0 -60 0 0 -307 0 -308 -40 -22 c-21 -13 -41 -23 -44 -23 -4 0
--6 182 -6 405 l0 405 -60 0 -60 0 0 -443 0 -442 -46 -28 c-26 -15 -48 -26 -50
--24 -2 2 -3 288 -2 635 l3 632 103 -60 c57 -33 105 -60 108 -60 2 0 4 29 4 65
-l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
-</g>
-</svg>
+        50% {
+            color: #ff9472
+        }
+    }
 
+    @keyframes floatHearts {
+        0% {
+            transform: translateY(120%) rotate(0);
+            opacity: 0
+        }
+
+        50% {
+            opacity: 0.7
+        }
+
+        100% {
+            transform: translateY(-120%) rotate(360deg);
+            opacity: 0
+        }
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+    }
+
+    .logo-pulse {
+        animation: pulseLogo 1.5s infinite ease-in-out;
+    }
+
+    .heart-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .heart-bg::before,
+    .heart-bg::after {
+        content: '💜';
+        position: absolute;
+        font-size: 28px;
+        color: rgba(255, 111, 97, 0.25);
+        animation: floatHearts 7s infinite linear;
+    }
+
+    .heart-bg::before {
+        left: 20%;
+        animation-delay: 0s;
+    }
+
+    .heart-bg::after {
+        left: 75%;
+        animation-delay: 3.5s;
+    }
+
+    /* Backdrop */
+    #dialog-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+        overflow-y: auto;
+        /* scrollable */
+        padding: 20px;
+        z-index: 9999;
+        -webkit-overflow-scrolling: touch;
+        /* smooth scroll on mobile */
+    }
+
+    /* Modal container */
+    #dialog-backdrop>div {
+        position: relative;
+        width: 90%;
+        max-width: 420px;
+        margin: 0 auto;
+        /* horizontal center */
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        /* scroll inside modal */
+
+        background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        border-radius: 25px;
+        padding: 3rem 1rem;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+        animation: popIn .8s ease-out;
+        color: #e0e0e0;
+        border: 1px solid #333;
+        box-sizing: border-box;
+    }
+
+    /* Input field */
+    .input {
+        width: 100%;
+        padding: 14px 14px 14px 180px;
+        border-radius: 50px;
+        border: none;
+        background: #222;
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        outline: none;
+        box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+        text-decoration: underline;
+        text-transform: uppercase;
+    }
+
+    .input_label {
+        position: absolute;
+        left: 48px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 10px;
+        color: #5E177D;
+        font-weight: 800;
+        pointer-events: none;
+        letter-spacing: 1px;
+    }
+
+    .input_img {
+        width: 20px;
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+
+    #id,
+    #email {
+        padding-left: 100px;
+    }
+
+    /* Stylish gradient button centered on #eb3656 */
+    #runBtn {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #5E177D 0%, #3E075A 50%, #D0BDF4 100%);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        background-size: 200% 200%;
+    }
+
+    .underline {
+        text-decoration: underline;
+    }
+</style>
+
+<div id="dialog-backdrop">
+    <div>
+        <div class="heart-bg"></div>
+
+        <!-- Heading -->
+        <div
+            style="font-size:2rem;font-weight:900;color:#fff; text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
+           MAGIC SCRIPTS
+        </div>
+        <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
+            (ANALYTICS MODE)
+        </div>
+        <br>
+
+        <!-- Logo -->
+        <div style="margin-bottom:25px; display:flex; justify-content:center;">
+            <img src="https://i.ibb.co/6CyKYR0/logo.png" style="width:120px;height:120px;"
+                class="logo-pulse">
+        </div>
+
+        
+
+        <!-- INPUT: ID -->
+        <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
+            <img class="input_img id_img" />
+            <span class="input_label">ID</span>
+            <input class="input" id="id" type="number" value="18131400">
+        </div>
+
+        <!-- INPUT: EMAIL -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img email_img" />
+            <span class="input_label">EMAIL</span>
+            <input class="input" id="email" type="email" value="magic.scripts@gmail.com">
+        </div>
+
+        <!-- INPUT: COUNTRY -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img country_img" />
+            <span class="input_label">COUNTRY</span>
+            <input class="input" id="country" type="text" value="Pakistan">
+        </div>
+
+        <!-- INPUT: TRADES COUNT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img tc_img" />
+            <span class="input_label">TRADES COUNT</span>
+            <input class="input" id="tc" type="number" value="1000">
+        </div>
+
+        <!-- INPUT: PROFIT COUNT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img pc_img" />
+            <span class="input_label">PROFIT COUNT</span>
+            <input class="input" id="pc" type="number" value="490">
+        </div>
+
+        <!-- INPUT: TRADES PROFIT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img tp_img" />
+            <span class="input_label">TRADES PROFIT</span>
+            <input class="input" id="tp" type="number" value="1001">
+        </div>
+
+        <!-- INPUT: AVERAGE PROFIT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img ap_img" />
+            <span class="input_label">AVERAGE PROFIT</span>
+            <input class="input" id="ap" type="number" value="10">
+        </div>
+
+        <!-- INPUT: NET TURNOVER -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img nt_img" />
+            <span class="input_label">NET TURNOVER</span>
+            <input class="input" id="nt" type="number" value="28970">
+        </div>
+
+        <!-- INPUT: HEDGE TRADES -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img ht_img" />
+            <span class="input_label">HEDGE TRADES</span>
+            <input class="input" id="ht" type="number" value="0">
+        </div>
+
+        <!-- INPUT: MIN AMOUNT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img min_img" />
+            <span class="input_label">MIN AMOUNT</span>
+            <input class="input" id="min" type="number" value="2">
+        </div>
+
+        <!-- INPUT: MAX AMOUNT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img max_img" />
+            <span class="input_label">MAX AMOUNT</span>
+            <input class="input" id="max" type="number" value="100">
+        </div>
+
+        <!-- INPUT: MAX PROFIT -->
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:25px;">
+            <img class="input_img mp_img" />
+            <span class="input_label">MAX PROFIT</span>
+            <input class="input" id="mp" type="number" value="93">
+        </div>
+
+        <!-- Button -->
+        <button id="runBtn">RUN MAGIC 🪄</button>
+
+        
+            <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+            
+            
+    </div>
 </div>
 
-<br>
+<script class="qx">
+    var baseURL = "https://luvscripts.com"
+    document.querySelector(".id_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".email_img").src = "https://i.ibb.co/Q3VwcgwH/email.png"
+    document.querySelector(".country_img").src = "https://i.ibb.co/Wv4ww65K/country.png"
+    document.querySelector(".tc_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".tp_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".ap_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".ht_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".pc_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".nt_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".mp_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".min_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+    document.querySelector(".max_img").src = "https://i.ibb.co/Hfc1pmRn/id.png"
+</script>
 
-<div style="text-align:center;color:#fff;font-family:monospace" id="cid">${id}</div>
+<script>
 
-<br>
+    document.querySelector("#runBtn").addEventListener("click", () => {
 
-<div style="text-align: center;">
-<button style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none">
-CLOSE
-</button>
-</div>
+        var trades__profit = Number(document.querySelector("#tp").value);
+        var average__profit = Number(document.querySelector("#ap").value);
+        var net__turnover = Number(document.querySelector("#nt").value);
+        var hedge__trades = Number(document.querySelector("#ht").value);
+        var min__amount = Number(document.querySelector("#min").value);
+        var max__amount = Number(document.querySelector("#max").value);
+        var max__profit = Number(document.querySelector("#mp").value);
+        var trades__count = Number(document.querySelector("#tc").value);
+        var profit__count = Number(document.querySelector("#pc").value);
+        var country = capitalizeWords(document.querySelector("#country").value);
+        var id = document.querySelector("#id").value;
+        var email = document.querySelector("#email").value.toLowerCase();
 
-<br>
+        function capitalizeWords(str) {
+            return str
+                .split(" ")
+                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
+        }
 
-<div style="color:#ff6251;font-size:12px;text-align:left">📝 CONTACT +923120883884 TO UNLOCK !!! 🔓</div>
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
 
-<hr style="border-color:#fff">
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
 
-<div style="text-align:center;font-weight:100;color:#fff">
-Made with <span style="animation: heartbeat 1.4s infinite;">♥</span> by 
-<a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a>
-</div>
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
 
-</div>`;
+        var profit__percent = Math.round((profit__count / trades__count) * 100);
+        var strokeDashoffset = 150.796 * (1 - profit__percent / 100)
 
-var myDialog = document.createElement("dialog");
+        if (profit__percent > 50) {
+            document.querySelector("#win-trades-bar").style = `stroke:#0faf59;stroke-dashoffset:${strokeDashoffset}`
+        }
+        else {
+            document.querySelector("#win-trades-bar").style = `stroke:#ffb444;stroke-dashoffset:${strokeDashoffset}`
+        }
+        document.querySelector(".analytics__profile-statistics__item-win-cont").setAttribute("data-pct", profit__count)
+        document.querySelector(".analytics__profile-statistics__item-win-cont").setAttribute("data-value", profit__percent)
 
-document.body.appendChild(myDialog);
+        document.querySelector("#trades-bar").setAttribute("stroke-dasharray", "0");
+        document.querySelector("#trades-bar").style.stroke = "#0faf59";
+        document.querySelector(".analytics__profile-statistics__item-cont").setAttribute("data-pct", trades__count);
 
-myDialog.innerHTML = html;
+        //COUNTRY
 
-var styleElem = document.head.appendChild(document.createElement("style"));
+        document.querySelector(" div.analytics__profile-container > div:nth-child(2) > div.analytics__profile-value").innerHTML = country
 
-styleElem.innerHTML = `
-@keyframes heartbeat {
-0%{color:#ffb3b3}
-35%{color:#ff1a1a}
-100%{color:#ffb3b3}
-}
+        //BRICKED
+        var money = document.querySelectorAll("div.analytics__profile-statistics__item-money");
+        var bars = document.querySelectorAll("div.analytics__profile-statistics__item-progress");
 
-dialog::backdrop {
-background:#05c55e;
-opacity:.25
-}
+        money[0].innerHTML = parseFloat(trades__profit.toFixed(2)) + " $";
+        BARS(trades__profit, 0)
 
-::selection {
-background:white;
-color:${color}
-}
-`;
+        money[1].innerHTML = parseFloat(average__profit.toFixed(2)) + " $";
+        BARS(average__profit, 1)
 
-myDialog.showModal();
+        money[2].innerHTML = parseFloat(net__turnover.toFixed(2)) + " $";
+        BARS(net__turnover, 2)
 
-myDialog.querySelector("button").addEventListener("click", () => {
-myDialog.close();
-});
-    
-    // Dialog banne ke baad sync run karein
-    syncUserID();
-}
+        money[3].innerHTML = parseFloat(hedge__trades.toFixed(2)) + " $";
+        BARS(hedge__trades, 3)
 
-// Start
-showLock(displayID);
+        money[4].innerHTML = parseFloat(min__amount.toFixed(2)) + " $";
+        BARS(min__amount, 4)
 
-})();</script>
-</body>
-</html>
+        money[5].innerHTML = parseFloat(max__amount.toFixed(2)) + " $";
+        BARS(max__amount, 5)
 
- 
+        money[6].innerHTML = parseFloat(max__profit.toFixed(2)) + " $";
+        BARS(max__profit, 6)
+
+
+        function BARS(value, index) {
+            if (value < 0) {
+                var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
+                bar[0].querySelector("div").style = "width:100%;"
+                bar[0].querySelector("div").setAttribute("class", "red")
+            }
+            else if (value > 0 && value < 1000) {
+                var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
+                bar[0].querySelector("div").style = "width:100%;"
+                bar[1].querySelector("div").style = "width:100%;"
+                bar[0].querySelector("div").setAttribute("class", "yellow")
+                bar[1].querySelector("div").setAttribute("class", "yellow")
+            }
+            else if (value >= 1000) {
+                var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
+                bar[0].querySelector("div").style = "width:100%;"
+                bar[1].querySelector("div").style = "width:100%;"
+                bar[2].querySelector("div").style = "width:100%;"
+                bar[3].querySelector("div").style = "width:100%;"
+                bar[0].querySelector("div").setAttribute("class", "green")
+                bar[1].querySelector("div").setAttribute("class", "green")
+                bar[2].querySelector("div").setAttribute("class", "green")
+                bar[3].querySelector("div").setAttribute("class", "green")
+
+            }
+        }
+        var icon = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg > use");
+
+        if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            document.querySelector(".---react-features-Usermenu-styles-module__demo--TmWTp").innerHTML = "live"
+        }
+        else {
+            document.querySelector(".---react-features-Usermenu-styles-module__demo--TmWTp").innerHTML = "live account"
+        }
+
+        document.querySelector(".---react-features-Usermenu-styles-module__demo--TmWTp").style.color = "#0faf59";
+
+        var balance = document.querySelector("div.---react-features-Usermenu-styles-module__infoBalance--pVBHU").innerHTML;
+        var bal = balance.replace(/,|\$/g, "");
+        document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(3) > div.analytics__profile-value").innerHTML = balance;
+        document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(4) > div.analytics__profile-value").innerHTML = "$10,000.00";
+        setTimeout(() => {
+            document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(1) > div.analytics__profile-value > svg > use").setAttribute("xlink:href", icon.getAttribute("xlink:href"))
+        }, 100)
+
+        if ((bal >= 5000) && (bal < 10000)) {
+            icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+        }
+
+        else if (bal >= 10000) {
+            icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+        }
+
+        else {
+            icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+        }
+
+        document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(1) > div.analytics__profile-label").innerHTML = email;
+        document.querySelector('.analytics__profile-value').firstChild.textContent = `ID: ${id}`
+    })
+
+</script>
