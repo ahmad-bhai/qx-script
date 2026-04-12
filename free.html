@@ -395,8 +395,8 @@
             banner.remove();
         }
 
-        document.querySelector("div.58LeE > div.SfrTV.TmWTp").innerText = "live";
-        document.querySelector("div.58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
+        document.querySelector("div._58LeE > div.SfrTV.TmWTp").innerText = "live";
+        document.querySelector("div._58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
         history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
         var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
@@ -577,7 +577,7 @@
         var limit__lower;
         var limit__upper;
      const BALANCE__ICON = () => {
-            var balance__str = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.58LeE > div.pVBHU").innerText;
+            var balance__str = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU").innerText;
             var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
             var currency = balance__str[0];
 
@@ -674,7 +674,7 @@
         var observer = new MutationObserver(_ => {
             BALANCE__ICON()
         })
-        var target__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.58LeE > div.pVBHU")
+        var target__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU")
 
         observer.observe(target__el, {
             subtree: true,
