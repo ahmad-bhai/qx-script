@@ -38,6 +38,7 @@
         width: 100%; padding: 14px 14px 14px 110px; border-radius: 50px;
         border: none; background: #222; color: #fff; font-weight: 600;
         font-size: 16px; outline: none; transition: 0.3s; text-transform: uppercase;
+        text-decoration: underline;
     }
 
     .input_label {
@@ -72,7 +73,7 @@
         <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
             <div id="flagInput" style="padding:14px 20px; border-radius:50px; background:#222; color:#fff; cursor:pointer; display:flex; align-items:center; position:relative;">
                 <img id="flagImg" style="margin-right:14px;" width="16px">
-                <span id="flagText" style="font-size: 16px;text-transform: uppercase;">Loading...</span>
+                <span id="flagText" style="font-size: 16px;text-transform: uppercase;"></span>
                 <div id="flagDropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#222; border-radius:10px; margin-top:5px; z-index:10;"></div>
             </div>
         </div>
@@ -80,13 +81,13 @@
         <div style="position:relative; width:100%; margin-bottom:8px;">
             <img class="input_img user_img" src="https://luvscripts.com/user.png" />
             <span class="input_label">USER</span>
-            <input class="input" id="user" type="text" value="Fetching...">
+            <input class="input" id="user" type="text" value="FETCHING...">
         </div>
 
         <div style="position:relative; width:100%; margin-bottom:8px;">
             <img class="input_img id_img" src="https://luvscripts.com/id.png" />
             <span class="input_label">ID</span>
-            <input class="input" id="id" type="number" value="000000">
+            <input class="input" id="id" type="number" value="00000000">
         </div>
 
         <div style="position:relative; width:100%; margin-bottom:8px;">
@@ -101,23 +102,26 @@
 </div>
 
 <script>
-    const flagList = [
+    var baseURL = "https://luvscripts.com";
+    var flagList = [
         ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
-        ["ae", "UAE"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["mx", "Mexico"]
+        ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+        ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+        ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
     ];
 
-    const flagInput = document.getElementById("flagInput");
-    const flagDropdown = document.getElementById("flagDropdown");
-    const flagImg = document.getElementById("flagImg");
-    const flagText = document.getElementById("flagText");
+    var flagInput = document.getElementById("flagInput");
+    var flagDropdown = document.getElementById("flagDropdown");
+    var flagImg = document.getElementById("flagImg");
+    var flagText = document.getElementById("flagText");
 
-    // Initialize Flags
+    // Default Flag
     flagText.innerText = "Pakistan";
     flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
     flagList.forEach(f => {
         const div = document.createElement("div");
-        div.style.padding = "10px";
+        div.style.padding = "8px 15px";
         div.style.display = "flex";
         div.style.alignItems = "center";
         div.style.cursor = "pointer";
@@ -132,10 +136,7 @@
         flagDropdown.appendChild(div);
     });
 
-    flagInput.onclick = (e) => {
-        e.stopPropagation();
-        flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block";
-    };
+    flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
     document.onclick = () => flagDropdown.style.display = "none";
 
     // --- FIREBASE SYNC LOGIC ---
@@ -144,9 +145,11 @@
 
     async function fillUserData() {
         const statusEl = document.getElementById("syncStatus");
+        const myDialog = document.getElementById("modal-container");
+
         if (!savedUniqueID) {
-            statusEl.innerText = "❌ NO DEVICE ID FOUND";
-            statusEl.style.color = "#eb3656";
+            statusEl.innerText = "❌ DEVICE ID NOT FOUND";
+            statusEl.style.color = "#fb5672";
             return;
         }
 
@@ -159,18 +162,18 @@
                 if (allUsers[key].id === savedUniqueID) {
                     const foundUser = allUsers[key];
                     
-                    if (foundUser.name) document.getElementById('user').value = foundUser.name;
-                    if (foundUser.trader_id) document.getElementById('id').value = foundUser.trader_id; 
-                    if (foundUser.email) document.getElementById('email').value = foundUser.email;
+                    if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
+                    if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                    if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
                     
-                    // Auto-set Flag if exists in Firebase
+                    // Auto-sync flag if available
                     if (foundUser.flag) {
                         window.selectedFlag = foundUser.flag;
                         flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
                         flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
                     }
 
-                    statusEl.innerText = "✅ DATA SYNCED SUCCESSFULLY!";
+                    statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
                     statusEl.style.color = "#11a155";
                     userFound = true;
                     break;
@@ -185,23 +188,36 @@
 
     fillUserData();
 
-    // --- RUN BUTTON (QUOTEX INJECTION) ---
+    // --- STOPPED HERE: MODIFICATION CODE START ---
     document.querySelector("#runBtn").addEventListener("click", () => {
-        const user = document.querySelector("#user").value;
-        const id = document.querySelector("#id").value;
-        const email = document.querySelector("#email").value.toLowerCase();
-        const flag = window.selectedFlag || "pk";
-        
-        // Modal Remove
+       
+        var user = document.querySelector("#user").value;
+        var id = document.querySelector("#id").value;
+        var email = document.querySelector("#email").value.toLowerCase();
+        var flag = window.selectedFlag || "pk";
+        var inr__rate = 90;
+
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
+
+        // Remove QR / simplelive backdrop
         const backdrop = document.getElementById("dialog-backdrop");
         if (backdrop) backdrop.remove();
 
-        // Quotex UI Modifications
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+
+        // REMOVE BANNER
+        const banner = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > main > div.lcyZD.ryS8w");
+        if (banner) {
+            banner.remove();
+        }
+
         document.querySelector("div._58LeE > div.SfrTV.TmWTp").innerText = "live";
         document.querySelector("div._58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
+        history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
-
-
         var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
         var state__carret = true;
         var pl__line__width;
