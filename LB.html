@@ -1,208 +1,276 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Leaderboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeaderBoard</title>
 </head>
-
 <body>
-    <script id="js">let regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-var dialogs = document.querySelectorAll("dialog");
-if (dialogs.length) {
-    dialogs.forEach(dia => dia.remove())
-}
-var color = "#1c242a";
+  <script id="js">
+(function() {
+// CSS with old colors and hearts
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes popIn {
+        0% { transform: scale(.6); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pulseLogo {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.12); }
+    }
+    @keyframes floatHearts {
+        0% { transform: translateY(120%) rotate(0); opacity: 0; }
+        50% { opacity: 0.7; }
+        100% { transform: translateY(-120%) rotate(360deg); opacity: 0; }
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+    .logo-pulse { animation: pulseLogo 1.5s infinite ease-in-out; }
+    .heart-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
+    .heart-bg::before, .heart-bg::after {
+        content: '💜';
+        position: absolute;
+        font-size: 28px;
+        color: rgba(255, 111, 97, 0.25);
+        animation: floatHearts 7s infinite linear;
+    }
+    .heart-bg::before { left: 20%; animation-delay: 0s; }
+    .heart-bg::after { left: 75%; animation-delay: 3.5s; }
+    #dialog-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+        overflow-y: auto;
+        padding: 20px;
+        z-index: 9999;
+    }
+    #dialog-backdrop > div {
+        position: relative;
+        width: 90%;
+        max-width: 420px;
+        margin: 0 auto;
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        border-radius: 25px;
+        padding: 3rem 1rem;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+        animation: popIn .8s ease-out;
+        color: #e0e0e0;
+        border: 1px solid #333;
+    }
+    .input {
+        width: 100%;
+        padding: 14px 14px 14px 140px;
+        border-radius: 50px;
+        border: none;
+        background: #222;
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        outline: none;
+        text-decoration: underline;
+        text-transform: uppercase;
+    }
+    .input_label {
+        position: absolute;
+        left: 48px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        color: #5E177D;
+        font-weight: 800;
+        pointer-events: none;
+        letter-spacing: 1px;
+    }
+    .input_img {
+        width: 20px;
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+    #runBtn {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #5E177D 0%, #3E075A 50%, #D0BDF4 100%);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+    }
+    .underline { text-decoration: underline; }
+    #flagInput {
+        padding: 14px 14px 14px 20px;
+        border-radius: 50px;
+        border: none;
+        background: #222;
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        user-select: none;
+        position: relative;
+    }
+    #flagDropdown {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        max-height: 150px;
+        overflow-y: auto;
+        background: #222;
+        border-radius: 10px;
+        margin-top: 5px;
+        z-index: 10;
+    }
+    #flagDropdown div {
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+    }
+    #flagDropdown div:hover { background: #333; }
+`;
+document.head.appendChild(style);
 
-// Default values set to Pakistan
-var defaultCode = "pk";
-var defaultName = "Pakistan";
+// HTML
+const html = `
+<div id="dialog-backdrop">
+    <div>
+        <div class="heart-bg"></div>
+        <div style="font-size:2rem;font-weight:900;color:#fff;text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
+            MAGIC SCRIPTS
+        </div>
+        <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
+            (LEADERBOARD MODE)
+        </div>
+        <br>
+        <div style="margin-bottom:25px; display:flex; justify-content:center;">
+            <img src="https://i.ibb.co/6CyKYR0/logo.png" style="width:120px;height:120px;" class="logo-pulse">
+        </div>
+        <div style="position:relative; width:100%; margin:auto; margin-bottom:5px; text-align:left;">
+            <div id="flagInput">
+                <img id="flagImg" src="https://flagcdn.com/16x12/pk.png" style="margin-right:14px;" width="16px">
+                <span id="flagText" style="font-size:16px;text-transform:uppercase;">Pakistan</span>
+                <div id="flagDropdown"></div>
+            </div>
+        </div>
+        <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
+            <img class="input_img user_img" src="https://i.ibb.co/nNhbZXyb/user.png" />
+            <span class="input_label">USER</span>
+            <input class="input" id="user" type="text" value="MAGIC SCRIPTS">
+        </div>
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img amount_img" src="https://i.ibb.co/P7vdvZR/amount.png" />
+            <span class="input_label">AMOUNT</span>
+            <input class="input" id="amount" type="text" value="987">
+        </div>
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img length_img" src="https://i.ibb.co/0jRzNh0d/length.png" />
+            <span class="input_label">LENGTH</span>
+            <input class="input" id="length" type="number" value="100" max="100" min="0">
+        </div>
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
+            <img class="input_img position_img" src="https://i.ibb.co/BMRbckm/position.png" />
+            <span class="input_label">POSITION</span>
+            <input class="input" id="position" type="text" value="100+">
+        </div>
+        <div style="position:relative; width:100%; margin:auto;margin-bottom:25px;">
+            <img class="input_img pl_img" src="https://i.ibb.co/5WyzWkLK/pl.png" />
+            <span class="input_label"><span class="underline">P</span>ROFIT/<span class="underline">L</span>OSS</span>
+            <input class="input" id="pl" type="text" value="p" maxlength="1">
+        </div>
+        <button id="runBtn">RUN MAGIC 🪄</button>
+        <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+    </div>
+</div>
+`;
+document.body.insertAdjacentHTML('beforeend', html);
 
-var html = `<div style="font-family: sans-serif;padding:1rem;background:${color};width:${screen.width>500?100+"%":(screen.width-40)+"px"}; border-top: 5px solid #05c55e" class="dia">
-                <div style="text-align:center"><div style="line-height:50px;font-size:30px;color:#fff;font-weight:900">PRO</div><svg version="1.0" xmlns="http://www.w3.org/2000/svg"
- width="50pt" height="50pt" viewBox="0 0 180.000000 180.000000"
- preserveAspectRatio="xMidYMid meet" style="display:inline-block;text-align:center">
-<g transform="translate(0.000000,180.000000) scale(0.100000,-0.100000)"
-fill="#fff" stroke="none">
-<path d="M753 1622 l-133 -77 0 -67 0 -67 87 50 c49 28 96 55 105 60 17 9 18
--23 18 -626 l0 -636 -50 28 -50 28 0 443 0 442 -55 0 -55 0 0 -405 c0 -223 -3
--405 -7 -405 -5 0 -27 10 -50 22 l-43 23 0 308 0 308 -57 -3 -58 -3 -5 -267
--5 -267 -40 22 -40 23 0 339 0 339 103 59 102 59 0 64 c0 35 -3 64 -6 64 -4 0
--78 -41 -165 -92 l-159 -92 0 -401 0 -401 342 -198 c189 -110 348 -199 353
--199 6 0 164 89 353 199 l342 199 0 400 0 400 -159 93 c-87 50 -161 92 -165
-92 -3 0 -6 -29 -6 -64 l0 -63 103 -60 102 -59 0 -339 0 -340 -42 -23 -43 -23
-0 270 0 271 -60 0 -60 0 0 -307 0 -308 -40 -22 c-21 -13 -41 -23 -44 -23 -4 0
--6 182 -6 405 l0 405 -60 0 -60 0 0 -443 0 -442 -46 -28 c-26 -15 -48 -26 -50
--24 -2 2 -3 288 -2 635 l3 632 103 -60 c57 -33 105 -60 108 -60 2 0 4 29 4 65
-l0 64 -92 54 c-51 30 -113 66 -138 80 l-45 26 -132 -77z"/>
-</g>
-</svg>
-</div><br>
-<div style="text-align:center">
-        <label for="flag__d">FLAG</label>
-            <span style="position: relative; display: inline-block; width: 180px; background:#fff;color:black;">
-  <span onclick="document.getElementById('o').style.display=document.getElementById('o').style.display=='inline-block'?'none':'inline-block'" class="s" id="s">
-    <img src="https://flagcdn.com/16x12/${defaultCode}.png">
-    ${defaultName}
-  </span>
-  <div class="o" id="o">
-      <div data-code="pk" data-name="Pakistan"><img src="https://flagcdn.com/16x12/pk.png">Pakistan</div>
-      <div data-code="in" data-name="India"><img src="https://flagcdn.com/16x12/in.png">India</div>
-      <div data-code="bd" data-name="Bangladesh"><img src="https://flagcdn.com/16x12/bd.png">Bangladesh</div>
-      <div data-code="sa" data-name="Saudi Arabia"><img src="https://flagcdn.com/16x12/sa.png">Saudi Arabia</div>
-      <div data-code="ae" data-name="United Arab Emirates"><img src="https://flagcdn.com/16x12/ae.png">UAE</div>
-      <div data-code="tr" data-name="Turkey"><img src="https://flagcdn.com/16x12/tr.png">Turkey</div>
-      <div data-code="lk" data-name="Sri Lanka"><img src="https://flagcdn.com/16x12/lk.png">Sri Lanka</div>
-      <div data-code="au" data-name="Australia"><img src="https://flagcdn.com/16x12/au.png">Australia</div>
-      <div data-code="jp" data-name="Japan"><img src="https://flagcdn.com/16x12/jp.png">Japan</div>
-      <div data-code="np" data-name="Nepal"><img src="https://flagcdn.com/16x12/np.png">Nepal</div>
-      <div data-code="eg" data-name="Egypt"><img src="https://flagcdn.com/16x12/eg.png">Egypt</div>
-      <div data-code="my" data-name="Malaysia"><img src="https://flagcdn.com/16x12/my.png">Malaysia</div>
-      <div data-code="th" data-name="Thailand"><img src="https://flagcdn.com/16x12/th.png">Thailand</div>
-      <div data-code="kr" data-name="South Korea"><img src="https://flagcdn.com/16x12/kr.png">South Korea</div>
-      <div data-code="ng" data-name="Nigeria"><img src="https://flagcdn.com/16x12/ng.png">Nigeria</div>
-      <div data-code="mx" data-name="Mexico"><img src="https://flagcdn.com/16x12/mx.png">Mexico</div>
-  </div>
-</span><br>
-        <label for="username">USERNAME</label>
-        <input id="username" type="text" placeholder="username" value= "Ahmad Bhai" /><br>
-        <label for="amount">AMOUNT</label>
-        <input id="amount" type="text" placeholder="amount" value="2530" /><br>
-        <label for="length">LINE</label>
-        <input id="length" type="text" placeholder="line width" value="100" /><br>
-        <label for="position">POSITION</label>
-        <input id="position" type="text" placeholder="position" value="100+" /><br>
-        <label for="pl">P̲ROFIT/L̲OSS</label>
-        <input id="pl" type="text" placeholder="P/L" value="P" /><br><br>
-        <div>
-        <div style="text-align: center;">
-            <button
-                style="padding:10px 20px;background:#05c55e;color:#fff;border:none;box-shadow:none;cursor:pointer">RUN CODE</button>
-        </div><br>
-          <div style="color:#05c55e;font-size:12px;text-align:left">✅ YOUR PAYMENT IS DONE !!! ENJOY PRO VERSION !!! 💚</div>
-        <hr style="border-color:#fff">
-        <div style="text-align:center;font-weight:100;color:#fff">Made with <span style="cursor: pointer;color: #fff;-webkit-animation-name: heartbeat;animation-name: heartbeat;-webkit-animation-duration: 1.42857s;animation-duration: 1.42857s;-webkit-animation-iteration-count: infinite;animation-iteration-count: infinite;-webkit-animation-timing-function: ease;animation-timing-function: ease;">♥</span> by <a style="color:#fff" href="https://t.me/AhmadTrader3">@AhmadTrader3</a></div>
-    </div>`;
+// Flag dropdown logic
+const flagList = [
+    ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+    ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+    ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+    ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
+];
+const flagInput = document.getElementById("flagInput");
+const flagDropdown = document.getElementById("flagDropdown");
+const flagImg = document.getElementById("flagImg");
+const flagText = document.getElementById("flagText");
 
-var myDialog = document.createElement("dialog");
-document.body.appendChild(myDialog);
-myDialog.innerHTML = html;
-
-// Initialize global flag variable with default
-var flag = defaultCode;
-
-// Selection logic fix
-myDialog.querySelectorAll(".o div").forEach(el => {
-    el.addEventListener("click", () => {
-        const code = el.getAttribute("data-code");
-        const name = el.getAttribute("data-name");
-        const s = myDialog.querySelector("#s");
-        const o = myDialog.querySelector("#o");
-        
-        s.innerHTML = `<img src="https://flagcdn.com/16x12/${code}.png"> ${name}`;
-        o.style.display = 'none';
-        flag = code; // Update the flag variable for the final RUN CODE button
+flagList.forEach(f => {
+    const div = document.createElement("div");
+    div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+    div.addEventListener("click", (e) => {
+        e.stopPropagation();
+        flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+        flagText.innerText = f[1];
+        flagDropdown.style.display = "none";
+        window.selectedFlag = f[0];
     });
+    flagDropdown.appendChild(div);
 });
 
-var styleElem = document.head.appendChild(document.createElement("style"));
-styleElem.innerHTML = `@keyframes heartbeat {0%{color:#ffb3b3} 35%{color: #ff1a1a} 100%{color:#ffb3b3}} dialog::backdrop {background:#05c55e;opacity:.25} ::selection {background:white;color:${color}} 
-.s {cursor: pointer;display: flex;align-items: center;padding: 5px;width: 180px;position: relative;height:30px;box-sizing:border-box;font-size:14px;}
-.o {display: none;position: absolute;top: 100%;left: 0;width: 180px;overflow-y: scroll;height: 200px;background: #fff;box-shadow: 0 2px 5px rgba(0,0,0,0.5); z-index: 10000;}
-.o div {padding: 8px;display: flex;align-items: center;cursor: pointer;background: #fff;color: #000;font-size:13px;border-bottom:1px solid #eee;}
-.o div:hover {background: #f0f0f0;}
-.o img, .s img {margin-right: 10px; width:16px; height:12px;}`;
-// --- YEH HISSA ADD KAREIN (FIREBASE SYNC) ---
-const savedUniqueID = localStorage.getItem('ahmad_script_uid');
-const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
-
-if (savedUniqueID) {
-    fetch(firebaseUrl)
-        .then(res => res.json())
-        .then(allUsers => {
-            for (let key in allUsers) {
-                if (allUsers[key].id === savedUniqueID) {
-                    // Firebase se name utha kar input mein dal raha hai
-                    if (allUsers[key].name) {
-                        myDialog.querySelector("#username").value = allUsers[key].name;
-                    }
-                    break;
-                }
-            }
-        })
-        .catch(e => console.log("Firebase Fetch Error"));
-}
-// --------------------------------------------
-
-myDialog.showModal(); // Yeh line aapke code mein pehle se hogi
-
-myDialog.showModal();
-
-// Formatting labels and inputs
-document.querySelectorAll(".dia label").forEach(l => {
-    l.style = `display:inline-block;width:100px;font-weight:600;color:#fff;font-size:12px`
+flagInput.addEventListener("click", (e) => {
+    e.stopPropagation();
+    flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block";
 });
-document.querySelectorAll(".dia input").forEach(i => {
-    i.style = `display:inline-block;width:180px;padding:5px;margin-top:2px;outline:none;border-radius:0;border:1px solid #ccc;`;
-});
+document.addEventListener("click", () => { flagDropdown.style.display = "none"; });
 
-// Final execution logic
-myDialog.querySelector("button").addEventListener("click", () => {
-    var user = myDialog.querySelector("#username").value.trim();
-    var amountVal = myDialog.querySelector("#amount").value.trim();
-    var prof = Number(amountVal).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    var pos = myDialog.querySelector("#position").value.trim();
-    var width = myDialog.querySelector("#length").value.trim();
-    var pl = myDialog.querySelector("#pl").value.toLowerCase().trim();
-
-    myDialog.close();
-    myDialog.remove();
-
-    // Backdrop removal if exists
+// Main button logic
+document.querySelector("#runBtn").addEventListener("click", () => {
+    const user = document.querySelector("#user").value;
+    const prof = Number(document.querySelector("#amount").value).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const pos = document.querySelector("#position").value;
+    const width = document.querySelector("#length").value;
+    const pl = document.querySelector("#pl").value.toLowerCase();
+    const flag = window.selectedFlag || "pk";
+    
     const backdrop = document.getElementById("dialog-backdrop");
     if (backdrop) backdrop.remove();
-
+    
     history.pushState({}, null, "/en/trade");
-
-    // UI Updates on the main site
-    const profileSelector = "#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.xN5cX";
-    const targetProfile = document.querySelector(profileSelector);
-    if(targetProfile) {
-        targetProfile.innerHTML = `<svg class="flag-${flag}"><use xlink:href="/profile/images/flags.svg#flag-${flag}"></use></svg>${user}`;
-    }
-
-    const progressSelector = "#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.h38TV > span";
-    const targetProgress = document.querySelector(progressSelector);
-    if(targetProgress) {
-        targetProgress.style.width = width + "%";
-    }
-
+    
+    document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.xN5cX").innerHTML = `<svg class="flag-${flag}"><use xlink:href="/profile/images/flags.svg#flag-${flag}"></use></svg>${user}`;
+    
+    document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.h38TV > span").style.width = width + "%";
+    
     const green = "LD4pW";
     const red = "qUPWg";
-    const pl_selector = `#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.BwWCZ`;
-    var pl_text = document.querySelector(pl_selector);
-
-    if (pl_text) {
-        if (pl === "p") {
+    const pl_text = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.BwWCZ.${green}, #root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.BwWCZ.${red}`);
+    
+    if (pl === "p") {
+        if (pl_text?.classList?.contains(red)) {
             pl_text.classList.remove(red);
             pl_text.classList.add(green);
-            pl_text.innerHTML = "$" + prof;
-            pl_text.style.color = "#0faf59";
-        } else {
+        }
+        pl_text.innerHTML = "$" + prof;
+        pl_text.style.color = "#0faf59";
+    } else if (pl === "l") {
+        if (pl_text?.classList?.contains(green)) {
             pl_text.classList.remove(green);
             pl_text.classList.add(red);
-            pl_text.innerHTML = "-" + prof + "$";
-            pl_text.style.color = "#db4635";
         }
+        pl_text.innerHTML = "-" + prof + "$";
+        pl_text.style.color = "#db4635";
     }
-
-    const posSelector = "#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6";
-    const targetPos = document.querySelector(posSelector);
-    if(targetPos) {
-        targetPos.innerHTML = `<div class="ocuJC">Your position:</div>${pos}`;
-    }
+    
+    document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6").innerHTML = `<div class="ocuJC">Your position:</div>${pos}`;
 });
-</script>
+})();
+    </script>
 </body>
-    </html>
+</html>
