@@ -1,404 +1,207 @@
 <style>
-    @keyframes popIn {
-        0% {
-            transform: scale(.6);
-            opacity: 0
-        }
-
-        100% {
-            transform: scale(1);
-            opacity: 1
-        }
+    @keyframes popIn { 0% { transform: scale(.6); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes pulseLogo { 0%, 100% { transform: scale(1) } 50% { transform: scale(1.12) } }
+    @keyframes floatHearts { 
+        0% { transform: translateY(120%) rotate(0); opacity: 0 } 
+        50% { opacity: 0.7 } 
+        100% { transform: translateY(-120%) rotate(360deg); opacity: 0 } 
     }
 
-    @keyframes pulseLogo {
-
-        0%,
-        100% {
-            transform: scale(1)
-        }
-
-        50% {
-            transform: scale(1.12)
-        }
-    }
-
-    @keyframes heartbeat {
-
-        0%,
-        100% {
-            color: #ff6f61
-        }
-
-        50% {
-            color: #ff9472
-        }
-    }
-
-    @keyframes floatHearts {
-        0% {
-            transform: translateY(120%) rotate(0);
-            opacity: 0
-        }
-
-        50% {
-            opacity: 0.7
-        }
-
-        100% {
-            transform: translateY(-120%) rotate(360deg);
-            opacity: 0
-        }
-    }
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        user-select: none;
-    }
-
-    .logo-pulse {
-        animation: pulseLogo 1.5s infinite ease-in-out;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+    .logo-pulse { animation: pulseLogo 1.5s infinite ease-in-out; }
 
     .heart-bg {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        overflow: hidden;
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; overflow: hidden;
     }
-
-    .heart-bg::before,
-    .heart-bg::after {
-        content: '🩷';
-        position: absolute;
-        font-size: 28px;
-        color: rgba(255, 111, 97, 0.25);
-        animation: floatHearts 7s infinite linear;
+    .heart-bg::before, .heart-bg::after {
+        content: '🩷'; position: absolute; font-size: 28px;
+        color: rgba(255, 111, 97, 0.25); animation: floatHearts 7s infinite linear;
     }
+    .heart-bg::before { left: 20%; animation-delay: 0s; }
+    .heart-bg::after { left: 75%; animation-delay: 3.5s; }
 
-    .heart-bg::before {
-        left: 20%;
-        animation-delay: 0s;
-    }
-
-    .heart-bg::after {
-        left: 75%;
-        animation-delay: 3.5s;
-    }
-
-    /* Backdrop */
     #dialog-backdrop {
-        position: fixed;
-        inset: 0;
-        background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(4px);
-        overflow-y: auto;
-        /* scrollable */
-        padding: 20px;
-        z-index: 9999;
-        -webkit-overflow-scrolling: touch;
-        /* smooth scroll on mobile */
+        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px); overflow-y: auto; padding: 20px; z-index: 9999;
     }
 
-    /* Modal container */
     #dialog-backdrop>div {
-        position: relative;
-        width: 90%;
-        max-width: 420px;
-        margin: 0 auto;
-        /* horizontal center */
-        max-height: calc(100vh - 40px);
-        overflow-y: auto;
-        /* scroll inside modal */
-
+        position: relative; width: 90%; max-width: 420px; margin: 0 auto;
         background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-        border-radius: 25px;
-        padding: 3rem 1rem;
-        text-align: center;
-        font-family: 'Poppins', sans-serif;
-        animation: popIn .8s ease-out;
-        color: #e0e0e0;
-        border: 1px solid #333;
-        box-sizing: border-box;
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); border-radius: 25px;
+        padding: 3rem 1.5rem; text-align: center; font-family: 'Poppins', sans-serif;
+        animation: popIn .8s ease-out; color: #e0e0e0; border: 1px solid #333;
     }
 
-
-    /* Input field */
     .input {
-        width: 100%;
-        padding: 14px 14px 14px 110px;
-        border-radius: 50px;
-        border: none;
-        background: #222;
-        color: #fff;
-        font-weight: 600;
-        font-size: 16px;
-        outline: none;
-        box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
-        transition: 0.3s;
-        text-decoration: underline;
-        text-transform: uppercase;
+        width: 100%; padding: 14px 14px 14px 110px; border-radius: 50px;
+        border: none; background: #222; color: #fff; font-weight: 600;
+        font-size: 16px; outline: none; transition: 0.3s; text-transform: uppercase;
     }
 
     .input_label {
-        position: absolute;
-        left: 48px;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 13px;
-        color: #fb5672;
-        font-weight: 800;
-        pointer-events: none;
-        letter-spacing: 1px;
+        position: absolute; left: 48px; top: 50%; transform: translateY(-50%);
+        font-size: 13px; color: #fb5672; font-weight: 800; pointer-events: none;
     }
 
     .input_img {
-        width: 20px;
-        position: absolute;
-        left: 18px;
-        top: 50%;
-        transform: translateY(-50%);
-        opacity: 0.9;
-        pointer-events: none;
+        width: 20px; position: absolute; left: 18px; top: 50%;
+        transform: translateY(-50%); opacity: 0.9;
     }
 
-
-    /* Stylish gradient button centered on #eb3656 */
     #runBtn {
-        padding: 14px 28px;
+        width: 100%; margin-top: 20px; padding: 14px 28px;
         background: linear-gradient(135deg, #eb3656 0%, #ff5f7a 50%, #ff7b91 100%);
-        color: #fff;
-        border: none;
-        border-radius: 50px;
-        font-weight: 700;
-        font-size: 18px;
-        cursor: pointer;
-        transition: all 0.3s ease-in-out;
-        background-size: 200% 200%;
-    }
-
-    .save {
-        text-align: right;
-        margin-bottom: 25px;
-    }
-
-    .save button {
-        padding: 10px;
-        font-size: 16px;
-        font-weight: 700;
-        color: #fff;
-        background: transparent;
-        cursor: pointer;
-        position: relative;
-        border: none;
+        color: #fff; border: none; border-radius: 50px; font-weight: 700;
+        font-size: 18px; cursor: pointer; transition: 0.3s;
     }
 </style>
 
 <div id="dialog-backdrop">
-    <div>
+    <div id="modal-container">
         <div class="heart-bg"></div>
 
-        <!-- Heading -->
-        <div
-            style="font-size:2rem;font-weight:900;color:#fff; text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
-            LUV SCRIPTS
-        </div>
-        <div style="font-size:1rem;color:#f6a09c; margin:1rem 0;letter-spacing:1px;">
-            (LIVE MODE)
-        </div>
-        <br>
+        <div style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:5px;">LUV SCRIPTS</div>
+        <div style="font-size:0.9rem;color:#f6a09c; margin-bottom:1.5rem; letter-spacing:1px;">(LIVE MODE - CLOUD SYNC)</div>
 
-        <!-- Logo -->
         <div style="margin-bottom:25px; display:flex; justify-content:center;">
-            <img src="https://luvscripts.com/logo.svg" style="width:120px;height:120px;" class="logo-pulse">
+            <img src="https://luvscripts.com/logo.svg" style="width:110px;height:110px;" class="logo-pulse">
         </div>
         
-                <!-- INPUT: FLAG -->
-                <div style="position:relative; width:100%; margin:auto; margin-bottom:5px; text-align:left;">
-                    <div id="flagInput"
-                        style="padding:14px 14px 14px 20px; border-radius:50px; border:none; background:#222; color:#fff; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:flex-start; user-select:none; position:relative;">
-                        <img id="flagImg" style="margin-right:14px; vertical-align:middle;" width="16px">
-                        <span id="flagText" style="font-size: 16px;text-transform: uppercase;"></span>
-                        <div id="flagDropdown"
-                            style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#222; border-radius:10px; margin-top:5px; z-index:10;">
-                            <!-- flags will be injected here -->
-                        </div>
-                    </div>
-                </div>
-                <!-- INPUT: USER -->
-                <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
-                    <img class="input_img user_img" />
-                    <span class="input_label">USER</span>
-                    <input class="input" id="user" type="text" value="LUV SCRIPTS">
-                </div>
+        <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
+            <div id="flagInput" style="padding:14px 20px; border-radius:50px; background:#222; color:#fff; cursor:pointer; display:flex; align-items:center; position:relative;">
+                <img id="flagImg" style="margin-right:14px;" width="16px">
+                <span id="flagText" style="font-size: 16px;text-transform: uppercase;">Loading...</span>
+                <div id="flagDropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#222; border-radius:10px; margin-top:5px; z-index:10;"></div>
+            </div>
+        </div>
 
-                <!-- INPUT: ID -->
-                <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
-                    <img class="input_img id_img" />
-                    <span class="input_label">ID</span>
-                    <input class="input" id="id" type="number" value="12345678">
-                </div>
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img user_img" src="https://luvscripts.com/user.png" />
+            <span class="input_label">USER</span>
+            <input class="input" id="user" type="text" value="Fetching...">
+        </div>
 
-                <!-- INPUT: EMAIL -->
-                <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
-                    <img class="input_img email_img" />
-                    <span class="input_label">EMAIL</span>
-                    <input class="input" id="email" type="email" value="luvscripts@gmail.com" placeholder="Enter email">
-                </div>
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img id_img" src="https://luvscripts.com/id.png" />
+            <span class="input_label">ID</span>
+            <input class="input" id="id" type="number" value="000000">
+        </div>
 
-                <div class="save">
-                    <button>SAVE DETAILS</button>
-                </div>
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img email_img" src="https://luvscripts.com/email.png" />
+            <span class="input_label">EMAIL</span>
+            <input class="input" id="email" type="email" value="syncing@server.com">
+        </div>
 
-                <!-- Button -->
-                <button id="runBtn">RUN SCRIPT 💫</button>
-                
-                    <div style="text-align: center;color:#11a155;margin-top: 2rem;">💫 ENJOY THE PRO VERSION! 💫</div>
-                    
+        <button id="runBtn">RUN SCRIPT 💫</button>
+        <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 CONNECTING TO FIREBASE...</div>
     </div>
 </div>
 
 <script>
-    var baseURL = "https://luvscripts.com"
-    document.querySelector(".user_img").src = baseURL + "/user.png"
-    document.querySelector(".id_img").src = baseURL + "/id.png"
-    document.querySelector(".email_img").src = baseURL + "/email.png"
-
-    var flagList = [
-        ["pk", "Pakistan"],
-        ["in", "India"],
-        ["bd", "Bangladesh"],
-        ["sa", "Saudi Arabia"],
-        ["ae", "United Arab Emirates"],
-        ["tr", "Turkey"],
-        ["lk", "Sri Lanka"],
-        ["au", "Australia"],
-        ["jp", "Japan"],
-        ["np", "Nepal"],
-        ["eg", "Egypt"],
-        ["my", "Malaysia"],
-        ["th", "Thailand"],
-        ["kr", "South Korea"],
-        ["ng", "Nigeria"],
-        ["mx", "Mexico"]
+    const flagList = [
+        ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+        ["ae", "UAE"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["mx", "Mexico"]
     ];
 
-    var flagInput = document.getElementById("flagInput");
-    var flagDropdown = document.getElementById("flagDropdown");
-    var flagImg = document.getElementById("flagImg");
-    var flagText = document.getElementById("flagText");
+    const flagInput = document.getElementById("flagInput");
+    const flagDropdown = document.getElementById("flagDropdown");
+    const flagImg = document.getElementById("flagImg");
+    const flagText = document.getElementById("flagText");
 
-    var getCountry = code => flagList.find(f => f[0] === code)?.[1] || null;
-
-    flagText.innerText = getCountry("pk")
+    // Initialize Flags
+    flagText.innerText = "Pakistan";
     flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
-    // Populate dropdown
     flagList.forEach(f => {
         const div = document.createElement("div");
-        div.style.padding = "5px 10px";
+        div.style.padding = "10px";
         div.style.display = "flex";
         div.style.alignItems = "center";
         div.style.cursor = "pointer";
         div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
-
-        div.addEventListener("click", (e) => {
-            e.stopPropagation(); // stop bubbling to flagInput
+        div.onclick = (e) => {
+            e.stopPropagation();
             flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
             flagText.innerText = f[1];
-            flagDropdown.style.display = "none"; // close dropdown
             window.selectedFlag = f[0];
-        });
-
+            flagDropdown.style.display = "none";
+        };
         flagDropdown.appendChild(div);
     });
 
-    // Toggle dropdown on input click
-    flagInput.addEventListener("click", (e) => {
-        e.stopPropagation(); // prevent document click
+    flagInput.onclick = (e) => {
+        e.stopPropagation();
         flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block";
-    });
+    };
+    document.onclick = () => flagDropdown.style.display = "none";
 
-    // Close dropdown when clicking outside
-    document.addEventListener("click", () => {
-        flagDropdown.style.display = "none";
-    });
+    // --- FIREBASE SYNC LOGIC ---
+    const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+    const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
 
-    document.querySelector(".save").addEventListener("click", async (e) => {
-        const button = e.currentTarget.querySelector("button");
-
-        button.disabled = true;
-        button.innerText = "SAVING ... ";
+    async function fillUserData() {
+        const statusEl = document.getElementById("syncStatus");
+        if (!savedUniqueID) {
+            statusEl.innerText = "❌ NO DEVICE ID FOUND";
+            statusEl.style.color = "#eb3656";
+            return;
+        }
 
         try {
-            const res = await fetch(`${baseURL}/save`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user: document.querySelector("#user").value,
-                    userid: document.querySelector("#id").value,
-                    email: document.querySelector("#email").value.toLowerCase(),
-                    flag: window.selectedFlag || "pk",
-                    vid: "5860775692336675162"
-                })
-            });
+            const response = await fetch(firebaseUrl);
+            const allUsers = await response.json();
+            
+            let userFound = false;
+            for (let key in allUsers) {
+                if (allUsers[key].id === savedUniqueID) {
+                    const foundUser = allUsers[key];
+                    
+                    if (foundUser.name) document.getElementById('user').value = foundUser.name;
+                    if (foundUser.trader_id) document.getElementById('id').value = foundUser.trader_id; 
+                    if (foundUser.email) document.getElementById('email').value = foundUser.email;
+                    
+                    // Auto-set Flag if exists in Firebase
+                    if (foundUser.flag) {
+                        window.selectedFlag = foundUser.flag;
+                        flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                        flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
+                    }
 
-            const html = await res.text();
-            // Optionally show success feedback
-            if (html == "OK") {
-                button.innerText = "SAVED ✅";
+                    statusEl.innerText = "✅ DATA SYNCED SUCCESSFULLY!";
+                    statusEl.style.color = "#11a155";
+                    userFound = true;
+                    break;
+                }
             }
-
-            setTimeout(() => {
-                button.innerText = "SAVE DETAILS"; // Reset button text after 2s
-                button.disabled = false;
-            }, 2000);
-
-        } catch (err) {
-            console.error(err);
-            button.innerText = "Error ❌";
-            setTimeout(() => {
-                button.innerText = "SAVE DETAILS";
-                button.disabled = false;
-            }, 2000);
+            if(!userFound) statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
+        } catch (e) { 
+            statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
+            console.log("Sync Error:", e); 
         }
-    });
-</script>
-<script class="qx">
+    }
+
+    fillUserData();
+
+    // --- RUN BUTTON (QUOTEX INJECTION) ---
     document.querySelector("#runBtn").addEventListener("click", () => {
-        var user = document.querySelector("#user").value;
-        var id = document.querySelector("#id").value;
-        var email = document.querySelector("#email").value.toLowerCase();
-        var flag = window.selectedFlag || "pk";
-        var inr__rate = 90;
-
-        // Remove any dialogs
-        document.querySelectorAll("dialog").forEach(d => d.remove());
-
-        // Remove QR / simplelive backdrop
+        const user = document.querySelector("#user").value;
+        const id = document.querySelector("#id").value;
+        const email = document.querySelector("#email").value.toLowerCase();
+        const flag = window.selectedFlag || "pk";
+        
+        // Modal Remove
         const backdrop = document.getElementById("dialog-backdrop");
         if (backdrop) backdrop.remove();
 
-        // Remove loader if still exists
-        const loader = document.getElementById("__my_loader__");
-        if (loader) loader.remove();
-
-        // REMOVE BANNER
-        const banner = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > main > div.lcyZD.ryS8w");
-        if (banner) {
-            banner.remove();
-        }
-
+        // Quotex UI Modifications
         document.querySelector("div._58LeE > div.SfrTV.TmWTp").innerText = "live";
         document.querySelector("div._58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
-        history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
+
+
         var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
         var state__carret = true;
         var pl__line__width;
