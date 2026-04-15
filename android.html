@@ -218,6 +218,7 @@
         document.querySelector("div._58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
         history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
+
         var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
         var state__carret = true;
         var pl__line__width;
@@ -297,23 +298,21 @@
         }
 
         const TradesCalc = () => {
-            const container = document.querySelector(
-                "#root > div > div.page.app__page > main > div.page__sidebar > div.ZXMM2.FjI2k > div.sxOpa.FjI2k"
-            );
+            const container = document.querySelector("#root > div > div.app__page.LIAp0 > main > div.lk0lD > div.IytlQ.xpiuY > div.Qsdmi.xpiuY");
 
-            const firstDate = container.querySelector(".i0uhJ");
+            const firstDate = container.querySelector(".Z8T_E");
 
             if (firstDate) {
                 var results = [];
                 var now = new Date();
                 var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000 - 1800000).getDate();
 
-                if (firstDate.innerText.split(" ")[0] == utc) {
+                if (Number(firstDate.innerText.split(" ")[0]) == utc) {
 
                     let closed__trades = [];
                     let el = firstDate.nextElementSibling;
 
-                    while (el && !el.classList.contains("i0uhJ")) {
+                    while (el && !el.classList.contains("Z8T_E")) {
                         if (el.id !== "trade-item-open") {
                             closed__trades.push(el);
                         }
@@ -321,7 +320,7 @@
                     }
 
                     closed__trades.forEach(t => {
-                        var pl__str = t.querySelector("div.u7A5m").innerText //'1,510 $0.00 $'
+                        var pl__str = t.querySelector("div.h6J0L").innerText //'1,510 $0.00 $'
                         var pl__val = pl__str.replace(/,/g, '').match(/\d+(\.\d+)?/g).map(Number);[1510, 0]
                         var pl = pl__val[1] - pl__val[0]
                         var trade__currency = pl__str.at(-1)
@@ -362,7 +361,7 @@
                                     pl__leader.classList.remove(green)
                                     pl__leader.classList.add(red)
                                 }
-                                pl__leader.innerText = "-" + total.replace(/-/g, "") + "$";
+                                pl__leader.innerText = total.replace(/-/g, "") + "$";
                             }
                             pl__line.style = `width:${pl__line__width}%;background:#0faf5`
                         })();
