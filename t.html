@@ -218,7 +218,7 @@
         <!-- Heading -->
         <div
             style="font-size:2rem;font-weight:900;color:#fff; text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
-           MAGIC SCRIPTS
+          MAGIC SCRIPTS
         </div>
         <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
             (PAYMENT MODE)
@@ -329,9 +329,9 @@
         Withdrawal();
     }
     else if (location.pathname.replaceAll(/\/|en/g, "") == "balance") {
-        icon = document.querySelector("#root > div > div.page.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
-        balance_str = document.querySelector("#root > div > div.page.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
-        var live_name = document.querySelector("#root > div > div.page.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.SfrTV.TmWTp")
+        icon = document.querySelector("#root > div > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
+        balance_str = document.querySelector("#root > div > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
+        var live_name = document.querySelector("#root > div > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.SfrTV.TmWTp")
         if (live_name) {
             if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 live_name.innerHTML = "live"
@@ -370,11 +370,6 @@
             // Remove loader if still exists
             const loader = document.getElementById("__my_loader__");
             if (loader) loader.remove();
-            
-            const banner = document.querySelector("#root > div > div.page.app__page > main > div.lcyZD.ryS8w.iYC12");
-            if (banner) {
-                banner.remove()
-            }
 
             amount = parseFloat(amount).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
             var currency__w;
@@ -439,7 +434,7 @@
     <b class="h5o4H ${req__type === "w" ? "lqlCl" : "jGuz_"}">${req__type === "w" ? `-${currency__w}${amount.replace(",", "")}` : `+${currency__w}${amount}`}</b>
     </div>
 </div>`
-            var el = document.querySelector("#root > div > div.page.app__page > main > div > div > div.transactions-list-wrapper > div > div.transactions-list__header");
+            var el = document.querySelector("#root > div > div.app__page.LIAp0 > main > div > div > div.transactions-list-wrapper > div > div.transactions-list__header");
             el.insertAdjacentHTML("afterend", add__row);
         })
 
