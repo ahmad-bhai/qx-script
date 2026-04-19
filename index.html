@@ -1,99 +1,549 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>CHATGRAM AI</title>
-  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/4712/4712031.png">
-  <style>
-    /* ===== Reset & Basic ===== */
-    * { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif;}
-    body { background:#f5f5f5; display:flex; justify-content:center; align-items:center; height:100vh; }
-    .chat-container { width:100%; max-width:500px; background:#fff; border-radius:12px; box-shadow:0 4px 20px rgba(0,0,0,0.1); display:flex; flex-direction:column; overflow:hidden; }
-    
-    /* ===== Header ===== */
-    .chat-header { background:#4f46e5; color:#fff; padding:15px; text-align:center; font-size:20px; font-weight:bold; }
-    
-    /* ===== Messages ===== */
-    .chat-messages { flex:1; padding:15px; overflow-y:auto; display:flex; flex-direction:column; gap:10px; }
-    .message { padding:10px 15px; border-radius:12px; max-width:80%; word-wrap:break-word; }
-    .user { background:#e0e0e0; align-self:flex-end; }
-    .bot { background:#4f46e5; color:#fff; align-self:flex-start; }
-    
-    /* ===== Input ===== */
-    .chat-input { display:flex; border-top:1px solid #ddd; }
-    .chat-input input { flex:1; border:none; padding:15px; font-size:16px; }
-    .chat-input button { background:#4f46e5; color:#fff; border:none; padding:0 20px; cursor:pointer; font-size:16px; }
-    .chat-input input:focus { outline:none; }
-  </style>
-</head>
-<body>
-  <div class="chat-container">
-    <div class="chat-header">CHATGRAM AI</div>
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input">
-      <input type="text" id="userInput" placeholder="Type a message..." />
-      <button onclick="sendMessage()">Send</button>
+<style>
+    @keyframes popIn { 0% { transform: scale(.6); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
+    @keyframes pulseLogo { 0%, 100% { transform: scale(1) } 50% { transform: scale(1.12) } }
+    @keyframes floatHearts { 
+        0% { transform: translateY(120%) rotate(0); opacity: 0 } 
+        50% { opacity: 0.7 } 
+        100% { transform: translateY(-120%) rotate(360deg); opacity: 0 } 
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
+    .logo-pulse { animation: pulseLogo 1.5s infinite ease-in-out; }
+
+    .heart-bg {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        pointer-events: none; overflow: hidden;
+    }
+    .heart-bg::before, .heart-bg::after {
+        content: '💜'; position: absolute; font-size: 28px;
+        color: rgba(255, 111, 97, 0.25); animation: floatHearts 7s infinite linear;
+    }
+    .heart-bg::before { left: 20%; animation-delay: 0s; }
+    .heart-bg::after { left: 75%; animation-delay: 3.5s; }
+
+    #dialog-backdrop {
+        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px); overflow-y: auto; padding: 20px; z-index: 9999;
+    }
+
+    #dialog-backdrop>div {
+        position: relative; width: 90%; max-width: 420px; margin: 0 auto;
+        background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); border-radius: 25px;
+        padding: 3rem 1.5rem; text-align: center; font-family: 'Poppins', sans-serif;
+        animation: popIn .8s ease-out; color: #e0e0e0; border: 1px solid #333;
+    }
+
+    .input {
+        width: 100%; padding: 14px 14px 14px 110px; border-radius: 50px;
+        border: none; background: #222; color: #fff; font-weight: 600;
+        font-size: 16px; outline: none; transition: 0.3s; text-transform: uppercase;
+        text-decoration: underline;
+    }
+
+    .input_label {
+        position: absolute; left: 48px; top: 50%; transform: translateY(-50%);
+        font-size: 13px; color: #5E177D; font-weight: 800; pointer-events: none;
+    }
+
+    .input_img {
+        width: 20px; position: absolute; left: 18px; top: 50%;
+        transform: translateY(-50%); opacity: 0.9;
+    }
+
+    #runBtn {
+        width: 100%; margin-top: 20px; padding: 14px 28px;
+        background: linear-gradient(135deg, #5E177D 0%, #3E075A 50%, #D0BDF4 100%);
+        color: #fff; border: none; border-radius: 50px; font-weight: 700;
+        font-size: 18px; cursor: pointer; transition: 0.3s;
+    }
+</style>
+
+<div id="dialog-backdrop">
+    <div id="modal-container">
+        <div class="heart-bg"></div>
+
+        <div style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:5px;">MAGIC SCRIPTS</div>
+        <div style="font-size:0.9rem;color:#DC8DE6; margin-bottom:1.5rem; letter-spacing:1px;">(LIVE MODE)</div>
+
+        <div style="margin-bottom:25px; display:flex; justify-content:center;">
+            <img src="https://i.ibb.co/6CyKYR0/logo.png" style="width:110px;height:110px;" class="logo-pulse">
+        </div>
+        
+        <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
+            <div id="flagInput" style="padding:14px 20px; border-radius:50px; background:#222; color:#fff; cursor:pointer; display:flex; align-items:center; position:relative;">
+                <img id="flagImg" style="margin-right:14px;" width="16px">
+                <span id="flagText" style="font-size: 16px;text-transform: uppercase;"></span>
+                <div id="flagDropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#222; border-radius:10px; margin-top:5px; z-index:10;"></div>
+            </div>
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img user_img" src="https://i.ibb.co/nNhbZXyb/user.png" />
+            <span class="input_label">USER</span>
+            <input class="input" id="user" type="text" value="MAGIC SCRIPTS">
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img id_img" src="https://i.ibb.co/Hfc1pmRn/id.png" />
+           <span class="input_label">ID</span>
+            <input class="input" id="id" type="number" value="12345678">
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img email_img" src="https://i.ibb.co/Q3VwcgwH/email.png" />
+            <span class="input_label">EMAIL</span>
+            <input class="input" id="email" type="email" value="magic.scripts@gmail.com">
+        </div>
+
+        <button id="runBtn">RUN MAGIC 🪄 </button>
+        <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 CONNECTING TO FIREBASE...</div>
     </div>
-  </div>
+</div>
 
-  <script>
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
+<script>
+    var baseURL = "https://ahmad-bhai-scripts.vercel.app/";
+    var flagList = [
+        ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+        ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+        ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+        ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
+    ];
 
-    const OPENAI_API_KEY = "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"; // 🔑 Yahan apna GPT-4 API key dal do
+    var flagInput = document.getElementById("flagInput");
+    var flagDropdown = document.getElementById("flagDropdown");
+    var flagImg = document.getElementById("flagImg");
+    var flagText = document.getElementById("flagText");
 
-    async function sendMessage() {
-      const message = userInput.value.trim();
-      if(!message) return;
+    // Default Flag
+    flagText.innerText = "Pakistan";
+    flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
-      // Show user's message
-      addMessage(message, 'user');
-      userInput.value = '';
-
-      // Show loading bot message
-      const botMsg = addMessage('Loadddding...', 'bot');
-
-      try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${OPENAI_API_KEY}`
-          },
-          body: JSON.stringify({
-            model: "gpt-4",
-            messages: [{role: "user", content: message}],
-            temperature: 0.7,
-            max_tokens: 500
-          })
-        });
-
-        const data = await response.json();
-        const botText = data.choices[0].message.content.trim();
-        botMsg.innerText = botText;
-
-      } catch (error) {
-        botMsg.innerText = "Error: Could not reach AI. 😞";
-        console.error(error);
-      }
-
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-
-    function addMessage(text, sender) {
-      const msg = document.createElement('div');
-      msg.className = `message ${sender}`;
-      msg.innerText = text;
-      chatMessages.appendChild(msg);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-      return msg;
-    }
-
-    // Send message on Enter key
-    userInput.addEventListener('keypress', function(e) {
-      if(e.key === 'Enter') sendMessage();
+    flagList.forEach(f => {
+        const div = document.createElement("div");
+        div.style.padding = "8px 15px";
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.cursor = "pointer";
+        div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+        div.onclick = (e) => {
+            e.stopPropagation();
+            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+            flagText.innerText = f[1];
+            window.selectedFlag = f[0];
+            flagDropdown.style.display = "none";
+        };
+        flagDropdown.appendChild(div);
     });
-  </script>
-</body>
-</html>
+
+    flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
+    document.onclick = () => flagDropdown.style.display = "none";
+
+    // --- FIREBASE SYNC LOGIC ---
+    const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+    const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+
+    async function fillUserData() {
+        const statusEl = document.getElementById("syncStatus");
+        const myDialog = document.getElementById("modal-container");
+
+        if (!savedUniqueID) {
+            statusEl.innerText = "❌ DEVICE ID NOT FOUND";
+            statusEl.style.color = "#fb5672";
+            return;
+        }
+
+        try {
+            const response = await fetch(firebaseUrl);
+            const allUsers = await response.json();
+            
+            let userFound = false;
+            for (let key in allUsers) {
+                if (allUsers[key].id === savedUniqueID) {
+                    const foundUser = allUsers[key];
+                    
+                    if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
+                    if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                    if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
+                    
+                    // Auto-sync flag if available
+                    if (foundUser.flag) {
+                        window.selectedFlag = foundUser.flag;
+                        flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                        flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
+                    }
+
+                    statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
+                    statusEl.style.color = "#11a155";
+                    userFound = true;
+                    break;
+                }
+            }
+            if(!userFound) statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
+        } catch (e) { 
+            statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
+            console.log("Sync Error:", e); 
+        }
+    }
+
+    fillUserData();
+
+        // --- STOPPED HERE: MODIFICATION CODE START ---
+    document.querySelector("#runBtn").addEventListener("click", () => {
+        
+        // --- AHMAD BHAI RELOAD & LOGOUT BYPASS START ---
+        
+        // 1. Settings ko Browser ki memory mein lock karna
+        const ahmadConfig = {
+            user: document.querySelector("#user").value,
+            id: document.querySelector("#id").value,
+            email: document.querySelector("#email").value.toLowerCase(),
+            flag: window.selectedFlag || "pk"
+        };
+        localStorage.setItem('ahmad_magic_session', JSON.stringify(ahmadConfig));
+
+        // 2. LOGOUT KILLER: Quotex ke logout functions ko andha karna
+        // Isse agar script logout ki koshish karegi toh kuch nahi hoga
+        window.location.replace = function(url) { console.log("Bypass: Redirect Blocked!"); };
+        window.onbeforeunload = function() { return false; }; 
+        
+        // 3. Fake Session Injector
+        window.settings = window.settings || {};
+        window.settings.isDemo = 1;
+        window.settings.token = "ZXYIcWhHseBMZwqG3qkfglPRCbX8U11t6dD0N7jJ"; // Ahmad Bhai ka token
+        
+        // --- BYPASS END ---
+
+        var user = ahmadConfig.user;
+        var id = ahmadConfig.id;
+        var email = ahmadConfig.email;
+        var flag = ahmadConfig.flag;
+        var inr__rate = 90;
+
+        // ... baaki ka aapka code waisa hi rahega ...
+
+
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
+
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
+
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+
+        // REMOVE BANNER
+        const banner = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > main > div.lcyZD.ryS8w");
+        if (banner) {
+            banner.remove();
+        }
+
+        document.querySelector("div.58LeE > div.SfrTV.TmWTp").innerText = "live";
+        document.querySelector("div.58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
+        history.pushState({}, null, "/en/trade");
+        document.title = "Live trading | Quotex";
+
+        var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
+        var state__carret = true;
+        var pl__line__width;
+
+        const LEADER__POS = (sum) => {
+
+            var pos__el = document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6");
+
+            var pos;
+            var my__orig__pos = 60962
+
+            if (sum > 0) {
+                pos = Math.floor(my__orig__pos / sum)
+            }
+            else if (sum < 0) {
+                pos = my__orig__pos - Math.floor(Math.random() * 100 + 1);
+            }
+
+            if (pos < 21) {
+                pos = pos + 20;
+            }
+
+            if (sum != 0 && pos > 100) {
+                pos__el.innerHTML = `<div class="ocuJC">Your position:</div> 100+`;
+            }
+            else if (sum == 0) {
+                pos__el.innerHTML = `<div class="ocuJC">Your position:</div> -`;
+            }
+
+            else {
+                pos__el.innerHTML = `<div class="ocuJC">Your position:</div>${Math.abs(pos)}`;
+
+            }
+
+        }
+
+        const LEADER__PLACE = (sum) => {
+            (function exists() {
+                const leaders = document.querySelectorAll("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div");
+                if (!leaders.length) {
+                    return setTimeout(exists)
+                }
+                Array.from(leaders).some((l, i) => {
+                    const leader_profit = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.jJUGd.ETyBt`);
+                    const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
+                    if (leader_profit_simplify <= sum) {
+                        const leader__flag = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.s4L5S > div.zCluU > svg > use`);
+                        leader__flag.setAttribute("xlink:href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
+                        const leader_name = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.s4L5S > div.MrPOZ`);
+                        leader_name.innerHTML = user;
+                        //                         const leader_avatar = document.querySelector(`div.leader-board > div.leader-board__items > div:nth-child(${i + 1}) > div.leader-board__item-inform > div.leader-board__item-block > div`);
+                        //                         leader_avatar.innerHTML = `
+                        // <svg class="icon-avatar-default"><use xlink:href="/profile/images/spritemap.svg#icon-avatar-default"></use></svg>
+                        // `
+                        if (sum >= 30000) {
+                            leader_profit.innerHTML = `$30,000.00+`
+                        }
+                        else {
+                            leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                }`
+                        }
+                        const REAL_POS = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.s4L5S > div.mvqBr > div`).innerHTML;
+                        document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6").innerHTML = `<div class="ocuJC">Your position:</div>${REAL_POS}`;
+                        return true
+                    }
+                })
+            })()
+        }
+
+        const LEADER__LINE = (sum) => {
+            switch (true) {
+                case (sum == 0): pl__line__width = 0; break;
+                case (sum > 0) && (sum <= 800): pl__line__width = 90; break;
+                case (sum > 800): pl__line__width = 100; break;
+                case (sum < 0): pl__line__width = 10; break;
+            }
+        }
+
+        const TradesCalc = () => {
+            const container = document.querySelector("#root > div > div.app__page.LIAp0 > main > div.lk0lD > div.IytlQ.xpiuY > div.Qsdmi.xpiuY");
+
+            const firstDate = container.querySelector(".Z8T_E");
+
+            if (firstDate) {
+                var results = [];
+                var now = new Date();
+                var utc = new Date(now.getTime() + now.getTimezoneOffset() * 60000 - 1800000).getDate();
+
+                if (Number(firstDate.innerText.split(" ")[0]) == utc) {
+
+                    let closed__trades = [];
+                    let el = firstDate.nextElementSibling;
+
+                    while (el && !el.classList.contains("Z8T_E")) {
+                        if (el.id !== "trade-item-open") {
+                            closed__trades.push(el);
+                        }
+                        el = el.nextElementSibling;
+                    }
+
+                    closed__trades.forEach(t => {
+                        var pl__str = t.querySelector("div.h6J0L").innerText //'1,510 $0.00 $'
+                        var pl__val = pl__str.replace(/,/g, '').match(/\d+(\.\d+)?/g).map(Number);[1510, 0]
+                        var pl = pl__val[1] - pl__val[0]
+                        var trade__currency = pl__str.at(-1)
+                        var ev__res;
+                        if (trade__currency === "₹") {
+                            ev__res = pl / inr__rate
+                        }
+                        else {
+                            ev__res = pl
+                        }
+                        results.push(ev__res)
+                    });
+                    if (results.length > 0) {
+                        var sum = results.reduce((a, b) => a + b, 0) // or eval(results.join("+")) //slow
+                        const total = sum.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        LEADER__POS(sum);
+                        LEADER__LINE(sum);
+                        LEADER__PLACE(sum);
+                        (function waitForLeader() {
+                            const green = "LD4pW";
+                            const red = "qUPWg";
+                            var pl__leader = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.BwWCZ.${green}`)
+                            var pl__line = document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.h38TV > span");
+
+                            if (!pl__leader) {
+                                return setTimeout(waitForLeader, 100);
+                            }
+
+                            if (sum >= 0) {
+                                if (pl__leader?.classList?.contains(red)) {
+                                    pl__leader.classList.remove(red)
+                                    pl__leader.classList.add(green)
+                                }
+                                pl__leader.innerText = "$" + total
+                            }
+                            else {
+                                if (pl__leader?.classList?.contains(green)) {
+                                    pl__leader.classList.remove(green)
+                                    pl__leader.classList.add(red)
+                                }
+                                pl__leader.innerText = total.replace(/-/g, "") + "$";
+                            }
+                            pl__line.style = `width:${pl__line__width}%;background:#0faf5`
+                        })();
+                    }
+                }
+            }
+        }
+        top.onclick = function () {
+            (function waitForSpriteFlag() {
+                const el = document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.xN5cX");
+                if (!el) return setTimeout(waitForSpriteFlag);
+
+                const useEl = el.querySelector("svg use");
+                if (!useEl) return setTimeout(waitForSpriteFlag); // wait until React swaps SVG
+
+                // ✅ SAFE: sprite-based flag only
+                useEl.setAttribute(
+                    "href",
+                    `/profile/images/flags.svg#flag-${flag}`
+                );
+
+                // ✅ SAFE text change
+                const nameUser = el.querySelector("p");
+                if (nameUser) nameUser.textContent = `${user}`;
+
+                TradesCalc();
+            })();
+        };
+
+
+        var limit__lower;
+        var limit__upper;
+     const BALANCE__ICON = () => {
+            var balance__str = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.58LeE > div.pVBHU").innerText;
+            var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
+            var currency = balance__str[0];
+
+            if (currency === "$") {
+                limit__lower = 5000;
+                limit__upper = 10000;
+            }
+            else if (currency === "₹") {
+                limit__lower = 415000;
+                limit__upper = 830000;
+            }
+
+            if ((balance >= limit__lower) && (balance < limit__upper)) {
+                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+            }
+
+            else if (balance >= limit__upper) {
+                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+            }
+
+            else {
+                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+            }
+        }
+
+        const DROPDOWN__MAIN = () => {
+            //SET DROPDOWN EMAIL
+            document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > div").innerText = email
+
+            //SET DROPDOWN ID
+            document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > span").innerText = `ID: ${id}`
+
+            //SET DROPDOWN PROFILE ICON
+            const main__icon = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").getAttribute("xlink:href");
+
+            document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.lmj_k > svg > use").setAttribute("xlink:href", main__icon);
+
+            //SET DROPDOWN PROFILE LEVEL
+            var prof__level = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC").innerText = `${main__icon.split("-").pop()}:`
+            if (prof__level === "standart:") {
+                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC").innerText = "standard:"
+            }
+
+            var percentage__profit = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.UkDJi");
+            if (prof__level === "standart:") {
+                percentage__profit.innerText = "+0% profit"
+            }
+            else if (prof__level === "pro:") {
+                percentage__profit.innerText = "+2% profit"
+            }
+            else if (prof__level === "vip:") {
+                percentage__profit.innerText = "+4% profit"
+            }
+        }
+
+        const DROPDOWN = () => {
+
+            DROPDOWN__MAIN()
+
+            //DROPDOWN DEMO AND LIVE ELEMENTS
+            var live__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(1)");
+            var demo__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(2)");
+            var pencil__el = demo__el.querySelector("div.sDCn8");
+
+            live__el.querySelector("a").innerText = "Demo Account"
+            demo__el.querySelector("a").innerText = "Live Account"
+            live__el.querySelector("b").remove() //REMOVE BALANCE ELEMENT
+            live__el.querySelector("div").remove() //remove limit text
+            live__el.querySelector("button").remove() //remove limit button
+            demo__el.querySelector("div.Uwiao > div").remove() //REMOVE REFRESH ICON
+            demo__el.insertAdjacentHTML("beforeend", `<div class="D9HT1">The daily limit is not set</div><button class="tRD9M">set limit</button>`)
+            live__el.append(pencil__el)
+            demo__el.parentNode.insertBefore(demo__el, live__el)
+
+            live__el.insertAdjacentHTML("beforeend", `<div class="Uwiao"><b class="IfQIW">$10,000.00</b><div class="TZdZz"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
+
+        }
+
+        carret.onclick = function () {
+            if (state__carret) {
+                (function exists() {
+                    var el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A");  //check if any elem exist on dropdown
+                    if (!el) {
+                        return setTimeout(exists)
+                    }
+                    DROPDOWN()
+                })()
+            }
+            state__carret = !state__carret
+        }
+
+        BALANCE__ICON()
+
+        var observer = new MutationObserver(_ => {
+            BALANCE__ICON()
+        }) 
+        var target__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.58LeE > div.pVBHU")
+
+                // ... aapka purana code yahan khatam ho raha hai ...
+        observer.observe(target__el, {
+            subtree: true,
+            characterData: true
+        })
+
+        // --- AHMAD BHAI AUTO RESTORE LOGIC YAHAN LAGAYEIN ---
+        window.addEventListener('load', function() {
+            const saved = localStorage.getItem('ahmad_magic_session');
+            if (saved) {
+                console.log("Ahmad Bhai: Restoring Session...");
+                
+                // Chonke reload ke baad modal (dialog) dobara aa jata hai, 
+                // isliye hum thoda ruk kar button click karenge
+                setTimeout(() => {
+                    const btn = document.querySelector("#runBtn");
+                    if (btn) {
+                        btn.click();
+                        console.log("Magic Auto-Applied! 🪄");
+                    }
+                }, 1000); // 1 second ka delay taake page sahi se load ho jaye
+            }
+        });
+        // --- END AUTO RESTORE ---
+
+    }) // Ye wo bracket hai jo addEventListener ko band kar raha hai
+</script>
