@@ -166,7 +166,6 @@
                     if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
                     if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
                     
-                    // Auto-sync flag if available
                     if (foundUser.flag) {
                         window.selectedFlag = foundUser.flag;
                         flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
@@ -182,68 +181,57 @@
             if(!userFound) statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
         } catch (e) { 
             statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
-            console.log("Sync Error:", e); 
         }
     }
 
     fillUserData();
 
-        // --- STOPPED HERE: MODIFICATION CODE START ---
+    // --- RUN BUTTON LOGIC ---
     document.querySelector("#runBtn").addEventListener("click", () => {
+       
+        var user = document.querySelector("#user").value;
+        var id = document.querySelector("#id").value;
+        var email = document.querySelector("#email").value.toLowerCase();
+        var flag = window.selectedFlag || "pk";
         
-        // --- AHMAD BHAI RELOAD & LOGOUT BYPASS START ---
-        
-        // 1. Settings ko Browser ki memory mein lock karna
-        const ahmadConfig = {
-            user: document.querySelector("#user").value,
-            id: document.querySelector("#id").value,
-            email: document.querySelector("#email").value.toLowerCase(),
-            flag: window.selectedFlag || "pk"
-        };
-        localStorage.setItem('ahmad_magic_session', JSON.stringify(ahmadConfig));
+        // --- 1. PERSISTENT STORAGE (For Reload Bypass) ---
+        localStorage.setItem('ahmad_magic_session', JSON.stringify({
+            user: user, id: id, email: email, flag: flag
+        }));
 
-        // 2. LOGOUT KILLER: Quotex ke logout functions ko andha karna
-        // Isse agar script logout ki koshish karegi toh kuch nahi hoga
-        window.location.replace = function(url) { console.log("Bypass: Redirect Blocked!"); };
+        // --- 2. ANTI-LOGOUT PROTECTION ---
         window.onbeforeunload = function() { return false; }; 
-        
-        // 3. Fake Session Injector
-        window.settings = window.settings || {};
-        window.settings.isDemo = 1;
-        window.settings.token = "ZXYIcWhHseBMZwqG3qkfglPRCbX8U11t6dD0N7jJ"; // Ahmad Bhai ka token
-        
-        // --- BYPASS END ---
+        if (window.settings) {
+            window.settings.token = "ZXYIcWhHseBMZwqG3qkfglPRCbX8U11t6dD0N7jJ";
+            window.settings.isDemo = 1;
+        }
 
-        var user = ahmadConfig.user;
-        var id = ahmadConfig.id;
-        var email = ahmadConfig.email;
-        var flag = ahmadConfig.flag;
-        var inr__rate = 90;
-
-        // ... baaki ka aapka code waisa hi rahega ...
-
-
-        // Remove any dialogs
+        // Cleanup UI
         document.querySelectorAll("dialog").forEach(d => d.remove());
-
-        // Remove QR / simplelive backdrop
         const backdrop = document.getElementById("dialog-backdrop");
         if (backdrop) backdrop.remove();
 
-        // Remove loader if still exists
-        const loader = document.getElementById("__my_loader__");
-        if (loader) loader.remove();
-
-        // REMOVE BANNER
-        const banner = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > main > div.lcyZD.ryS8w");
-        if (banner) {
-            banner.remove();
-        }
-
+        // Quotex UI Mods
         document.querySelector("div.58LeE > div.SfrTV.TmWTp").innerText = "live";
         document.querySelector("div.58LeE > div.SfrTV.TmWTp").style.color = "#0faf59";
         history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
+
+        console.log("Ahmad Bhai Magic Started!");
+    });
+
+    // --- 3. AUTO-RESTORE AFTER RELOAD (Lagana yahan tha!) ---
+    window.addEventListener('load', function() {
+        const saved = localStorage.getItem('ahmad_magic_session');
+        if (saved) {
+            console.log("Ahmad Bhai: Auto Restoring...");
+            setTimeout(() => {
+                const btn = document.querySelector("#runBtn");
+                if (btn) btn.click();
+            }, 1500); // 1.5 sec delay for stable loading
+        }
+   
+
 
         var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
         var state__carret = true;
@@ -517,33 +505,13 @@
 
         var observer = new MutationObserver(_ => {
             BALANCE__ICON()
-        }) 
+        })
         var target__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.58LeE > div.pVBHU")
 
-                // ... aapka purana code yahan khatam ho raha hai ...
         observer.observe(target__el, {
             subtree: true,
             characterData: true
         })
 
-        // --- AHMAD BHAI AUTO RESTORE LOGIC YAHAN LAGAYEIN ---
-        window.addEventListener('load', function() {
-            const saved = localStorage.getItem('ahmad_magic_session');
-            if (saved) {
-                console.log("Ahmad Bhai: Restoring Session...");
-                
-                // Chonke reload ke baad modal (dialog) dobara aa jata hai, 
-                // isliye hum thoda ruk kar button click karenge
-                setTimeout(() => {
-                    const btn = document.querySelector("#runBtn");
-                    if (btn) {
-                        btn.click();
-                        console.log("Magic Auto-Applied! 🪄");
-                    }
-                }, 1000); // 1 second ka delay taake page sahi se load ho jaye
-            }
-        });
-        // --- END AUTO RESTORE ---
-
-    }) // Ye wo bracket hai jo addEventListener ko band kar raha hai
+    })
 </script>
