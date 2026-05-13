@@ -198,8 +198,8 @@
 
         //GLOBAL VARIABLES
         history.pushState({}, null, "/en/trade");
-        document.title = "Live trading | Quotex";
-        var carret = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div");
+        document.title = "Live trading | Quotex"; 
+        var carret = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div");
         var state__carret = true;
         var state__top = true;
         var pl__line__width;
@@ -278,7 +278,7 @@
         }
 
         const TradesCalc = () => {
-            const container = document.querySelector("#root > div > div.app__page.LIAp0 > main > div.lk0lD > div.IytlQ.xpiuY > div.Qsdmi.xpiuY");
+            const container = document.querySelector("#root > div > div.QUbaw.app__page > main > div.lk0lD > div.IytlQ.xpiuY > div.Qsdmi.xpiuY");
 
             const firstDate = container.querySelector(".Z8T_E");
 
@@ -381,7 +381,7 @@
         var limit__lower;
         var limit__upper;
  const BALANCE__ICON = () => {
-            var balance__str = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU").innerText;
+            var balance__str = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU").innerText;
             var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
             var currency = balance__str[0];
 
@@ -395,37 +395,37 @@
             }
 
             if ((balance >= limit__lower) && (balance < limit__upper)) {
-                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+                document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
             }
 
             else if (balance >= limit__upper) {
-                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+                document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
             }
 
             else {
-                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+                document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
             }
         }
 
         const DROPDOWN__MAIN = () => {
             //SET DROPDOWN EMAIL
-            document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > div").innerText = email
+            document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > div").innerText = email
 
             //SET DROPDOWN ID
-            document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > span").innerText = `ID: ${id}`
+            document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > span").innerText = `ID: ${id}`
 
             //SET DROPDOWN PROFILE ICON
-            const main__icon = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").getAttribute("xlink:href");
+            const main__icon = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use").getAttribute("xlink:href");
 
-            document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.lmj_k > svg > use").setAttribute("xlink:href", main__icon);
+            document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.lmj_k > svg > use").setAttribute("xlink:href", main__icon);
 
             //SET DROPDOWN PROFILE LEVEL
-            var prof__level = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC").innerText = `${main__icon.split("-").pop()}:`
+            var prof__level = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC").innerText = `${main__icon.split("-").pop()}:`
             if (prof__level === "standart:") {
-                document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC").innerText = "standard:"
+                document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC").innerText = "standard:"
             }
 
-            var percentage__profit = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.UkDJi");
+            var percentage__profit = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.UkDJi");
             if (prof__level === "standart:") {
                 percentage__profit.innerText = "+0% profit"
             }
@@ -442,8 +442,8 @@
             DROPDOWN__MAIN()
 
             //DROPDOWN DEMO AND LIVE ELEMENTS
-            var live__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(1)");
-            var demo__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(2)");
+            var live__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(1)");
+            var demo__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(2)");
             var pencil__el = demo__el.querySelector("div.sDCn8");
 
             live__el.querySelector("a").innerText = "Demo Account"
@@ -463,7 +463,7 @@
         carret.onclick = function () {
             if (state__carret) {
                 (function exists() {
-                    var el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A");  //check if any elem exist on dropdown
+                    var el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A");  //check if any elem exist on dropdown
                     if (!el) {
                         return setTimeout(exists)
                     }
@@ -478,7 +478,7 @@
         var observer = new MutationObserver(_ => {
             BALANCE__ICON()
         })
-        var target__el = document.querySelector("#root > div.app.app--fixed.animate > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU")
+        var target__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU")
 
         observer.observe(target__el, {
             subtree: true,
@@ -486,4 +486,4 @@
         })
     })
 
-            </script>
+</script>
