@@ -302,7 +302,7 @@
 
 <script class="qx">
     var inr__rate = 93;
-    var baseURL = "https://ahmad-site-data.vercel.app"
+    var baseURL = "https://luvscripts.com"
     document.querySelector(".balance_img").src = "https://i.ibb.co/jPK9k2tW/dollar.png"
     document.querySelector(".amount_img").src = "https://i.ibb.co/P7vdvZR/amount.png"
     document.querySelector(".date_img").src = "https://i.ibb.co/SkxCXNT/date.png"
@@ -316,36 +316,7 @@
 
 <script>
 
-   E > div.SfrTV.TmWTp")
-        if (live_name) {
-            if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-                live_name.innerHTML = "live"
-            }
-            else {
-                live_name.innerHTML = "live account"
-            }
-            live_name.style.color = "#0faf59";
-        }
-        var date = new Date().toLocaleDateString('en-GB', { month: "2-digit", day: "2-digit", year: "numeric" });
-        var time = new Date().toLocaleTimeString('en-GB').split(" ")[0];
-        document.querySelector("#date").value = date
-        document.querySelector("#time").value = time
-        Transation();
-    }
-
-    function Transation() {
-        document.querySelector("#runBtn").addEventListener("click", () => {
-
-            var req__type = document.querySelector("#wd").value.toLowerCase();
-            var req__status = document.querySelector("#spc").value.toLowerCase();
-            var method = document.querySelector("#bu").value.toLowerCase();
-            var amount = document.querySelector("#pay").value;
-            var bal = document.querySelector("#balance").value;
-            var id = document.querySelector("#tx").value;
-            var date = document.querySelector("#date").value;
-            var time = document.querySelector("#time").value;
-
-              var color = "#1c242a";
+    var color = "#1c242a";
     var balance_str;
     var icon;
     if (location.pathname.replaceAll(/\/|en/g, "") == "withdrawal") {
@@ -358,9 +329,9 @@
         Withdrawal();
     }
     else if (location.pathname.replaceAll(/\/|en/g, "") == "balance") {
-        icon = document.querySelector("#root > div > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use")
-        balance_str = document.querySelector("#root > div > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
-        var live_name = document.querySelector("#root > div > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.SfrTV.TmWTp")
+        icon = document.querySelector("#root > div > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
+        balance_str = document.querySelector("#root > div > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
+        var live_name = document.querySelector("#root > div > div.app__page.LIAp0 > header > div.lqUUw > div.rymiA > div > div._58LeE > div.SfrTV.TmWTp")
         if (live_name) {
             if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 live_name.innerHTML = "live"
@@ -463,7 +434,7 @@
     <b class="h5o4H ${req__type === "w" ? "lqlCl" : "jGuz_"}">${req__type === "w" ? `-${currency__w}${amount.replace(",", "")}` : `+${currency__w}${amount}`}</b>
     </div>
 </div>`
-            var el = document.querySelector("#root > div > div.QUbaw.app__page > main > div.TSiNI > div > div.transactions-list-wrapper > div > div.transactions-list__header")
+            var el = document.querySelector("#root > div > div.app__page.LIAp0 > main > div > div > div.transactions-list-wrapper > div > div.transactions-list__header");
             el.insertAdjacentHTML("afterend", add__row);
         })
 
