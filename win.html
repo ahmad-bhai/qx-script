@@ -147,7 +147,7 @@
         if (backdrop) backdrop.remove();
         
         // Modify trades
-        var trades = document.querySelectorAll("#root > div > div.mobile-trade-list > div > div.Qsdmi.xpiuY > div > div");
+        var trades = document.querySelectorAll(".mobile-trade-list .item, .Qsdmi.xpiuY > div > div");
         trades.forEach(el => {
             var calc = parseFloat(el.childNodes[4].childNodes[1].textContent.split(" ")[0].replace(",","")) * (1 + (percent/100));
             el.childNodes[4].querySelector("div").innerHTML = "+" + calc.toLocaleString("en", {
