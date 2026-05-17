@@ -124,7 +124,7 @@
             if (document.querySelector(".battery")) document.querySelector(".battery").style.background = "#6c90b0";
             if (document.querySelector(".status_time")) document.querySelector(".status_time").style.background = "#517da2";
             
-            document.querySelector(".bg_img").src = baseURL + "feed-thumb.png";
+            document.querySelector(".bg_img").src = baseURL + "tg%20(1).jpg";
             document.documentElement.style.setProperty('--bg_color', 'white');
             document.documentElement.style.setProperty('--chat_name', '#000000');
             document.documentElement.style.setProperty('--fg_color', '#59bf4a');
