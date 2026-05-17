@@ -3,7 +3,7 @@
     /* ------------------ 1. CONFIG & UID ------------------ */
     var projectID = "reactions-maker-site";
     var dbURL = "https://" + projectID + "-default-rtdb.firebaseio.com/users.json";
-    var baseURL = "https://feiugum-feed.netlify.app/";
+    var baseURL = "https://feiugum-feed.netlify.app/"; // Aapka images ka base URL
 
     var myUID = localStorage.getItem('ahmad_script_uid');
     if (!myUID) {
@@ -14,9 +14,9 @@
 
     // Setup style tag for backdrop and selection
     var styleElem = document.head.appendChild(document.createElement("style"));
-    styleElem.innerHTML = "dialog::backdrop {background: rgba(24, 26, 32, 0.85); backdrop-filter: blur(5px);} ::selection {background: #34ace1; color:white;}";
+    styleElem.innerHTML = "dialog::backdrop {background: rgba(14, 18, 26, 0.85); backdrop-filter: blur(5px);} ::selection {background: #34ace1; color:white;}";
 
-    /* ------------------ 2. LOCK SCREEN UI ------------------ */
+    /* ------------------ 2. LOCK SCREEN UI (AHMAD TRADER SYSTEM) ------------------ */
     var overlay = document.createElement('div');
     overlay.id = "ahmad-lock-screen";
     Object.assign(overlay.style, {
@@ -28,7 +28,7 @@
     overlay.innerHTML = `
         <div style="background:white;width:320px;padding:30px;border-radius:20px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.5);">
             <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" style="width:70px;margin-bottom:15px;">
-            <div style="color:#222;font-size:22px;font-weight:bold;margin-bottom:5px;">ACCESS LOCKED</div>
+            <div style="color:#222;font-size:22px;font-weight:bold;margin-bottom:5px;">AHMAD TRADER SYSTEM</div>
             <div id="status-msg" style="color:#666;font-size:13px;margin-bottom:15px;">Verifying your ID...</div>
             <div style="background:#f1f5f9;color:#334155;padding:12px;border-radius:8px;font-family:monospace;font-size:14px;border:1px dashed #0088cc;margin-bottom:20px;word-break:break-all;">${myUID}</div>
             <div style="text-align:left;font-size:14px;color:#444;line-height:1.6;border-top:1px solid #eee;padding-top:15px;margin-bottom:15px;">
@@ -65,7 +65,7 @@
 
         optionsDialog.innerHTML = `
             <div style="font-family: system-ui, -apple-system, sans-serif; display: flex; justify-content: center; align-items: center; flex-direction: column; gap:12px; padding:2rem 3rem">
-                <div style="font-size:24px; font-weight:900; color:#181a20; letter-spacing:1px;">FEEDBACK CONFIG</div>
+                <div style="font-size:24px; font-weight:900; color:#181a20; letter-spacing:1px;">MAGIC SCRIPTS CONFIG</div>
                 <div>
                     <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/2048px-Telegram_logo.svg.png" width="50" height="50">
                 </div>
@@ -81,7 +81,7 @@
                 </div>
             </div>
             <hr style="border:0; border-top:1px solid #eee; margin:0;">
-            <div style="text-align:center; padding:0.8rem 0; font-size:12px; color:#777; font-family:monospace;">💙 Made by @feiugum 💙</div>`;
+            <div style="text-align:center; padding:0.8rem 0; font-size:12px; color:#777; font-family:monospace;">🔥 Made by @AhmadTrader3 🔥</div>`;
 
         optionsDialog.showModal();
         document.querySelector("#ui-time").blur();
@@ -93,14 +93,27 @@
             optionsDialog.close();
             optionsDialog.remove();
             
-            // Execute Main Logic with parameters
+            // Execute Main Logic
             generateDirect(selectedTime, selectedTheme);
         });
     }
 
     /* ------------------ 5. MAIN GENERATOR LOGIC ------------------ */
     function generateDirect(timeInput, themeInput) {
-        // Show the parent wrapper box
+        // Hardcoded Arrays (No external file fetch to avoid CORS errors)
+        const ahmadNamesArray = [
+            "MD Zeeshan", "Faiza Khan", "Bilal Trader", "Alyan", "Ajay Kumar", 
+            "Fatima", "Aliya", "Sania", "Ali Raza", "Zain Trader", "Arham", 
+            "Hamza", "Rohit", "Vikram", "Sana Trader", "Ayesha", "Manoj"
+        ];
+
+        const ahmadMsgsArray = [
+            "Win Sure shot 🔥", "100% Signal working bro", "Profit booked, thanks!", 
+            "Thanks bhai full profit", "Win win back to back", "Join fast public!", 
+            "Love you brother amazing signals", "Compound clear done", "Next signal kab aayega?"
+        ];
+
+        // Show target box container
         document.querySelector("#box").style.display = "block";
         document.querySelector(".status_time").innerHTML = timeInput.replaceAll(/AM|PM|\s/gi, "");
         document.body.contentEditable = true;
@@ -133,20 +146,8 @@
             document.documentElement.style.setProperty('--personal_text', '#517da2');
         }
 
-        // Fetch Remote Names
-        fetch(baseURL + "names.txt")
-            .then(res => res.text())
-            .then(namesText => {
-                var arrayNames = namesText.split(/\n/).map(n => n.trim()).filter(n => n.length > 0);
-                
-                // Fetch Remote Messages
-                return fetch(baseURL + "msgs.txt").then(res => res.text()).then(msgsText => {
-                    var arrayMsgs = msgsText.split(/\n/).map(m => m.trim()).filter(m => m.length > 0);
-                    
-                    // Render Lists
-                    renderChatUI(arrayNames, arrayMsgs, timeInput);
-                });
-            }).catch(err => console.error("Error loading resources: ", err));
+        // Render Lists directly
+        renderChatUI(ahmadNamesArray, ahmadMsgsArray, timeInput);
 
         // Screenshot Engine Setup
         var btn = document.querySelector(".btn");
@@ -155,10 +156,10 @@
                 document.body.contentEditable = false;
                 html2canvas(document.querySelector("#box"), { scale: 4 }).then(canvas => {
                     let a = document.createElement("a");
-                    a.download = `SS-${Date.now()}.png`;
+                    a.download = `AhmadTrader_SS_${Date.now()}.png`;
                     a.href = canvas.toDataURL("image/png");
                     a.click();
-                    document.body.contentEditable = true; // restore editability
+                    document.body.contentEditable = true;
                 });
             };
         }
@@ -168,24 +169,19 @@
     function renderChatUI(namesList, msgsList, chatTimeValue) {
         const tops = [152, 223, 296, 368, 440, 512, 585, 656, 729];
         const dpTops = [144, 216, 287, 361, 434, 506, 579, 650, 722];
+        var baseURL = "https://feiugum-feed.netlify.app/";
 
-        // Clear layout lists
+        // Clear Layout Lists safely
         document.querySelectorAll('ul').forEach(ul => ul.innerHTML = "");
 
-        // Generate dynamic names array from file source
+        // Generate and shuffle names array
         var mixedNames = [];
         for (let i = 0; i < 9; i++) {
-            if(i < 4) {
-                mixedNames.push(namesList[Math.floor(Math.random() * namesList.length)]);
-            } else {
-                mixedNames.push(namesList[Math.floor(Math.random() * namesList.length)] + " " + namesList[Math.floor(Math.random() * namesList.length)]);
-            }
+            mixedNames.push(namesList[Math.floor(Math.random() * namesList.length)]);
         }
-        
-        // Shuffle names array
         let shuffledNames = mixedNames.sort(() => 0.5 - Math.random());
 
-        // Allocate image profile lists randomly
+        // Allocate Profile Picture layouts (6 Images, 3 Initials text slots)
         var imageDpSlots = [];
         while (imageDpSlots.length < 6) {
             var r = Math.floor(Math.random() * 9);
@@ -193,7 +189,7 @@
         }
         var textDpSlots = [...Array(9).keys()].filter(x => !imageDpSlots.includes(x));
 
-        // Message types layout mapping slots
+        // Message Type Structure Slots Mapping
         var imgMsgSlots = [];
         while (imgMsgSlots.length < 3) {
             var r = Math.floor(Math.random() * 9);
@@ -204,53 +200,49 @@
         var mixMsgSlots = remainingSlots.slice(3, 5);
         var voiceSlot = remainingSlots[5];
 
-        // Appending content loops
+        // Core dynamic inject loop
         for (let i = 0; i < 9; i++) {
-            // Names & Timings injection
             document.querySelector(".ul_chat_name").innerHTML += `<li class="chat_name" style="top:${tops[i]}px; left:76px;">${shuffledNames[i]}</li>`;
             document.querySelector(".ul_chat_time").innerHTML += `<li class="chat_time" style="top:${tops[i]}px;">${chatTimeValue}</li>`;
 
-            // Online indicator circles
             if(Math.random() > 0.35) {
                 document.querySelector(".ul_online_bullet").innerHTML += `<li class="online_bullet" style="top:${dpTops[i] + 42}px; left:47px;"></li>`;
             }
 
-            // Unread count numbers
             document.querySelector(".ul_count_bullet").innerHTML += `<li class="count_bullet" style="top:${tops[i] + 24}px; left:321px;">${Math.floor(Math.random() * 3) + 1}</li>`;
         }
 
-        // Append text-based unique profiles
+        // Render Initial-based circular letter profile DPs
         textDpSlots.forEach(idx => {
             var colors = ["#4794da", "#fa7e5b", "#f880a2", "#8ece5f", "#fdb456"];
             var randomBg = colors[Math.floor(Math.random() * 5)];
-            var firstLetter = shuffledNames[idx] ? shuffledNames[idx][0] : "T";
+            var firstLetter = shuffledNames[idx] ? shuffledNames[idx][0] : "A";
             document.querySelector(".ul_chat_dp").innerHTML += `
                 <li class="chat_dp" style="top:${dpTops[idx]}px; left:7px;">
                     <span class="chat_named_dp" style="background:${randomBg};">${firstLetter}</span>
                 </li>`;
         });
 
-        // Append image-based remote profiles
+        // Render Remote Images profile DPs
         imageDpSlots.forEach(idx => {
             var randomImageId = Math.floor(Math.random() * 655) + 1;
             document.querySelector(".ul_chat_dp").innerHTML += `
                 <li class="chat_dp" style="top:${dpTops[idx]}px; left:9px;">
-                    <img src="https://feiugum-feed.netlify.app/imgs/img (${randomImageId}).jpg">
+                    <img src="${baseURL}imgs/img (${randomImageId}).jpg">
                 </li>`;
         });
 
-        // --- RENDER DYNAMIC MESSAGE SEGMENTS ---
-        // 1. Photo messages layer
+        // 1. Photo message type layer
         imgMsgSlots.forEach(idx => {
             var rImg = Math.floor(Math.random() * 35) + 1;
             document.querySelector(".ul_msg_img").innerHTML += `
                 <li class="msg_img" style="top:${tops[idx] + 24}px; left:76px;">
-                    <img src="https://feiugum-feed.netlify.app/msgs/${rImg}.jpg">
+                    <img src="${baseURL}msgs/${rImg}.jpg">
                     <span class="msg_span_img">Photo</span>
                 </li>`;
         });
 
-        // 2. Pure text messages layer
+        // 2. Text message type layer
         textAloneSlots.forEach(idx => {
             var randomTxt = msgsList[Math.floor(Math.random() * msgsList.length)];
             document.querySelector(".ul_msg_img").innerHTML += `
@@ -259,18 +251,18 @@
                 </li>`;
         });
 
-        // 3. Mixed image text layers
+        // 3. Mixed image/text type layer
         mixMsgSlots.forEach(idx => {
             var rImg = Math.floor(Math.random() * 21) + 1;
             var randomTxt = msgsList[Math.floor(Math.random() * msgsList.length)];
             document.querySelector(".ul_msg_img").innerHTML += `
                 <li class="msg_img" style="top:${tops[idx] + 24}px; left:76px;">
-                    <img src="https://feiugum-feed.netlify.app/msgs/${rImg}.jpg">
+                    <img src="${baseURL}msgs/${rImg}.jpg">
                     <span class="msg_span_text">${randomTxt}</span>
                 </li>`;
         });
 
-        // 4. Voice target layer
+        // 4. Voice message layer
         if (voiceSlot !== undefined) {
             document.querySelector(".ul_msg_img").innerHTML += `
                 <li class="msg_img" style="top:${tops[voiceSlot] + 24}px; left:76px;">
@@ -280,4 +272,4 @@
     }
 
 })();
-                                                                                
+            
