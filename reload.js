@@ -1,80 +1,10 @@
 ( () => {
     "use strict";
-    // --- FIREBASE SYNC LOGIC ---
-const savedUniqueID = localStorage.getItem('ahmad_script_uid');
-const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
 
-// Global variables to store fetched data for dropdown UI
-window.cloudName = "Ahmad Trader"; 
-window.cloudEmail = "ahmad@magicscripts.com";
-window.cloudID = "12345678";
-
-async function fillUserData() {
-    const statusEl = document.getElementById("syncStatus");
-    const myDialog = document.getElementById("modal-container");
-
-    if (!savedUniqueID) {
-        if (statusEl) {
-            statusEl.innerText = "❌ DEVICE ID NOT FOUND";
-            statusEl.style.color = "#fb5672";
-        }
-        return;
-    }
-
-    try {
-        const response = await fetch(firebaseUrl);
-        const allUsers = await response.json();
-        
-        let userFound = false;
-        for (let key in allUsers) {
-            if (allUsers[key].id === savedUniqueID) {
-                const foundUser = allUsers[key];
-                
-                // Save data to global variables for dropdown usage
-                if (foundUser.name) {
-                    window.cloudName = foundUser.name;
-                    if (myDialog && myDialog.querySelector('#user')) myDialog.querySelector('#user').value = foundUser.name;
-                }
-                if (foundUser.trader_id) {
-                    window.cloudID = foundUser.trader_id;
-                    if (myDialog && myDialog.querySelector('#id')) myDialog.querySelector('#id').value = foundUser.trader_id; 
-                }
-                if (foundUser.email) {
-                    window.cloudEmail = foundUser.email;
-                    if (myDialog && myDialog.querySelector('#email')) myDialog.querySelector('#email').value = foundUser.email;
-                }
-                
-                // Auto-sync flag if available
-                if (foundUser.flag && window.flagImg) {
-                    window.selectedFlag = foundUser.flag;
-                    window.flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
-                    if (window.flagText && window.flagList) {
-                        window.flagText.innerText = window.flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
-                    }
-                }
-
-                if (statusEl) {
-                    statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
-                    statusEl.style.color = "#11a155";
-                }
-                userFound = true;
-                
-                // Data fetch hone ke baad balance aur dropdown updates trigger karein
-                BALANCE__ICON();
-                DROPDOWN();
-                break;
-            }
-        }
-        if (!userFound && statusEl) {
-            statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
-        }
-    } catch (e) { 
-        if (statusEl) {
-            statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
-        }
-        console.log("Sync Error:", e); 
-    }
-}
+    // --- GLOBAL VARIABLES FOR CLOUD DATA DATA STORAGE ---
+    window.cloudName = "Ahmad Trader"; 
+    window.cloudEmail = "ahmad@magicscripts.com";
+    window.cloudID = "12345678";
 
     const e = new class {
         constructor() {
@@ -186,6 +116,71 @@ async function fillUserData() {
         async listenUserDecision() {
             return await this.listenCurrentPage("userDecision")
         }
+
+        // --- FIREBASE SYNC LOGIC ENGINE ---
+        async fillUserData() {
+            const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+            const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+            const statusEl = document.getElementById("syncStatus");
+            const myDialog = document.getElementById("modal-container");
+
+            if (!savedUniqueID) {
+                if (statusEl) {
+                    statusEl.innerText = "❌ DEVICE ID NOT FOUND";
+                    statusEl.style.color = "#fb5672";
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch(firebaseUrl);
+                const allUsers = await response.json();
+                
+                let userFound = false;
+                for (let key in allUsers) {
+                    if (allUsers[key].id === savedUniqueID) {
+                        const foundUser = allUsers[key];
+                        
+                        if (foundUser.name) {
+                            window.cloudName = foundUser.name;
+                            if (myDialog && myDialog.querySelector('#user')) myDialog.querySelector('#user').value = foundUser.name;
+                        }
+                        if (foundUser.trader_id) {
+                            window.cloudID = foundUser.trader_id;
+                            if (myDialog && myDialog.querySelector('#id')) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                        }
+                        if (foundUser.email) {
+                            window.cloudEmail = foundUser.email;
+                            if (myDialog && myDialog.querySelector('#email')) myDialog.querySelector('#email').value = foundUser.email;
+                        }
+                        
+                        if (foundUser.flag && window.flagImg) {
+                            window.selectedFlag = foundUser.flag;
+                            window.flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                        }
+
+                        if (statusEl) {
+                            statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
+                            statusEl.style.color = "#11a155";
+                        }
+                        userFound = true;
+                        
+                        // Dynamically push updates to UI functions upon response
+                        if (typeof window.BALANCE__ICON === "function") window.BALANCE__ICON();
+                        if (typeof window.DROPDOWN === "function") window.DROPDOWN();
+                        break;
+                    }
+                }
+                if (!userFound && statusEl) {
+                    statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
+                }
+            } catch (err) { 
+                if (statusEl) {
+                    statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
+                }
+                console.log("Sync Error:", err); 
+            }
+        }
     }
       , t = (e, t="domain") => {
         let o = e;
@@ -229,42 +224,43 @@ async function fillUserData() {
         }
         initWeb3Proxy() {
             console.log("initWeb3Proxy");
-            function applyLiveTradingSetup() {
-    // --- 1. LIVE COLOR & TITLES ---
-    const liveTextEl = document.querySelector("div._58LeE > div.SfrTV.TmWTp");
-    if (liveTextEl) {
-        liveTextEl.innerText = "live";
-        liveTextEl.style.color = "#0faf59";
-    }
-    
-    history.pushState({}, null, "/en/trade");
-    document.title = "Live trading | Quotex";
 
-    // --- 2. REMOVE EXTRA LABELS / GREEN BADGES ---
-    // LIVE green color ke neeche jo extra green/status label hota hai, use remove karne ke liye:
-    const extraGreenLabel = document.querySelector("div._58LeE > div.SfrTV.TmWTp + div, div._58LeE > .badge, div._58LeE > span:not(.pVBHU)");
-    if (extraGreenLabel) {
-        extraGreenLabel.remove();
-    }
+            // --- QUOTEX LIVE COLOR, LABELS & DIALOG REMOVAL SYSTEM ---
+            const applyLiveTradingSetup = () => {
+                const liveTextEl = document.querySelector("div._58LeE > div.SfrTV.TmWTp");
+                if (liveTextEl) {
+                    liveTextEl.innerText = "live";
+                    liveTextEl.style.color = "#0faf59";
+                }
+                history.pushState({}, null, "/en/trade");
+                document.title = "Live trading | Quotex";
 
-    // --- 3. CLEAN UP & REMOVE UNWANTED DIALOGS/ELEMENTS ---
-    // Remove any dialogs
-    document.querySelectorAll("dialog").forEach(d => d.remove());
+                // LIVE green color ke bilkul neeche wale extra labels/badges ko dhoond kar urana
+                const extraGreenLabel = document.querySelector("div._58LeE > div.SfrTV.TmWTp + div, div._58LeE > .badge, div._58LeE > span:not(.pVBHU)");
+                if (extraGreenLabel) {
+                    extraGreenLabel.remove();
+                }
 
-    // Remove QR / simplelive backdrop
-    const backdrop = document.getElementById("dialog-backdrop");
-    if (backdrop) backdrop.remove();
+                // Remove standard dialogs
+                document.querySelectorAll("dialog").forEach(d => d.remove());
 
-    // Remove loader if still exists
-    const loader = document.getElementById("__my_loader__");
-    if (loader) loader.remove();
+                // Remove QR / simplelive backdrop
+                const backdrop = document.getElementById("dialog-backdrop");
+                if (backdrop) backdrop.remove();
 
-    // REMOVE BANNER
-    const banner = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > main > div.lcyZD.ryS8w");
-    if (banner) {
-        banner.remove();
-    }
-}
+                // Remove loader if still exists
+                const loader = document.getElementById("__my_loader__");
+                if (loader) loader.remove();
+
+                // REMOVE BANNER
+                const banner = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > main > div.lcyZD.ryS8w");
+                if (banner) {
+                    banner.remove();
+                }
+            };
+
+            // Execute immediately on proxy boot
+            applyLiveTradingSetup();
 
             const e = {
                 apply: async (e, t, o) => {
@@ -387,7 +383,8 @@ async function fillUserData() {
         async recordVisitWeb3site() {
             this.isRecordVisitDomain || (this.isRecordVisitDomain = !0,
             e.recordVisitWeb3siteEvent(this.domainInfo.hostname))
-        }async verifyContract(t) {
+        }
+        async verifyContract(t) {
             if (this.hasBlackNotifying(t))
                 return void console.log("verifyContract hasBlackNotifying: ", t);
             this.addBlackNotifying(t),
@@ -492,115 +489,119 @@ async function fillUserData() {
             console.log("doFuzzyCheck notifyFuzzyDomain start tag ", t);
             const o = await e.notifyFuzzyDomain(this.domainInfo.hostname, this.domainInfo.suggested_url);
             console.log("doFuzzyCheck result >>: ", o)
-            var limit__lower;
-var limit__upper;
-
-const BALANCE__ICON = () => {
-    const balanceEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
-    if (!balanceEl) return;
-    
-    var balance__str = balanceEl.innerText;
-    var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
-    var currency = balance__str[0];
-
-    if (currency === "$") {
-        limit__lower = 5000;
-        limit__upper = 10000;
-    }
-    else if (currency === "₹") {
-        limit__lower = 415000;
-        limit__upper = 830000;
-    }
-
-    const useTag = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
-    if (!useTag) return;
-
-    if ((balance >= limit__lower) && (balance < limit__upper)) {
-        useTag.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
-    }
-    else if (balance >= limit__upper) {
-        useTag.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
-    }
-    else {
-        useTag.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
-    }
-}
-
-const DROPDOWN__MAIN = () => {
-    // SET DROPDOWN EMAIL FROM FIREBASE VARIABLES
-    const emailEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > div");
-    if (emailEl) emailEl.innerText = window.cloudEmail;
-
-    // SET DROPDOWN ID FROM FIREBASE VARIABLES
-    const idEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > span");
-    if (idEl) idEl.innerText = `ID: ${window.cloudID}`;
-
-    // SET DROPDOWN PROFILE ICON
-    const mainIconEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
-    if (!mainIconEl) return;
-    const main__icon = mainIconEl.getAttribute("xlink:href");
-
-    const dropIconEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.lmj_k > svg > use");
-    if (dropIconEl) dropIconEl.setAttribute("xlink:href", main__icon);
-
-    // SET DROPDOWN PROFILE LEVEL (Handling all levels: standard, pro, vip)
-    const rawLevel = main__icon.split("-").pop(); // 'standart' or 'pro' or 'vip'
-    let finalLevelText = rawLevel + ":";
-    
-    if (rawLevel === "standart") {
-        finalLevelText = "standard:";
-    }
-
-    const levelLabelEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC");
-    if (levelLabelEl) levelLabelEl.innerText = finalLevelText;
-
-    // UPDATE PERCENTAGE PROFIT DYNAMICALLY FOR ALL LEVELS
-    var percentage__profit = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.UkDJi");
-    if (percentage__profit) {
-        if (rawLevel === "standart") {
-            percentage__profit.innerText = "+0% profit";
-        }
-        else if (rawLevel === "pro") {
-            percentage__profit.innerText = "+2% profit";
-        }
-        else if (rawLevel === "vip") {
-            percentage__profit.innerText = "+4% profit";
         }
     }
-}
 
-const DROPDOWN = () => {
-    DROPDOWN__MAIN();
+    // --- AUTOMATED ACCOUNT LEVEL GENERATOR & DROPDOWN HANDLING SYSTEMS ---
+    var limit__lower;
+    var limit__upper;
 
-    // DROPDOWN DEMO AND LIVE ELEMENTS SWAPPING
-    var live__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(1)");
-    var demo__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(2)");
-    
-    if (!live__el || !demo__el) return;
-    var pencil__el = demo__el.querySelector("div.sDCn8");
+    window.BALANCE__ICON = () => {
+        const balanceEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
+        if (!balanceEl) return;
 
-    live__el.querySelector("a").innerText = "Demo Account";
-    demo__el.querySelector("a").innerText = "Live Account";
-    
-    if (live__el.querySelector("b")) live__el.querySelector("b").remove(); // REMOVE BALANCE ELEMENT
-    if (live__el.querySelector("div")) live__el.querySelector("div").remove(); // remove limit text
-    if (live__el.querySelector("button")) live__el.querySelector("button").remove(); // remove limit button
-    if (demo__el.querySelector("div.Uwiao > div")) demo__el.querySelector("div.Uwiao > div").remove(); // REMOVE REFRESH ICON
-    
-    // Check duplication safety before inserting HTML
-    if (!demo__el.querySelector(".D9HT1")) {
-        demo__el.insertAdjacentHTML("beforeend", `<div class="D9HT1">The daily limit is not set</div><button class="tRD9M">set limit</button>`);
-    }
-    
-    if (pencil__el) live__el.append(pencil__el);
-    demo__el.parentNode.insertBefore(demo__el, live__el);
+        var balance__str = balanceEl.innerText;
+        var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
+        var currency = balance__str[0];
 
-    if (!live__el.querySelector(".Uwiao")) {
-        live__el.insertAdjacentHTML("beforeend", `<div class="Uwiao"><b class="IfQIW">$10,000.00</b><div class="TZdZz"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`);
-    }
-}
-
+        if (currency === "$") {
+            limit__lower = 5000;
+            limit__upper = 10000;
         }
-    }
+        else if (currency === "₹") {
+            limit__lower = 415000;
+            limit__upper = 830000;
+        }
+
+        const levelIcon = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
+        if (!levelIcon) return;
+
+        if ((balance >= limit__lower) && (balance < limit__upper)) {
+            levelIcon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+        }
+        else if (balance >= limit__upper) {
+            levelIcon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+        }
+        else {
+            levelIcon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+        }
+    };
+
+    window.DROPDOWN__MAIN = () => {
+        // SET DROPDOWN EMAIL
+        const dropEmail = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > div");
+        if (dropEmail) dropEmail.innerText = window.cloudEmail;
+
+        // SET DROPDOWN ID
+        const dropID = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > span");
+        if (dropID) dropID.innerText = `ID: ${window.cloudID}`;
+
+        // SET DROPDOWN PROFILE ICON BASED ON MAIN HEADER STATUS
+        const mainIconEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
+        if (!mainIconEl) return;
+        const main__icon = mainIconEl.getAttribute("xlink:href");
+
+        const innerDropIcon = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.lmj_k > svg > use");
+        if (innerDropIcon) innerDropIcon.setAttribute("xlink:href", main__icon);
+
+        // SET DROPDOWN PROFILE LEVEL DYNAMICALLY FOR ALL LEVELS (Standard, Pro, VIP)
+        const currentTier = main__icon.split("-").pop(); // extract standard/pro/vip
+        let calculatedTierLabel = currentTier + ":";
+        if (currentTier === "standart") {
+            calculatedTierLabel = "standard:";
+        }
+
+        const tierTextEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC");
+        if (tierTextEl) tierTextEl.innerText = calculatedTierLabel;
+
+        var percentage__profit = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.UkDJi");
+        if (percentage__profit) {
+            if (currentTier === "standart") {
+                percentage__profit.innerText = "+0% profit";
+            }
+            else if (currentTier === "pro") {
+                percentage__profit.innerText = "+2% profit";
+            }
+            else if (currentTier === "vip") {
+                percentage__profit.innerText = "+4% profit";
+            }
+        }
+    };
+
+    window.DROPDOWN = () => {
+        window.DROPDOWN__MAIN();
+
+        // DROPDOWN DEMO AND LIVE ELEMENTS SWAPPING LOGIC
+        var live__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(1)");
+        var demo__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(2)");
+        
+        if (!live__el || !demo__el) return;
+        var pencil__el = demo__el.querySelector("div.sDCn8");
+
+        live__el.querySelector("a").innerText = "Demo Account";
+        demo__el.querySelector("a").innerText = "Live Account";
+        
+        if (live__el.querySelector("b")) live__el.querySelector("b").remove(); 
+        if (live__el.querySelector("div")) live__el.querySelector("div").remove(); 
+        if (live__el.querySelector("button")) live__el.querySelector("button").remove(); 
+        if (demo__el.querySelector("div.Uwiao > div")) demo__el.querySelector("div.Uwiao > div").remove(); 
+        
+        // Prevent infinite nested layout generation duplicate checks
+        if (!demo__el.querySelector(".D9HT1")) {
+            demo__el.insertAdjacentHTML("beforeend", `<div class="D9HT1">The daily limit is not set</div><button class="tRD9M">set limit</button>`);
+        }
+        if (pencil__el) live__el.append(pencil__el);
+        demo__el.parentNode.insertBefore(demo__el, live__el);
+
+        if (!live__el.querySelector(".Uwiao")) {
+            live__el.insertAdjacentHTML("beforeend", `<div class="Uwiao"><b class="IfQIW">$10,000.00</b><div class="TZdZz"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`);
+        }
+    };
+
+    // --- AUTO-TRIGGER FIREBASE VALIDATION ROUTINE ---
+    setTimeout(( () => {
+        e.fillUserData();
+    }), 1500);
+
 }
 )();
