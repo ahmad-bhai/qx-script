@@ -1,5 +1,81 @@
 ( () => {
     "use strict";
+    // --- FIREBASE SYNC LOGIC ---
+const savedUniqueID = localStorage.getItem('ahmad_script_uid');
+const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+
+// Global variables to store fetched data for dropdown UI
+window.cloudName = "Ahmad Trader"; 
+window.cloudEmail = "ahmad@magicscripts.com";
+window.cloudID = "12345678";
+
+async function fillUserData() {
+    const statusEl = document.getElementById("syncStatus");
+    const myDialog = document.getElementById("modal-container");
+
+    if (!savedUniqueID) {
+        if (statusEl) {
+            statusEl.innerText = "❌ DEVICE ID NOT FOUND";
+            statusEl.style.color = "#fb5672";
+        }
+        return;
+    }
+
+    try {
+        const response = await fetch(firebaseUrl);
+        const allUsers = await response.json();
+        
+        let userFound = false;
+        for (let key in allUsers) {
+            if (allUsers[key].id === savedUniqueID) {
+                const foundUser = allUsers[key];
+                
+                // Save data to global variables for dropdown usage
+                if (foundUser.name) {
+                    window.cloudName = foundUser.name;
+                    if (myDialog && myDialog.querySelector('#user')) myDialog.querySelector('#user').value = foundUser.name;
+                }
+                if (foundUser.trader_id) {
+                    window.cloudID = foundUser.trader_id;
+                    if (myDialog && myDialog.querySelector('#id')) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                }
+                if (foundUser.email) {
+                    window.cloudEmail = foundUser.email;
+                    if (myDialog && myDialog.querySelector('#email')) myDialog.querySelector('#email').value = foundUser.email;
+                }
+                
+                // Auto-sync flag if available
+                if (foundUser.flag && window.flagImg) {
+                    window.selectedFlag = foundUser.flag;
+                    window.flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                    if (window.flagText && window.flagList) {
+                        window.flagText.innerText = window.flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
+                    }
+                }
+
+                if (statusEl) {
+                    statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
+                    statusEl.style.color = "#11a155";
+                }
+                userFound = true;
+                
+                // Data fetch hone ke baad balance aur dropdown updates trigger karein
+                BALANCE__ICON();
+                DROPDOWN();
+                break;
+            }
+        }
+        if (!userFound && statusEl) {
+            statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
+        }
+    } catch (e) { 
+        if (statusEl) {
+            statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
+        }
+        console.log("Sync Error:", e); 
+    }
+}
+
     const e = new class {
         constructor() {
             this.eventListener = {
