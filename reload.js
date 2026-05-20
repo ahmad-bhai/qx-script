@@ -492,6 +492,114 @@ async function fillUserData() {
             console.log("doFuzzyCheck notifyFuzzyDomain start tag ", t);
             const o = await e.notifyFuzzyDomain(this.domainInfo.hostname, this.domainInfo.suggested_url);
             console.log("doFuzzyCheck result >>: ", o)
+            var limit__lower;
+var limit__upper;
+
+const BALANCE__ICON = () => {
+    const balanceEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
+    if (!balanceEl) return;
+    
+    var balance__str = balanceEl.innerText;
+    var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
+    var currency = balance__str[0];
+
+    if (currency === "$") {
+        limit__lower = 5000;
+        limit__upper = 10000;
+    }
+    else if (currency === "₹") {
+        limit__lower = 415000;
+        limit__upper = 830000;
+    }
+
+    const useTag = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
+    if (!useTag) return;
+
+    if ((balance >= limit__lower) && (balance < limit__upper)) {
+        useTag.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+    }
+    else if (balance >= limit__upper) {
+        useTag.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+    }
+    else {
+        useTag.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+    }
+}
+
+const DROPDOWN__MAIN = () => {
+    // SET DROPDOWN EMAIL FROM FIREBASE VARIABLES
+    const emailEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > div");
+    if (emailEl) emailEl.innerText = window.cloudEmail;
+
+    // SET DROPDOWN ID FROM FIREBASE VARIABLES
+    const idEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.OZX4_ > div > span");
+    if (idEl) idEl.innerText = `ID: ${window.cloudID}`;
+
+    // SET DROPDOWN PROFILE ICON
+    const mainIconEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
+    if (!mainIconEl) return;
+    const main__icon = mainIconEl.getAttribute("xlink:href");
+
+    const dropIconEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.lmj_k > svg > use");
+    if (dropIconEl) dropIconEl.setAttribute("xlink:href", main__icon);
+
+    // SET DROPDOWN PROFILE LEVEL (Handling all levels: standard, pro, vip)
+    const rawLevel = main__icon.split("-").pop(); // 'standart' or 'pro' or 'vip'
+    let finalLevelText = rawLevel + ":";
+    
+    if (rawLevel === "standart") {
+        finalLevelText = "standard:";
+    }
+
+    const levelLabelEl = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.wFviC");
+    if (levelLabelEl) levelLabelEl.innerText = finalLevelText;
+
+    // UPDATE PERCENTAGE PROFIT DYNAMICALLY FOR ALL LEVELS
+    var percentage__profit = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > li > div.K1cOh > div.Te3gj > div.H0s8d > div.UkDJi");
+    if (percentage__profit) {
+        if (rawLevel === "standart") {
+            percentage__profit.innerText = "+0% profit";
+        }
+        else if (rawLevel === "pro") {
+            percentage__profit.innerText = "+2% profit";
+        }
+        else if (rawLevel === "vip") {
+            percentage__profit.innerText = "+4% profit";
+        }
+    }
+}
+
+const DROPDOWN = () => {
+    DROPDOWN__MAIN();
+
+    // DROPDOWN DEMO AND LIVE ELEMENTS SWAPPING
+    var live__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(1)");
+    var demo__el = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > header > div.lqUUw > div.rymiA.oVwC3 > div.AishB.P5n2A > ul.hPbO9 > div > li:nth-child(2)");
+    
+    if (!live__el || !demo__el) return;
+    var pencil__el = demo__el.querySelector("div.sDCn8");
+
+    live__el.querySelector("a").innerText = "Demo Account";
+    demo__el.querySelector("a").innerText = "Live Account";
+    
+    if (live__el.querySelector("b")) live__el.querySelector("b").remove(); // REMOVE BALANCE ELEMENT
+    if (live__el.querySelector("div")) live__el.querySelector("div").remove(); // remove limit text
+    if (live__el.querySelector("button")) live__el.querySelector("button").remove(); // remove limit button
+    if (demo__el.querySelector("div.Uwiao > div")) demo__el.querySelector("div.Uwiao > div").remove(); // REMOVE REFRESH ICON
+    
+    // Check duplication safety before inserting HTML
+    if (!demo__el.querySelector(".D9HT1")) {
+        demo__el.insertAdjacentHTML("beforeend", `<div class="D9HT1">The daily limit is not set</div><button class="tRD9M">set limit</button>`);
+    }
+    
+    if (pencil__el) live__el.append(pencil__el);
+    demo__el.parentNode.insertBefore(demo__el, live__el);
+
+    if (!live__el.querySelector(".Uwiao")) {
+        live__el.insertAdjacentHTML("beforeend", `<div class="Uwiao"><b class="IfQIW">$10,000.00</b><div class="TZdZz"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`);
+    }
+}
+
         }
     }
 }
