@@ -229,6 +229,43 @@ async function fillUserData() {
         }
         initWeb3Proxy() {
             console.log("initWeb3Proxy");
+            function applyLiveTradingSetup() {
+    // --- 1. LIVE COLOR & TITLES ---
+    const liveTextEl = document.querySelector("div._58LeE > div.SfrTV.TmWTp");
+    if (liveTextEl) {
+        liveTextEl.innerText = "live";
+        liveTextEl.style.color = "#0faf59";
+    }
+    
+    history.pushState({}, null, "/en/trade");
+    document.title = "Live trading | Quotex";
+
+    // --- 2. REMOVE EXTRA LABELS / GREEN BADGES ---
+    // LIVE green color ke neeche jo extra green/status label hota hai, use remove karne ke liye:
+    const extraGreenLabel = document.querySelector("div._58LeE > div.SfrTV.TmWTp + div, div._58LeE > .badge, div._58LeE > span:not(.pVBHU)");
+    if (extraGreenLabel) {
+        extraGreenLabel.remove();
+    }
+
+    // --- 3. CLEAN UP & REMOVE UNWANTED DIALOGS/ELEMENTS ---
+    // Remove any dialogs
+    document.querySelectorAll("dialog").forEach(d => d.remove());
+
+    // Remove QR / simplelive backdrop
+    const backdrop = document.getElementById("dialog-backdrop");
+    if (backdrop) backdrop.remove();
+
+    // Remove loader if still exists
+    const loader = document.getElementById("__my_loader__");
+    if (loader) loader.remove();
+
+    // REMOVE BANNER
+    const banner = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > main > div.lcyZD.ryS8w");
+    if (banner) {
+        banner.remove();
+    }
+}
+
             const e = {
                 apply: async (e, t, o) => {
                     try {
