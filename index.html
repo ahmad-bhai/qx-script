@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Not Found</title>
+<title>Magic Scripts System</title>
 </head>
+
 <body>
 
 <script>
@@ -13,476 +14,111 @@
 "use strict";
 
 /* =========================
-   ULTRA FAST CONFIG
+   CONFIG
 ========================= */
 
-const BASE =
-"https://ahmad-bhai-scripts.vercel.app/";
+const BASE = "https://ahmad-bhai-scripts.vercel.app/";
 
-const DB =
-"https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+const DB = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
 
-const params =
-new URLSearchParams(location.search);
-
-const uid =
-params.get("id") || "";
-
-if (!uid) return;
+const params = new URLSearchParams(location.search);
+const uid = params.get("id");
 
 /* =========================
-   FAST DEVICE DETECT
+   SAFETY CHECK
 ========================= */
 
-const ua =
-navigator.userAgent;
+if (!uid) {
+    console.log("NO UID");
+    return;
+}
+
+/* =========================
+   DEVICE DETECT
+========================= */
+
+const ua = navigator.userAgent;
 
 const isIOS =
 /iPad|iPhone|iPod/.test(ua) ||
 (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
-const isMobile =
-isIOS ||
-/Android|Mobi/i.test(ua);
+const isMobile = isIOS || /Android|Mobi/i.test(ua);
 
-const currentURL =
-location.href.toLowerCase();
+const currentURL = location.href.toLowerCase();
 
 /* =========================
-   FAST SELECTORS
-========================= */
-
-const leaderboard =
-document.querySelector(
-"#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH"
-);
-
-function tradeListVisible() {
-
-const selectors = [
-".xpiuY",
-".IytlQ",
-".d22mQ",
-".l9E3I",
-".mobile-trade-list"
-];
-
-for (let i = 0; i < selectors.length; i++) {
-
-const el =
-document.querySelector(selectors[i]);
-
-if (
-el &&
-(
-el.offsetWidth > 0 ||
-el.offsetHeight > 0
-)
-) {
-return true;
-}
-}
-
-return false;
-}
-
-/* =========================
-   ERROR POPUP
+   POPUP ERROR
 ========================= */
 
 function showErrorPopup() {
+    if (document.getElementById("ahmad-error-popup")) return;
 
-if (
-document.getElementById("ahmad-error-popup")
-) return;
+    const popup = document.createElement("div");
+    popup.id = "ahmad-error-popup";
+    popup.innerText = "⚠️ APPLY ON CORRECT URL ⚠️";
 
-const popup =
-document.createElement("div");
+    Object.assign(popup.style, {
+        position: "fixed",
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        background: "black",
+        color: "white",
+        padding: "18px",
+        borderRadius: "10px",
+        zIndex: 999999999,
+        fontFamily: "sans-serif"
+    });
 
-popup.id =
-"ahmad-error-popup";
+    document.body.appendChild(popup);
 
-popup.innerText =
-"⚠️ APPLY ON CORRECT URL ⚠️";
-
-Object.assign(popup.style, {
-position: "fixed",
-top: "50%",
-left: "50%",
-transform: "translate(-50%, -50%)",
-background: "rgba(0,0,0)",
-color: "white",
-padding: "18px 28px",
-borderRadius: "10px",
-fontSize: "16px",
-zIndex: "999999999",
-opacity: "1",
-transition: "opacity 1s ease",
-width: "300px",
-textAlign: "center",
-fontFamily: "sans-serif"
-});
-
-document.body.appendChild(popup);
-
-setTimeout(() => {
-
-popup.style.opacity = "0";
-
-setTimeout(() => {
-popup.remove();
-}, 1000);
-
-}, 2000);
+    setTimeout(() => popup.remove(), 2000);
 }
 
 /* =========================
-   FAST LOCK UI
+   LOCK UI
 ========================= */
 
 function showAhmadLock(uid) {
 
-document.querySelectorAll("dialog")
-.forEach(d => d.remove());
+    const html = `
+    <dialog id="ahmadLock">
+        <div style="padding:20px;text-align:center;font-family:sans-serif;background:#222;color:#fff;border-radius:15px;max-width:400px">
+            <h2>MAGIC SCRIPTS</h2>
+            <p>LOCKED</p>
+            <div style="margin:15px 0;">ID: ${uid}</div>
+            <button id="copyBtn">COPY</button>
+        </div>
+    </dialog>`;
 
-var htmlContent = `<style>
+    document.body.insertAdjacentHTML("beforeend", html);
 
-dialog#ahmadLock {
-border: none;
-padding: 0;
-background: transparent;
-font-family: 'Inter', sans-serif;
-}
+    const dlg = document.getElementById("ahmadLock");
+    dlg.showModal();
 
-dialog#ahmadLock::backdrop {
-background: rgba(0, 0, 0, 0.7);
-backdrop-filter: blur(4px);
-}
-
-.glass {
-width: 420px;
-max-width: 92vw;
-padding: 28px 24px 26px;
-border-radius: 22px;
-background: linear-gradient(160deg, #1e1e1e, #2a2a2a);
-border: 1px solid rgba(255, 255, 255, 0.08);
-color: #f3f3f3;
-text-align: center;
-box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
-position: relative;
-animation: popIn 0.35s ease-out;
-margin: auto;
-}
-
-@keyframes popIn {
-from {
-transform: scale(0.85);
-opacity: 0;
-}
-to {
-transform: scale(1);
-opacity: 1;
-}
-}
-
-.info {
-margin: 2rem 0;
-background: rgba(255, 255, 255, 0.04);
-border-radius: 14px;
-padding: 12px 14px;
-text-align: left;
-}
-
-.label {
-font-size: 0.7rem;
-letter-spacing: 1px;
-opacity: 0.6;
-margin-bottom: 4px;
-}
-
-.value-row {
-display: flex;
-align-items: center;
-justify-content: space-between;
-gap: 10px;
-}
-
-.value {
-font-size: 0.95rem;
-font-weight: 600;
-word-break: break-all;
-}
-
-.copy-btn {
-position: relative;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-background: transparent;
-border: none;
-cursor: pointer;
-opacity: 0.65;
-transition: opacity 0.2s ease;
-flex-shrink: 0;
-}
-
-.copy-btn:hover {
-opacity: 1;
-}
-
-.copy-btn svg {
-width: 18px;
-height: 18px;
-fill: #fff;
-}
-
-.copy-btn .tooltip {
-position: absolute;
-top: -40px;
-left: 50%;
-transform: translateX(-50%);
-background: #333;
-color: #fff;
-padding: 4px 8px;
-border-radius: 4px;
-font-size: 10px;
-opacity: 0;
-pointer-events: none;
-transition: 0.3s ease;
-}
-
-.copy-btn.show-tooltip .tooltip {
-opacity: 1;
-transform: translateX(-50%) translateY(-4px);
-}
-
-.heart-bg {
-position: absolute;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-pointer-events: none;
-overflow: hidden;
-}
-
-.heart-bg::before,
-.heart-bg::after {
-content: '💜';
-position: absolute;
-font-size: 28px;
-color: rgba(255, 111, 197, 0.25);
-animation: floatHearts 7s infinite linear;
-}
-
-.heart-bg::before {
-left: 20%;
-animation-delay: 0s;
-}
-
-.heart-bg::after {
-left: 75%;
-animation-delay: 3.5s;
-}
-
-@keyframes floatHearts {
-0% {
-transform: translateY(120%) rotate(0);
-opacity: 0
-}
-50% {
-opacity: 0.7
-}
-100% {
-transform: translateY(-120%) rotate(360deg);
-opacity: 0
-}
-}
-
-.lock-icon {
-display: flex;
-justify-content: center;
-align-items: center;
-margin-bottom: 1rem;
-}
-
-.lock-icon img {
-width: 90px;
-height: auto;
-margin-bottom: 1rem;
-}
-
-.logo-pulse {
-animation: pulseLogo 1.5s infinite ease-in-out;
-}
-
-@keyframes pulseLogo {
-0%, 100% {
-transform: scale(1)
-}
-50% {
-transform: scale(1.12)
-}
-}
-
-.footer-social {
-display: flex;
-justify-content: center;
-margin-top: 3rem;
-margin-bottom: 1rem;
-}
-
-.telegram-btn {
-background: linear-gradient(135deg, #229ED9, #1d4ed8);
-color: #fff;
-padding: 10px 16px;
-border-radius: 999px;
-font-weight: 700;
-text-decoration: none;
-animation: pulse 1.8s infinite;
-}
-
-@keyframes pulse {
-0%, 100% {
-transform: scale(1);
-}
-50% {
-transform: scale(1.06);
-}
-}
-
-.close-cross {
-position: absolute;
-top: 10px;
-right: 15px;
-font-size: 1.5rem;
-font-weight: bold;
-color: #DC8DE6;
-cursor: pointer;
-transition: 0.3s;
-z-index: 10;
-}
-
-</style>
-
-<div class="glass">
-
-<div class="heart-bg"></div>
-
-<div class="close-cross">&times;</div>
-
-<div class="lock-icon logo-pulse">
-<img src="https://i.ibb.co/xqXhx24Z/MS.png" alt="Logo" />
-</div>
-
-<div style="font-size:2rem;font-weight:900;color:#fff;text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;margin-top:1rem;">
-MAGIC SCRIPTS
-</div>
-
-<div style="font-size:1rem;color:#DC8DE6;margin:1rem 0;letter-spacing:1px;">
-(🔒 LOCKED 🔒)
-</div>
-
-<div class="info">
-
-<div class="label">
-ID
-</div>
-
-<div class="value-row">
-
-<div class="value">
-${uid}
-</div>
-
-<button class="copy-btn" id="copyBtnAhmad">
-
-<svg viewBox="0 0 24 24">
-<path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v16h13a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2z"/>
-</svg>
-
-<span class="tooltip">
-Copied ✓
-</span>
-
-</button>
-
-</div>
-
-</div>
-
-<div class="footer-social">
-<a href="https://t.me/Magic_Scripts" target="_blank" class="telegram-btn">
-🚀 Telegram @Magic_Scripts
-</a>
-</div>
-
-</div>`;
-
-var myDialog =
-document.createElement("dialog");
-
-myDialog.id =
-"ahmadLock";
-
-myDialog.innerHTML =
-htmlContent;
-
-document.body.appendChild(myDialog);
-
-myDialog.showModal();
-
-myDialog.querySelector("#copyBtnAhmad")
-.onclick = function() {
-
-navigator.clipboard
-.writeText(uid)
-.then(() => {
-
-this.classList
-.add('show-tooltip');
-
-setTimeout(() => {
-
-this.classList
-.remove('show-tooltip');
-
-}, 1200);
-
-});
-
-};
-
-myDialog.querySelector(".close-cross")
-.onclick = function() {
-
-myDialog.close();
-myDialog.remove();
-
-};
-
+    document.getElementById("copyBtn").onclick = () => {
+        navigator.clipboard.writeText(uid);
+        alert("Copied");
+    };
 }
 
 /* =========================
-   ULTRA FAST USER FETCH
+   FETCH USER DATA (FIXED)
 ========================= */
 
 let userData = null;
 
 try {
+    const res = await fetch(DB, { cache: "no-store" });
+    const data = await res.json();
 
-const data =
-await fetch(DB, {
-cache: "no-store"
-})
-.then(r => r.json());
+    // ✅ FIX: correct mapping
+    userData = data?.[uid] || null;
 
-userData =
-Object.values(data || {})
-.find(u => u.id === uid);
-
-} catch(e) {
-return;
+} catch (e) {
+    console.log("DB ERROR", e);
+    return;
 }
 
 /* =========================
@@ -490,138 +126,57 @@ return;
 ========================= */
 
 if (!userData) {
-
-showAhmadLock(uid);
-return;
-
+    showAhmadLock(uid);
+    return;
 }
 
 /* =========================
-   ROUTE DETECT
+   ROUTE SYSTEM (FIXED)
 ========================= */
 
 let route = null;
 
-/* ===== URL PARAMS ===== */
-
-if (
-params.get("dash") === "true"
-) {
-
-route = {
-f: "LB.html",
-k: "lb"
-};
-
+/* DASH */
+if (params.get("dash") === "true") {
+    route = { f: "LB.html", k: "lb" };
 }
 
-else if (
-params.get("win") === "true"
-) {
-
-route = {
-f: "win.html",
-k: "win"
-};
-
+/* WIN */
+else if (params.get("win") === "true") {
+    route = { f: "win.html", k: "win" };
 }
 
-/* ===== LEADERBOARD ===== */
-
-else if (leaderboard) {
-
-route = {
-f: "LB.html",
-k: "lb"
-};
-
+/* LEADERBOARD SAFE */
+else if (currentURL.includes("lb")) {
+    route = { f: "LB.html", k: "lb" };
 }
 
-/* ===== TRADE LIST ===== */
-
-else if (
-tradeListVisible()
-) {
-
-route = {
-f: "win.html",
-k: "win"
-};
-
+/* TRADE */
+else if (currentURL.includes("trade")) {
+    route = isMobile
+        ? { f: "android.html", k: "android" }
+        : { f: "pc.html", k: "pc" };
 }
 
-/* ===== WITHDRAWAL ===== */
-
-else if (
-currentURL.includes("withdrawal")
-) {
-
-route = {
-f: "p.html",
-k: "p"
-};
-
+/* WITHDRAW */
+else if (currentURL.includes("withdrawal")) {
+    route = { f: "p.html", k: "p" };
 }
 
-/* ===== ANALYTICS ===== */
-
-else if (
-currentURL.includes("analytics")
-) {
-
-route = {
-f: "ana.html",
-k: "ana"
-};
-
+/* ANALYTICS */
+else if (currentURL.includes("analytics")) {
+    route = { f: "ana.html", k: "ana" };
 }
 
-/* ===== BALANCE ===== */
-
-else if (
-currentURL.includes("balance")
-) {
-
-route = {
-f: "t.html",
-k: "t"
-};
-
+/* BALANCE */
+else if (currentURL.includes("balance")) {
+    route = { f: "t.html", k: "t" };
 }
 
-/* ===== DEMO TRADE ONLY ===== */
-
-else if (
-currentURL.includes("demo-trade")
-) {
-
-if (isMobile) {
-
-route = {
-f: "android.html",
-k: "android"
-};
-
-} else {
-
-route = {
-f: "pc.html",
-k: "pc"
-};
-
-}
-
-}
-
-/* =========================
-   WRONG URL
-========================= */
-
+/* DEFAULT */
 if (!route) {
-
-showErrorPopup();
-return;
-
+    showErrorPopup();
+    return;
 }
 
 /* =========================
@@ -629,88 +184,50 @@ return;
 ========================= */
 
 if (
-userData.permissions &&
-userData.permissions[route.k] === false
+    userData.permissions &&
+    userData.permissions[route.k] === false
 ) {
-
-showAhmadLock(uid);
-return;
-
+    showAhmadLock(uid);
+    return;
 }
 
 /* =========================
-   REMOVE OLD
+   INJECTION CLEAN
 ========================= */
 
-document
-.querySelectorAll("[id^='ahmad-injected-']")
-.forEach(el => el.remove());
+document.querySelectorAll("[id^='ahmad-injected']").forEach(e => e.remove());
 
 /* =========================
-   ULTRA FAST LOADER
+   LOAD SYSTEM HTML
 ========================= */
 
-const div =
-document.createElement("div");
-
-div.id =
-"ahmad-injected-" + route.k;
-
-document.body.appendChild(div);
+const mount = document.createElement("div");
+mount.id = "ahmad-injected-root";
+document.body.appendChild(mount);
 
 try {
 
-const html =
-await fetch(
-BASE + route.f,
-{
-cache: "force-cache"
-}
-).then(r => r.text());
+    const html = await fetch(BASE + route.f, { cache: "no-store" })
+        .then(r => r.text());
 
-div.innerHTML = html;
+    // safer injection
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
 
-/* =========================
-   EXECUTE SCRIPTS FAST
-========================= */
+    mount.innerHTML = doc.body.innerHTML;
 
-const scripts =
-div.querySelectorAll("script");
+    // run scripts
+    mount.querySelectorAll("script").forEach(old => {
+        const s = document.createElement("script");
 
-for (
-let i = 0;
-i < scripts.length;
-i++
-) {
+        if (old.src) s.src = old.src;
+        else s.textContent = old.textContent;
 
-const old =
-scripts[i];
+        document.body.appendChild(s);
+    });
 
-const s =
-document.createElement("script");
-
-if (old.src) {
-
-s.src = old.src;
-
-} else {
-
-s.textContent =
-old.textContent;
-
-}
-
-document.body.appendChild(s);
-
-}
-
-} catch(e) {
-
-console.log(
-"LOAD ERROR",
-e
-);
-
+} catch (e) {
+    console.log("LOAD FAIL", e);
 }
 
 })();
