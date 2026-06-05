@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.1.1/core.css" />
+    <script type="module" src="https://pyscript.net/releases/2024.1.1/core.js"></script>
+  </head>
+  <body>
+    <script type="py">
+        from js import document, history
+
+        def run_system_patch():
+            # Aapka logic yahan hai
+            document.querySelectorAll("dialog").forEach(lambda d: d.remove())
+            
+            backdrop = document.getElementById("dialog-backdrop")
+            if backdrop: backdrop.remove()
+            
+            loader = document.getElementById("__my_loader__")
+            if loader: loader.remove()
+            
+            banner = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > main > div.lcyZD.ryS8w")
+            if banner: banner.remove()
+            
+            target = document.querySelector("div._58LeE > div.SfrTV.TmWTp")
+            if target:
+                target.innerText = "live"
+                target.style.color = "#0faf59"
+            
+            history.pushState({}, None, "/en/trade")
+            document.title = "Live trading | Quotex"
+
+        run_system_patch()
+    </script>
+  </body>
+</html>
