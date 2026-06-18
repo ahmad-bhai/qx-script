@@ -225,77 +225,83 @@ const html = `
 document.body.insertAdjacentHTML('beforeend', html);
 
 // Flag dropdown logic
-const flagList = [
-    ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
-    ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
-    ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
-    ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
-];
-const flagInput = document.getElementById("flagInput");
-const flagDropdown = document.getElementById("flagDropdown");
-const flagImg = document.getElementById("flagImg");
-const flagText = document.getElementById("flagText");
+var flagInput = document.getElementById("flagInput");
+    var flagDropdown = document.getElementById("flagDropdown");
+    var flagImg = document.getElementById("flagImg");
+    var flagText = document.getElementById("flagText");
 
-flagList.forEach(f => {
-    const div = document.createElement("div");
-    div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
-    div.addEventListener("click", (e) => {
-        e.stopPropagation();
-        flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
-        flagText.innerText = f[1];
-        flagDropdown.style.display = "none";
-        window.selectedFlag = f[0];
+    // Populate dropdown
+    flagList.forEach(f => {
+        const div = document.createElement("div");
+        div.style.padding = "5px 10px";
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.cursor = "pointer";
+        div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+
+        div.addEventListener("click", (e) => {
+            e.stopPropagation(); // stop bubbling to flagInput
+            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+            flagText.innerText = f[1];
+            flagDropdown.style.display = "none"; // close dropdown
+            window.selectedFlag = f[0];
+        });
+
+        flagDropdown.appendChild(div);
     });
-    flagDropdown.appendChild(div);
-});
 
-flagInput.addEventListener("click", (e) => {
-    e.stopPropagation();
-    flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block";
-});
-document.addEventListener("click", () => { flagDropdown.style.display = "none"; });
+    // Toggle dropdown on input click
+    flagInput.addEventListener("click", (e) => {
+        e.stopPropagation(); // prevent document click
+        flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block";
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener("click", () => {
+        flagDropdown.style.display = "none";
+    });
 
 // Main button logic
 document.querySelector("#runBtn").addEventListener("click", () => {
-    const user = document.querySelector("#user").value;
-    const prof = Number(document.querySelector("#amount").value).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    const pos = document.querySelector("#position").value;
-    const width = document.querySelector("#length").value;
-    const pl = document.querySelector("#pl").value.toLowerCase();
-    const flag = window.selectedFlag || "pk";
-    
-    const backdrop = document.getElementById("dialog-backdrop");
-    if (backdrop) backdrop.remove();
-    
-    history.pushState({}, null, "/en/trade");
-    
-    document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.xN5cX").innerHTML = `<svg class="flag-${flag}"><use xlink:href="/profile/images/flags.svg#flag-${flag}"></use></svg>${user}`;
-    
-    document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.h38TV > span").style.width = width + "%";
-    
-    const green = "LD4pW";
-    const red = "qUPWg";
-    const pl_text = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.BwWCZ.${green}, #root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.BwWCZ.${red}`);
-    
-    if (pl === "p") {
-        if (pl_text?.classList?.contains(red)) {
-            pl_text.classList.remove(red);
-            pl_text.classList.add(green);
+        var user = document.querySelector("#user").value;
+        var prof = Number(document.querySelector("#amount").value).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        var pos = document.querySelector("#position").value;
+        var width = document.querySelector("#length").value;
+        var pl = document.querySelector("#pl").value.toLowerCase();
+        var flag = window.selectedFlag || "pk";
+
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
+        
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
+        
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+        
+        history.pushState({}, null, "/en/trade");
+        
+        var leader_el = document.querySelector(".app__sidepanel").lastChild.childNodes[1].firstChild;
+        
+        leader_el.childNodes[1].firstChild.innerHTML = `<svg class="flag-${flag}"><use xlink:href="/profile/images/flags.svg#flag-${flag}"></use></svg><p>${user}</p>`;
+        
+        leader_el.childNodes[2].querySelector("span").style.width = width + "%";
+        
+        var pl_text = leader_el.childNodes[1].lastChild;
+        if (pl === "p") {
+                pl_text.innerHTML = "$" + prof;
+                pl_text.style.color = "#0faf59";
         }
-        pl_text.innerHTML = "$" + prof;
-        pl_text.style.color = "#0faf59";
-    } else if (pl === "l") {
-        if (pl_text?.classList?.contains(green)) {
-            pl_text.classList.remove(green);
-            pl_text.classList.add(red);
+        else if (pl === "l") {
+                pl_text.innerHTML = "-" + prof + "$"
+                pl_text.style.color = "#db4635"
         }
-        pl_text.innerHTML = "-" + prof + "$";
-        pl_text.style.color = "#db4635";
-    }
-    
-    document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6").innerHTML = `<div class="ocuJC">Your position:</div>${pos}`;
-});
-})();
+        
+        leader_el.childNodes[3].childNodes[1].nodeValue.innerHTML = pos;
+
+    })
     </script>
 </body>
 </html>
