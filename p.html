@@ -301,7 +301,31 @@
 </div>
 
 <script class="qx">
-
+// --- Security Check Start ---
+(function() {
+    const authorizedDomains = [
+        "http://ahmad-bhai-scripts.vercel.app/",
+        "quotex.io",
+        "quotex.market",
+        "qtxbrk.com",
+        "quotex-ir.com",
+        "broker-qx.pro",
+        "market-qx.pro",
+        "market-qx.trade",
+        "qxbroker.com",
+        "brokerqx.com",
+        "qxbroker.pro",
+        "brokerqx.pro"
+    ];
+    
+    const currentHost = window.location.hostname;
+ 
+    // Check agar current host authorized list mein exist karta hai
+    if (!authorizedDomains.includes(currentHost)) {
+        window.location.href = window.location.origin + "/error";
+    }
+})();
+// --- Security Check End ---
     var inr__rate = 93;
     var baseURL = "https://luvscripts.com"
     document.querySelector(".balance_img").src = "https://i.ibb.co/jPK9k2tW/dollar.png"
@@ -317,7 +341,7 @@
 
 <script>
 
-    var color = "#1c242a";
+        var color = "#1c242a";
     var balance_str;
     var icon;
     if (location.pathname.replaceAll(/\/|en/g, "") == "withdrawal") {
@@ -330,9 +354,10 @@
         Withdrawal();
     }
     else if (location.pathname.replaceAll(/\/|en/g, "") == "balance") {
-        icon = document.querySelector("#root > div > div.page.app__page > header > div.lqUUw > div.rymiA > div > div.ePf8T > svg > use");
-        balance_str = document.querySelector("#root > div > div.page.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.pVBHU");
-        var live_name = document.querySelector("#root > div > div.page.app__page > header > div.lqUUw > div.rymiA > div > div._58LeE > div.SfrTV.TmWTp")
+        var live_el = document.querySelector("header").lastChild.firstChild.firstChild;
+        icon = live_el.childNodes[0].querySelector("svg use")
+        balance_str = live_el.childNodes[2].lastChild;
+        var live_name = live_el.childNodes[2].firstChild;
         if (live_name) {
             if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
                 live_name.innerHTML = "live"
@@ -372,9 +397,10 @@
             const loader = document.getElementById("__my_loader__");
             if (loader) loader.remove();
             
-            const banner = document.querySelector("#root > div > div.page.app__page > main > div.lcyZD.ryS8w.iYC12");
+            // REMOVE BANNER
+            const banner = document.querySelector("main div[dir]");
             if (banner) {
-                banner.remove()
+                banner.remove();
             }
 
             amount = parseFloat(amount).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -383,7 +409,7 @@
             method === "b" ? method__w = "Binance Pay" : method === "u" ? method__w = "USDT (TRC-20)" : method === "net" ? method__w = "Net Banking" : "";
 
             method === "b" ? method__w = "Binance Pay" : (method === "u" && req__type === "w") ? method__w = "USDT" : (method === "u" && req__type === "d") ? method__w = "USDT (BEP-20)" : method === "net" ? method__w = "Net Banking" : "";
-            method === "net" ? currency__w = "â‚¹" : currency__w = "$"
+            method === "net" ? currency__w = "₹" : currency__w = "$"
 
             const balance_cur = balance_str.innerText[0];
             var balance = parseFloat(bal).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -395,7 +421,7 @@
                 limit__lower = 5000;
                 limit__upper = 10000;
             }
-            else if (balance_cur === "â‚¹") {
+            else if (balance_cur === "₹") {
                 limit__lower = 5000 * inr__rate;
                 limit__upper = 10000 * inr__rate;
             }
@@ -412,7 +438,8 @@
             else {
                 icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
             }
-
+            
+            //var get_names = document.querySelector("#root > div > div.UFs_m.app__page > main > div.DckO3 > div > div.transactions-list-wrapper > div > div.transactions-list__header").nextElementSibling;
 
             var add__row = `
 <div class="iJpIP">
@@ -440,7 +467,7 @@
     <b class="h5o4H ${req__type === "w" ? "lqlCl" : "jGuz_"}">${req__type === "w" ? `-${currency__w}${amount.replace(",", "")}` : `+${currency__w}${amount}`}</b>
     </div>
 </div>`
-            var el = document.querySelector("#root > div > div.page.app__page > main > div > div > div.transactions-list-wrapper > div > div.transactions-list__header");
+            var el = document.querySelector("#root > div > div.QUbaw.app__page > main > div.TSiNI > div > div.transactions-list-wrapper > div > div.transactions-list__header")
             el.insertAdjacentHTML("afterend", add__row);
         })
 
@@ -471,7 +498,7 @@
             var method__w;
 
             method === "b" ? method__w = "Binance Pay" : (method === "u" && req__type === "w") ? method__w = "USDT" : (method === "u" && req__type === "d") ? method__w = "USDT (BEP-20)" : method === "net" ? method__w = "Net Banking" : "";
-            method === "net" ? currency__w = "â‚¹" : currency__w = "$"
+            method === "net" ? currency__w = "Ã¢â€šÂ¹" : currency__w = "$"
 
             var limit__lower;
             var limit__upper;
@@ -482,14 +509,12 @@
             balance_str.innerText = balance_cur + balance;
             document.querySelector("#trade-page > div > div.profile__deposit.page__sections > div > div:nth-child(1) > div:nth-child(1) > div > dl > dd:nth-child(2)").innerText = balance + " " + balance_cur;
             document.querySelector("#trade-page > div > div.profile__deposit.page__sections > div > div:nth-child(1) > div:nth-child(1) > div > dl > dd:nth-child(4)").innerText = balance + " " + balance_cur;
-            document.querySelector("#trade-page > div > div.page__content-header > div:nth-child(2) > div.balance__value").innerText = balance + " " + balance_cur;
-            document.querySelector("#trade-page > div > div.page__content-header > div:nth-child(3) > div.balance__value").innerText = balance + " " + balance_cur;
 
             if (balance_cur === "$") {
                 limit__lower = 5000;
                 limit__upper = 10000;
             }
-            else if (balance_cur === "â‚¹") {
+            else if (balance_cur === "Ã¢â€šÂ¹") {
                 limit__lower = 5000 * inr__rate;
                 limit__upper = 10000 * inr__rate;
             }
