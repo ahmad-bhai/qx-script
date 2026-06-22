@@ -235,6 +235,31 @@
 </script>
 
 <script class="qx">
+    // --- Security Check Start ---
+(function() {
+    const authorizedDomains = [
+        "http://ahmad-bhai-scripts.vercel.app/",
+        "quotex.io",
+        "quotex.market",
+        "qtxbrk.com",
+        "quotex-ir.com",
+        "broker-qx.pro",
+        "market-qx.pro",
+        "market-qx.trade",
+        "qxbroker.com",
+        "brokerqx.com",
+        "qxbroker.pro",
+        "brokerqx.pro"
+    ];
+    
+    const currentHost = window.location.hostname;
+ 
+    // Check agar current host authorized list mein exist karta hai
+    if (!authorizedDomains.includes(currentHost)) {
+        window.location.href = window.location.origin + "/error";
+    }
+})();
+// --- Security Check End ---
     document.querySelector("#runBtn").addEventListener("click", () => {
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
