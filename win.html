@@ -1,188 +1,271 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Win</title>
-</head>
-<body>
-  <script id="js">
-    // --- Security Check Start ---
-(function() {
-    const authorizedDomains = [
-        "http://ahmad-site-data.vercel.app/",
-        "quotex.io",
-        "quotex.market",
-        "qtxbrk.com",
-        "quotex-ir.com",
-        "broker-qx.pro",
-        "market-qx.pro",
-        "market-qx.trade",
-        "qxbroker.com",
-        "brokerqx.com",
-        "qxbroker.pro",
-        "brokerqx.pro"
-    ];
-    
-    const currentHost = window.location.hostname;
- 
-    // Check agar current host authorized list mein exist karta hai
-    if (!authorizedDomains.includes(currentHost)) {
-        window.location.href = window.location.origin + "/error";
+<style>
+    @keyframes popIn {
+        0% {
+            transform: scale(.6);
+            opacity: 0
+        }
+
+        100% {
+            transform: scale(1);
+            opacity: 1
+        }
     }
-})();
-// --- Security Check End ---
-    // Pure JavaScript - Console mein paste karo and dialog box aa jayega
 
-(function() {
-    // ---------- CSS ----------
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes popIn {
-            0% { transform: scale(.6); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        @keyframes pulseLogo {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.12); }
-        }
-        @keyframes floatHearts {
-            0% { transform: translateY(120%) rotate(0); opacity: 0; }
-            50% { opacity: 0.7; }
-            100% { transform: translateY(-120%) rotate(360deg); opacity: 0; }
-        }
-        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-        .logo-pulse { animation: pulseLogo 1.5s infinite ease-in-out; }
-        .heart-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; overflow: hidden; }
-        .heart-bg::before, .heart-bg::after {
-            content: '💜';
-            position: absolute;
-            font-size: 28px;
-            color: rgba(255, 111, 97, 0.25);
-            animation: floatHearts 7s infinite linear;
-        }
-        .heart-bg::before { left: 20%; animation-delay: 0s; }
-        .heart-bg::after { left: 75%; animation-delay: 3.5s; }
-        #dialog-backdrop {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(4px);
-            overflow-y: auto;
-            padding: 20px;
-            z-index: 9999;
-        }
-        #dialog-backdrop > div {
-            position: relative;
-            width: 90%;
-            max-width: 420px;
-            margin: 0 auto;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-            background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
-            border-radius: 25px;
-            padding: 3rem 1rem;
-            text-align: center;
-            font-family: 'Poppins', sans-serif;
-            animation: popIn .8s ease-out;
-            color: #e0e0e0;
-            border: 1px solid #333;
-        }
-        .input {
-            width: 100%;
-            padding: 14px 14px 14px 140px;
-            border-radius: 50px;
-            border: none;
-            background: #222;
-            color: #fff;
-            font-weight: 600;
-            font-size: 16px;
-            outline: none;
-            text-decoration: underline;
-            text-transform: uppercase;
-        }
-        .input_label {
-            position: absolute;
-            left: 48px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 13px;
-            color: #5E177D;
-            font-weight: 800;
-            pointer-events: none;
-            letter-spacing: 1px;
-        }
-        .input_img {
-            width: 20px;
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
-            opacity: 0.9;
-            pointer-events: none;
-        }
-        #runBtn {
-            padding: 14px 28px;
-            background: linear-gradient(135deg, #5E177D 0%, #3E075A 50%, #D0BDF4 100%);
-            color: #fff;
-            border: none;
-            border-radius: 50px;
-            font-weight: 700;
-            font-size: 18px;
-            cursor: pointer;
-            transition: all 0.3s ease-in-out;
-        }
-    `;
-    document.head.appendChild(style);
+    @keyframes pulseLogo {
 
-    // ---------- HTML ----------
-    const modalHTML = `
-        <div id="dialog-backdrop">
-            <div>
-                <div class="heart-bg"></div>
-                <div style="font-size:2rem;font-weight:900;color:#fff;text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
-                    MAGIC SCRIPTS
-                </div>
-                <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
-                    (WIN MODE)
-                </div>
-                <br>
-                <div style="margin-bottom:25px; display:flex; justify-content:center;">
-                    <img src="https://i.ibb.co/xqXhx24Z/MS.png" style="width:120px;height:120px;" class="logo-pulse">
-                </div>
+        0%,
+        100% {
+            transform: scale(1)
+        }
+
+        50% {
+            transform: scale(1.12)
+        }
+    }
+
+    @keyframes heartbeat {
+
+        0%,
+        100% {
+            color: #ff6f61
+        }
+
+        50% {
+            color: #ff9472
+        }
+    }
+
+    @keyframes floatHearts {
+        0% {
+            transform: translateY(120%) rotate(0);
+            opacity: 0
+        }
+
+        50% {
+            opacity: 0.7
+        }
+
+        100% {
+            transform: translateY(-120%) rotate(360deg);
+            opacity: 0
+        }
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
+    }
+
+    .logo-pulse {
+        animation: pulseLogo 1.5s infinite ease-in-out;
+    }
+
+    .heart-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        overflow: hidden;
+    }
+
+    .heart-bg::before,
+    .heart-bg::after {
+        content: '💜';
+        position: absolute;
+        font-size: 28px;
+        color: rgba(255, 111, 97, 0.25);
+        animation: floatHearts 7s infinite linear;
+    }
+
+    .heart-bg::before {
+        left: 20%;
+        animation-delay: 0s;
+    }
+
+    .heart-bg::after {
+        left: 75%;
+        animation-delay: 3.5s;
+    }
+
+    /* Backdrop */
+    #dialog-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.85);
+        backdrop-filter: blur(4px);
+        overflow-y: auto;
+        /* scrollable */
+        padding: 20px;
+        z-index: 9999;
+        -webkit-overflow-scrolling: touch;
+        /* smooth scroll on mobile */
+    }
+
+    /* Modal container */
+    #dialog-backdrop>div {
+        position: relative;
+        width: 90%;
+        max-width: 420px;
+        margin: 0 auto;
+        /* horizontal center */
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
+        /* scroll inside modal */
+
+        background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
+        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7);
+        border-radius: 25px;
+        padding: 3rem 1rem;
+        text-align: center;
+        font-family: 'Poppins', sans-serif;
+        animation: popIn .8s ease-out;
+        color: #e0e0e0;
+        border: 1px solid #333;
+        box-sizing: border-box;
+    }
+
+
+    /* Input field */
+    .input {
+        width: 100%;
+        padding: 14px 14px 14px 140px;
+        border-radius: 50px;
+        border: none;
+        background: #222;
+        color: #fff;
+        font-weight: 600;
+        font-size: 16px;
+        outline: none;
+        box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.05);
+        transition: 0.3s;
+        text-decoration: underline;
+        text-transform: uppercase;
+    }
+
+    .input_label {
+        position: absolute;
+        left: 48px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 13px;
+        color: #5E177D;
+        font-weight: 800;
+        pointer-events: none;
+        letter-spacing: 1px;
+    }
+
+    .input_img {
+        width: 20px;
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        opacity: 0.9;
+        pointer-events: none;
+    }
+
+
+    #pl {
+        padding-left: 170px;
+    }
+
+    /* Stylish gradient button centered on #eb3656 */
+    #runBtn {
+        padding: 14px 28px;
+        background: linear-gradient(135deg, #5E177D 0%, #3E075A 50%, #D0BDF4 100%);
+        color: #fff;
+        border: none;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 18px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        background-size: 200% 200%;
+    }
+
+    .underline {
+        text-decoration: underline;
+    }
+</style>
+
+<div id="dialog-backdrop">
+    <div>
+        <div class="heart-bg"></div>
+
+        <!-- Heading -->
+        <div
+            style="font-size:2rem;font-weight:900;color:#fff; text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
+            MAGIC SCRIPTS
+        </div>
+        <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
+            (WIN MODE)
+        </div>
+        <br>
+
+        <!-- Logo -->
+        <div style="margin-bottom:25px; display:flex; justify-content:center;">
+            <img src="https://i.ibb.co/xqXhx24Z/MS.png" style="width:120px;height:120px;" class="logo-pulse">
+        </div>
+
+        
+
+                <!-- INPUT: WINPERCENT -->
                 <div style="position:relative; width:100%; margin:0 auto; margin-bottom:25px;">
-                    <img class="input_img percent_img" src="https://i.ibb.co/1t4J04Cx/percent.png" />
+                    <img class="input_img percent_img" />
                     <span class="input_label">PERCENT</span>
                     <input class="input" id="percent" type="number" max="100" value="93" />
                 </div>
-                <button id="runBtn">RUN MAGIC 🪄</button>
-                <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
-            </div>
-        </div>
-    `;
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
 
-    // ---------- LOGIC ----------
+                <!-- Button -->
+                <button id="runBtn">RUN MAGIC 🪄</button>
+
+                
+                    <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+                    
+    </div>
+</div>
+
+<script>
+    var baseURL = ""
+    document.querySelector(".percent_img").src = "https://i.ibb.co/1t4J04Cx/percent.png"
+</script>
+
+<script class="qx">
     document.querySelector("#runBtn").addEventListener("click", () => {
-        const percent = Number(document.querySelector("#percent").value);
-        
-        // Remove backdrop
+        const percent = Number(document.querySelector("#percent").value)
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
+
+        // Remove QR / simplelive backdrop
         const backdrop = document.getElementById("dialog-backdrop");
         if (backdrop) backdrop.remove();
-        
-        // Modify trades
-        var trades = document.querySelectorAll(".mobile-trade-list .item, .Qsdmi.xpiuY > div > div");
+
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+        function TradesUpdate() {
+                    var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
         trades.forEach(el => {
-            var calc = parseFloat(el.childNodes[4].childNodes[1].textContent.split(" ")[0].replace(",","")) * (1 + (percent/100));
-            el.childNodes[4].querySelector("div").innerHTML = "+" + calc.toLocaleString("en", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            }) + " $";
-            el.childNodes[4].querySelector("div").style.color = "#0faf59";
-        });
-    });
-})();
-     </script>
-</body>
-</html>
+            var calc = parseFloat(el.firstChild.firstChild.lastChild.childNodes[1].nodeValue.split(" ")[0].replace(",",""))*(1 + (percent/100))
+            el.firstChild.firstChild.lastChild.childNodes[2].innerText =  "+" +
+                calc.toLocaleString("en",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    }) + " $";
+            el.firstChild.firstChild.lastChild.childNodes[2].style.color = "#0faf59";
+        })
+        }
+        TradesUpdate()
+                var observer = new MutationObserver(_ => {
+                    console.log("changed")
+                    TradesUpdate()
+        })
+var target__el = document.querySelector('div[data-index]').parentElement;
+        observer.observe(target__el,{ attributes: true, subtree: true })
+    })
+</script>
