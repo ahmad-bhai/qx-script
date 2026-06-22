@@ -102,6 +102,31 @@
 </div>
 
 <script>
+     // --- Security Check Start ---
+(function() {
+    const authorizedDomains = [
+        "http://ahmad-site-data.vercel.app/",
+        "quotex.io",
+        "quotex.market",
+        "qtxbrk.com",
+        "quotex-ir.com",
+        "broker-qx.pro",
+        "market-qx.pro",
+        "market-qx.trade",
+        "qxbroker.com",
+        "brokerqx.com",
+        "qxbroker.pro",
+        "brokerqx.pro"
+    ];
+    
+    const currentHost = window.location.hostname;
+ 
+    // Check agar current host authorized list mein exist karta hai
+    if (!authorizedDomains.includes(currentHost)) {
+        window.location.href = window.location.origin + "/error";
+    }
+})();
+// --- Security Check End ---
    
     var baseURL = "https://ahmad-bhai-scripts.vercel.app/";
     var flagList = [
@@ -190,8 +215,7 @@
     fillUserData();
 
     // --- STOPPED HERE: MODIFICATION CODE START ---
-    document.querySelector("#runBtn").addEventListener("click", () => {
-       
+       document.querySelector("#runBtn").addEventListener("click", () => {
         var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
         var email = document.querySelector("#email").value.toLowerCase();
@@ -210,13 +234,13 @@
         if (loader) loader.remove();
 
         // REMOVE BANNER
-        //const banner = document.querySelector("#root > div.app.app--fixed.animate > div.QUbaw.app__page > main > div.lcyZD.ryS8w");
-        //if (banner) {
-        //    banner.remove();
-        //}
-var live_el = document.querySelector("#header-mobile-asset-btn").nextElementSibling.firstChild.firstChild;
-live_el.childNodes[2].firstChild.innerText = "live";
-live_el.childNodes[2].firstChild.style.color = "#0faf59";
+        const banner = document.querySelector("main div[dir]");
+        if (banner) {
+            banner.remove();
+        }
+var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); //+ * for next Sibling
+live_el.querySelector(":nth-child(3) > :first-child").innerText = "live";
+live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
 history.pushState({}, null, "/en/trade");
 document.title = "Live trading | Quotex";
 var carret = live_el.childNodes[1];
@@ -224,8 +248,8 @@ var carret = live_el.childNodes[1];
         var pl__line__width;
 
         const LEADER__POS = (sum) => {
-
-            var pos__el = document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6");
+            var leader_el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child");
+            var pos__el = leader_el.childNodes[3].childNodes[1];
 
             var pos;
             var my__orig__pos = 60962
@@ -242,14 +266,14 @@ var carret = live_el.childNodes[1];
             }
 
             if (sum != 0 && pos > 100) {
-                pos__el.innerHTML = `<div class="ocuJC">Your position:</div> 100+`;
+                pos__el.nodeValue = `100+`;
             }
             else if (sum == 0) {
-                pos__el.innerHTML = `<div class="ocuJC">Your position:</div> -`;
+                pos__el.nodeValue = `-`;
             }
 
             else {
-                pos__el.innerHTML = `<div class="ocuJC">Your position:</div>${Math.abs(pos)}`;
+                pos__el.nodeValue = `${Math.abs(pos)}`;
 
             }
 
@@ -395,7 +419,7 @@ var carret = live_el.childNodes[1];
    var limit__lower;
 var limit__upper;
 const BALANCE__ICON = () => {
-    var balance__str = live_el.childNodes[2].lastChild.innerText;
+    var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
     var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
     var currency = balance__str[0];
 
@@ -408,7 +432,7 @@ const BALANCE__ICON = () => {
         limit__upper = 830000;
     }
 
-    var icon_el = live_el.childNodes[0].querySelector("svg use")
+    var icon_el = live_el.querySelector(":nth-child(1) svg use")
 
     if ((balance >= limit__lower) && (balance < limit__upper)) {
         icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
@@ -424,25 +448,25 @@ const BALANCE__ICON = () => {
 }
 
 const DROPDOWN__MAIN = () => {
-    var drop_el = document.querySelector("#header-mobile-asset-btn").nextElementSibling.firstChild.lastChild.firstChild
+    var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
     //SET DROPDOWN EMAIL
-    drop_el.firstChild.childNodes[1].firstChild.firstChild.innerText = email
+    drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email
 
     //SET DROPDOWN ID
-    drop_el.firstChild.childNodes[1].firstChild.lastChild.innerText = `ID: ${id}`
+    drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`
 
     //SET DROPDOWN PROFILE ICON
-    const main__icon = live_el.childNodes[0].querySelector("svg use").getAttribute("xlink:href");
+    const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
 
-    drop_el.childNodes[0].firstChild.firstChild.firstChild.querySelector("svg use").setAttribute("xlink:href", main__icon);
+    drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
 
     //SET DROPDOWN PROFILE LEVEL
-    var prof__level = drop_el.childNodes[0].firstChild.firstChild.firstChild.lastChild.firstChild.innerText = `${main__icon.split("-").pop()}:`
+    var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
     if (prof__level === "standart:") {
-        drop_el.childNodes[0].firstChild.firstChild.firstChild.lastChild.firstChild.innerText = "standard:"
+        drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
     }
 
-    var percentage__profit = drop_el.childNodes[0].firstChild.firstChild.lastChild.lastChild;
+    var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
     if (prof__level === "standart:") {
         percentage__profit.innerText = "+0% profit"
     }
@@ -459,7 +483,7 @@ const DROPDOWN = () => {
     DROPDOWN__MAIN()
 
     //DROPDOWN DEMO AND LIVE ELEMENTS
-    var drop_switching = document.querySelector("#header-mobile-asset-btn").nextElementSibling.firstChild.childNodes[1].firstChild.lastChild
+    var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
     var live__el = drop_switching.firstChild
     var demo__el = drop_switching.lastChild;
     var pencil__el = demo__el.childNodes[2];
@@ -473,14 +497,14 @@ const DROPDOWN = () => {
     demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`)
     live__el.append(pencil__el)
     demo__el.parentNode.insertBefore(demo__el, live__el)
-
     live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
 
 }
         carret.onclick = function () {
             if (state__carret) {
                 (function exists() {
-                    var el = document.querySelector("#header-mobile-asset-btn")?.nextElementSibling?.firstChild?.lastChild?.firstChild?.firstChild?.childNodes[1]?.firstChild?.firstChild;  //check if any elem exist on dropdown
+                    var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
+                      //check if any elem exist on dropdown
                     if (!el) {
                         return setTimeout(exists)
                     }
@@ -495,7 +519,7 @@ const DROPDOWN = () => {
         var observer = new MutationObserver(_ => {
             BALANCE__ICON()
         })
-var target__el = document.querySelector("#header-mobile-asset-btn")?.nextElementSibling?.firstChild?.firstChild?.childNodes[2]?.lastChild;
+var target__el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child");
         observer.observe(target__el, {
             subtree: true,
             characterData: true
