@@ -1,62 +1,166 @@
 <style>
-    @keyframes popIn { 0% { transform: scale(.6); opacity: 0 } 100% { transform: scale(1); opacity: 1 } }
-    @keyframes pulseLogo { 0%, 100% { transform: scale(1) } 50% { transform: scale(1.12) } }
-    @keyframes floatHearts { 
-        0% { transform: translateY(120%) rotate(0); opacity: 0 } 
-        50% { opacity: 0.7 } 
-        100% { transform: translateY(-120%) rotate(360deg); opacity: 0 } 
-    }
+@keyframes popIn { 
+    0% { transform: scale(.95); opacity: 0 } 
+    100% { transform: scale(1); opacity: 1 } 
+}
+@keyframes pulseLogo { 
+    0%, 100% { transform: scale(1); opacity: 0.9; } 
+    50% { transform: scale(1.05); opacity: 1; } 
+}
+@keyframes floatHearts { 
+    0% { transform: translateY(120%) rotate(0); opacity: 0 } 
+    50% { opacity: 0.4 } 
+    100% { transform: translateY(-120%) rotate(360deg); opacity: 0 } 
+}
 
-    * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; }
-    .logo-pulse { animation: pulseLogo 1.5s infinite ease-in-out; }
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+    user-select: none; 
+    -webkit-font-smoothing: antialiased;
+}
 
-    .heart-bg {
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        pointer-events: none; overflow: hidden;
-    }
-    .heart-bg::before, .heart-bg::after {
-        content: '💜'; position: absolute; font-size: 28px;
-        color: rgba(255, 111, 97, 0.25); animation: floatHearts 7s infinite linear;
-    }
-    .heart-bg::before { left: 20%; animation-delay: 0s; }
-    .heart-bg::after { left: 75%; animation-delay: 3.5s; }
+.logo-pulse { animation: pulseLogo 2s infinite ease-in-out; }
 
-    #dialog-backdrop {
-        position: fixed; inset: 0; background: rgba(0, 0, 0, 0.85);
-        backdrop-filter: blur(4px); overflow-y: auto; padding: 20px; z-index: 9999;
-    }
+.heart-bg {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; overflow: hidden;
+}
+.heart-bg::before, .heart-bg::after {
+    content: '💜'; position: absolute; font-size: 24px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    animation: floatHearts 8s infinite linear;
+}
+.heart-bg::before { left: 15%; animation-delay: 0s; }
+.heart-bg::after { left: 80%; animation-delay: 4s; }
 
-    #dialog-backdrop>div {
-        position: relative; width: 90%; max-width: 420px; margin: 0 auto;
-        background: linear-gradient(145deg, #111 0%, #1f1f1f 100%);
-        box-shadow: 0 15px 50px rgba(0, 0, 0, 0.7); border-radius: 25px;
-        padding: 3rem 1.5rem; text-align: center; font-family: 'Poppins', sans-serif;
-        animation: popIn .8s ease-out; color: #e0e0e0; border: 1px solid #333;
-    }
+/* Backdrop - Soft tint with exactly 5px blur */
+#dialog-backdrop {
+    position: fixed; 
+    inset: 0; 
+    background: rgba(0, 0, 0, 0.4); /* Soft dark overlay */
+    backdrop-filter: blur(5px); /* 👈 Aapki demand par exactly 5px blur */
+    -webkit-backdrop-filter: blur(5px);
+    overflow-y: auto; 
+    padding: 20px; 
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
 
-    .input {
-        width: 100%; padding: 14px 14px 14px 110px; border-radius: 50px;
-        border: none; background: #222; color: #fff; font-weight: 600;
-        font-size: 16px; outline: none; transition: 0.3s; text-transform: uppercase;
-        text-decoration: underline;
-    }
+/* Modal container - Fully Transparent & Borderless */
+#dialog-backdrop>div {
+    position: relative; 
+    width: 90%; 
+    max-width: 390px; /* Perfect iPhone width */
+    margin: 0 auto;
+    
+    /* Full Transparent Layer */
+    background: transparent;
+    box-shadow: none; 
+    border: none;
+    
+    /* 30% Rounded / 70% Square Aesthetic for structural alignment */
+    border-radius: 12px; 
+    
+    padding: 2.5rem 1rem; 
+    text-align: center; 
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+    color: #ffffff;
+}
 
-    .input_label {
-        position: absolute; left: 48px; top: 50%; transform: translateY(-50%);
-        font-size: 13px; color: #5E177D; font-weight: 800; pointer-events: none;
-    }
+/* Input Wrapper for clean positioning */
+.input-container {
+    position: relative;
+    margin-bottom: 16px;
+    width: 100%;
+}
 
-    .input_img {
-        width: 20px; position: absolute; left: 18px; top: 50%;
-        transform: translateY(-50%); opacity: 0.9;
-    }
+/* Input field - Subtle Glassmorphism to keep text readable */
+.input {
+    width: 100%; 
+    padding: 14px 14px 14px 125px; 
+    
+    /* 30% Round / 70% Square Corner Style */
+    border-radius: 10px; 
+    
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Sleek hairline border */
+    background: rgba(255, 255, 255, 0.07); /* Light transparent overlay */
+    color: #fff; 
+    font-weight: 500;
+    font-size: 16px; 
+    outline: none; 
+    transition: all 0.25s ease; 
+}
 
-    #runBtn {
-        width: 100%; margin-top: 20px; padding: 14px 28px;
-        background: linear-gradient(135deg, #5E177D 0%, #3E075A 50%, #D0BDF4 100%);
-        color: #fff; border: none; border-radius: 50px; font-weight: 700;
-        font-size: 18px; cursor: pointer; transition: 0.3s;
-    }
+.input:focus {
+    border-color: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.input_label {
+    position: absolute; 
+    left: 44px; 
+    top: 50%; 
+    transform: translateY(-50%);
+    font-size: 13px; 
+    color: #D0BDF4; /* Original purple accent palette matched beautifully */
+    font-weight: 600; 
+    pointer-events: none;
+    letter-spacing: 0.5px;
+}
+
+.input_img {
+    width: 18px; 
+    position: absolute; 
+    left: 16px; 
+    top: 50%;
+    transform: translateY(-50%); 
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Premium Transparent Action Button */
+#runBtn {
+    width: 100%; 
+    margin-top: 12px; 
+    padding: 14px 28px;
+    
+    /* Same brand colors but converted into a premium semi-transparent gradient */
+    background: linear-gradient(135deg, rgba(94, 23, 125, 0.85) 0%, rgba(62, 7, 90, 0.85) 100%);
+    
+    color: #fff; 
+    border: 1px solid rgba(208, 189, 244, 0.25); 
+    
+    /* Matching 30% Round Corner Style */
+    border-radius: 10px; 
+    
+    font-weight: 600;
+    font-size: 17px; 
+    cursor: pointer; 
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(94, 23, 125, 0.2);
+}
+
+#runBtn:hover {
+    background: linear-gradient(135deg, rgba(94, 23, 125, 0.95) 0%, rgba(62, 7, 90, 0.95) 100%);
+    box-shadow: 0 6px 20px rgba(94, 23, 125, 0.35);
+    transform: translateY(-1px);
+}
+
+#runBtn:active {
+    transform: translateY(1px);
+    opacity: 0.85;
+}
+
+.underline {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Minimal clean underline */
+}
+    
 </style>
 
 <div id="dialog-backdrop">
