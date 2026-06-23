@@ -250,28 +250,28 @@
 
         <!-- INPUT: AMOUNT -->
         <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
-            <img class="input_img amount_img" src="https://i.ibb.co/P7vdvZR/amount.png" />
+            <img class="input_img amount_img" />
             <span class="input_label">AMOUNT</span>
             <input class="input" id="amount" type="text" value="987">
         </div>
 
         <!-- INPUT: PROFIT LINE -->
         <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
-            <img class="input_img length_img" src="https://i.ibb.co/0jRzNh0d/length.png" />
+            <img class="input_img length_img" />
             <span class="input_label">LENGTH</span>
             <input class="input" id="length" type="number" value="100" max="100" min="0">
         </div>
 
         <!-- INPUT: POSITION -->
         <div style="position:relative; width:100%; margin:auto;margin-bottom:5px;">
-            <img class="input_img position_img" src="https://i.ibb.co/BMRbckm/position.png" />
+            <img class="input_img position_img" />
             <span class="input_label">POSITION</span>
             <input class="input" id="position" type="text" value="100+">
         </div>
 
         <!-- INPUT: PL -->
         <div style="position:relative; width:100%; margin:auto;margin-bottom:25px;">
-            <img class="input_img pl_img" src="https://i.ibb.co/5WyzWkLK/pl.png" />
+            <img class="input_img pl_img" />
             <span class="input_label"><span class="underline">P</span>ROFIT/<span class="underline">L</span>OSS</span>
             <input class="input" id="pl" type="text" value="p" maxlength="1">
         </div>
@@ -285,33 +285,8 @@
 </div>
 
 <script>
-     // --- Security Check Start ---
-(function() {
-    const authorizedDomains = [
-        "http://ahmad-bhai-scripts.vercel.app/",
-        "quotex.io",
-        "quotex.market",
-        "qtxbrk.com",
-        "quotex-ir.com",
-        "broker-qx.pro",
-        "market-qx.pro",
-        "market-qx.trade",
-        "qxbroker.com",
-        "brokerqx.com",
-        "qxbroker.pro",
-        "brokerqx.pro"
-    ];
-    
-    const currentHost = window.location.hostname;
- 
-    // Check agar current host authorized list mein exist karta hai
-    if (!authorizedDomains.includes(currentHost)) {
-        window.location.href = window.location.origin + "/error";
-    }
-})();
-// --- Security Check End ---
-    var baseURL = "https://t.me/magic_scripts"
-    document.querySelector(".user_img").src "https://i.ibb.co/nNhbZXyb/user.png"
+    var baseURL = "https://luvscripts.com"
+    document.querySelector(".user_img").src = "https://i.ibb.co/nNhbZXyb/user.png"
     document.querySelector(".amount_img").src = "https://i.ibb.co/P7vdvZR/amount.png"
     document.querySelector(".length_img").src = "https://i.ibb.co/0jRzNh0d/length.png"
     document.querySelector(".position_img").src = "https://i.ibb.co/BMRbckm/position.png"
