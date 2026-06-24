@@ -361,17 +361,17 @@ var carret = live_el.childNodes[1];
 
         const LEADER__PLACE = (sum) => {
             (function exists() {
-                const leaders = document.querySelectorAll("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div");
+                const leaders = document.querySelectorAll(".M_p_O > :last-child > div");
                 if (!leaders.length) {
                     return setTimeout(exists)
                 }
                 Array.from(leaders).some((l, i) => {
-                    const leader_profit = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.jJUGd.ETyBt`);
+                    const leader_profit = l.querySelector(`:nth-child(3)`);
                     const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
                     if (leader_profit_simplify <= sum) {
-                        const leader__flag = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.s4L5S > div.zCluU > svg > use`);
+                        const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
                         leader__flag.setAttribute("xlink:href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
-                        const leader_name = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.s4L5S > div.MrPOZ`);
+                        const leader_name = l.querySelector(`:nth-child(2) > :nth-child(3)`);
                         leader_name.innerHTML = user;
                         //                         const leader_avatar = document.querySelector(`div.leader-board > div.leader-board__items > div:nth-child(${i + 1}) > div.leader-board__item-inform > div.leader-board__item-block > div`);
                         //                         leader_avatar.innerHTML = `
@@ -384,8 +384,8 @@ var carret = live_el.childNodes[1];
                             leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
                                 }`
                         }
-                        const REAL_POS = document.querySelector(`#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.LTZTE > div:nth-child(${i + 1}) > div.s4L5S > div.mvqBr > div`).innerHTML;
-                        document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.iKtL6").innerHTML = `<div class="ocuJC">Your position:</div>${REAL_POS}`;
+                        const REAL_POS = document.querySelector(`:nth-child(2) > :first-child > div`).innerHTML;
+                        document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child").childNodes[3].childNodes[1].nodeValue = REAL_POS;
                         return true
                     }
                 })
@@ -475,7 +475,7 @@ var carret = live_el.childNodes[1];
         }
         top.onclick = function () {
             (function waitForSpriteFlag() {
-                const el = document.querySelector("#root > div > aside.GIUEs.app__sidepanel.y29PX.qe_nH > div.FEpc5 > div.MUXvc > div.K9Ykc > div.DTYNe > div.xN5cX");
+                const el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child > :nth-child(2) > :first-child");
                 if (!el) return setTimeout(waitForSpriteFlag);
 
                 const useEl = el.querySelector("svg use");
@@ -491,7 +491,7 @@ var carret = live_el.childNodes[1];
                 const nameUser = el.querySelector("p");
                 if (nameUser) nameUser.textContent = `${user}`;
 
-                TradesCalc();
+                //TradesCalc();
             })();
         };
 
