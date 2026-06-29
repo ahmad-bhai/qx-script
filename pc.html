@@ -361,56 +361,29 @@
     // --- RUN SCRIPT TRIGGER ---
     document.querySelector("#runBtn").addEventListener("click", () => {
 
-        if (document.querySelector("#win").value.toLowerCase() == "yes") {
-            function TradesUpdate() {
-    // Pure PC selector aapka original wala
-    var trades = document.querySelectorAll("#root > div.app.app--fixed.animate > div.d22mQ > div > div.Qsdmi.xpiuY > div > div > div.h6J0L");
-    
-    // PC ke liye percent input element
-    var percentInput = document.querySelector("#percent");
-    var pcPercent = percentInput ? Number(percentInput.value) : 0; // Agar input na mile toh 00% consider karega
-
-    trades.forEach(el => {
-        try {
-            // Pure numeric value nikalne ke liye saare commas hataye (/,/g)
-            var rawText = el.innerText.split(" ")[0].replace(/,/g, "");
-            var calc = parseFloat(rawText) * (1 + (pcPercent / 100));
-            
-            var targetDiv = el.querySelector("div");
-            if (targetDiv) {
-                targetDiv.innerText = "+" + calc.toLocaleString("en", {
-                    minimumFractionDigits: 2,
-                    maximumFractionDigits: 2,
-                }) + " $";
-                targetDiv.style.color = "#0faf59";
-            }
-        } catch (err) {
-            console.error("Calculation ya DOM error:", err);
+         var trades = document.querySelectorAll("#root > div.app.app--fixed.animate > div.d22mQ > div > div.Qsdmi.xpiuY > div > div > div.h6J0L");
+            trades.forEach(el => {
+                var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
+                el.querySelector("div").innerText =  "+" +
+                    calc.toLocaleString("en",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }) + " $";
+                el.querySelector("div").style.color = "#0faf59";
+            })
         }
-    });
-}
-
-// Pehli baar function run karne ke liye
-TradesUpdate();
-
-// Mutation Observer setup pure PC layout ke mutabiq
-var target__el = document.querySelector("#root");
-
-if (target__el) {
-    var observer = new MutationObserver((mutations) => {
-        // Infinite loop/crash se bachne ke liye updates se pehle observer pause
-        observer.disconnect();
-        
-        console.log("PC DOM changed, updating values...");
-        TradesUpdate();
-        
-        // Update khatam hone ke baad dobara listen shuru
-        observer.observe(target__el, { childList: true, characterData: true, subtree: true });
-    });
-
-    // Pehli baar observer start karne ke liye
-    observer.observe(target__el, { childList: true, characterData: true, subtree: true });
-}
+        TradesUpdate()
+                var observer = new MutationObserver(_ => {
+                    console.log("changed")
+                    observer.disconnect(); // Infinite loop se bachne ke liye pause kiya
+                    TradesUpdate()
+                    observer.observe(target__el,{ attributes: true, subtree: true }) // Kaam ke baad dubara start kiya
+        })
+var target__el = document.querySelector("#root > div.app.app--fixed.animate"); // PC ka parent element
+        observer.observe(target__el,{ attributes: true, subtree: true })
+    })
+    }
             
 
         var user = document.querySelector("#user").value;
