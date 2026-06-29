@@ -358,9 +358,10 @@
 
     fillUserData();
 
-    // --- RUN SCRIPT TRIGGER ---
+// --- RUN SCRIPT TRIGGER ---
     document.querySelector("#runBtn").addEventListener("click", () => {
-if (document.querySelector("#win").value.toLowerCase() == "yes") {
+
+        if (document.querySelector("#win").value.toLowerCase() == "yes") {
             var trades = document.querySelectorAll("#root > div.app.app--fixed.animate > div.d22mQ > div > div.Qsdmi.xpiuY > div > div > div.h6J0L");
             trades.forEach(el => {
                 var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
@@ -372,18 +373,7 @@ if (document.querySelector("#win").value.toLowerCase() == "yes") {
                         }) + " $";
                 el.querySelector("div").style.color = "#0faf59";
             })
-}
-        
-        TradesUpdate()
-                var observer = new MutationObserver(_ => {
-                    console.log("changed")
-                    observer.disconnect(); // Infinite loop se bachne ke liye pause kiya
-                    TradesUpdate()
-                    observer.observe(target__el,{ attributes: true, subtree: true }) // Kaam ke baad dubara start kiya
-        })
-var target__el = document.querySelector("#root > div.app.app--fixed.animate"); // PC ka parent element
-        observer.observe(target__el,{ attributes: true, subtree: true })
-    })
+        }
 
         var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
