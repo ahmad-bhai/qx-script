@@ -236,7 +236,7 @@
         <div style="position:relative; width:100%; margin-bottom:8px;">
             <img class="input_img win_img" src="https://i.ibb.co/Xr8SRLGT/win.png" />
             <span class="input_label" style="left:48px;">WIN (YES/NO)</span>
-            <input class="input" id="win" type="text" value="YES" />
+            <input class="input" id="win" type="text" value="NO" />
         </div>
 
         <div style="position:relative; width:100%; margin-bottom:8px;">
@@ -361,7 +361,8 @@
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
-          var trades = document.querySelectorAll("div[data-index]:not([data-index="0"])");
+          var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
+            
             
             trades.forEach(el => {
                 var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
