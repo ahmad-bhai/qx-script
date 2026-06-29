@@ -359,20 +359,30 @@
     fillUserData();
 
 // --- RUN SCRIPT TRIGGER ---
-    document.querySelector("#runBtn").addEventListener("click", () => {
+document.querySelector("#runBtn").addEventListener("click", () => {
+        const percent = Number(document.querySelector("#percent").value)
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
 
-        if (document.querySelector("#win").value.toLowerCase() == "yes") {
-            var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
-trades.forEach(el => {
-    var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
-    el.querySelector("div").innerText =  "+" +
-        calc.toLocaleString("en",
-            {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2,
-            }) + " $";
-    el.querySelector("div").style.color = "#0faf59";
-})
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
+
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+        function TradesUpdate() {
+                    var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
+        trades.forEach(el => {
+            var calc = parseFloat(el.firstChild.firstChild.lastChild.childNodes[1].nodeValue.split(" ")[0].replace(",",""))*(1 + (percent/100))
+            el.firstChild.firstChild.lastChild.childNodes[2].innerText =  "+" +
+                calc.toLocaleString("en",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    }) + " $";
+            el.firstChild.firstChild.lastChild.childNodes[2].style.color = "#0faf59";
+        })
         }
 
         var user = document.querySelector("#user").value;
