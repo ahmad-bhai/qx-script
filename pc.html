@@ -362,7 +362,7 @@
     document.querySelector("#runBtn").addEventListener("click", () => {
 
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
-            var target__el = document.querySelector("#root > div.app.app--fixed.animate");
+            var trades__el = document.querySelector("#root > div.app.app--fixed.animate");
             trades.forEach(el => {
                 var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
                 el.querySelector("div").innerText =  "+" +
