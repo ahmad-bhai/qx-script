@@ -362,7 +362,7 @@
     document.querySelector("#runBtn").addEventListener("click", () => {
 
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
-            var trades = document.querySelectorAll("#root > div.app.app--fixed.animate > div.d22mQ > div > div.Qsdmi.xpiuY > div > div > div.h6J0L");
+            var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
             trades.forEach(el => {
                 var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
                 el.querySelector("div").innerText =  "+" +
