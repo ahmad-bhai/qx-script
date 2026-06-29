@@ -360,19 +360,9 @@
 
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
-        const percent = Number(document.querySelector("#percent").value)
-        // Remove any dialogs
-        document.querySelectorAll("dialog").forEach(d => d.remove());
-
-        // Remove QR / simplelive backdrop
-        const backdrop = document.getElementById("dialog-backdrop");
-        if (backdrop) backdrop.remove();
-
-        // Remove loader if still exists
-        const loader = document.getElementById("__my_loader__");
-        if (loader) loader.remove();
-        function TradesUpdate() {
-          var trades = document.querySelectorAll("#root > div.app.app--fixed.animate > div.d22mQ > div > div.Qsdmi.xpiuY > div > div > div.h6J0L");
+        if (document.querySelector("#win").value.toLowerCase() == "yes") {
+          var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
+            
             trades.forEach(el => {
                 var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
                 el.querySelector("div").innerText =  "+" +
