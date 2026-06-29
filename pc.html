@@ -236,7 +236,7 @@
         <div style="position:relative; width:100%; margin-bottom:8px;">
             <img class="input_img win_img" src="https://i.ibb.co/Xr8SRLGT/win.png" />
             <span class="input_label" style="left:48px;">WIN (YES/NO)</span>
-            <input class="input" id="win" type="text" value="YES" />
+            <input class="input" id="win" type="text" value="NO" />
         </div>
 
         <div style="position:relative; width:100%; margin-bottom:8px;">
@@ -372,17 +372,17 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         const loader = document.getElementById("__my_loader__");
         if (loader) loader.remove();
         function TradesUpdate() {
-                    var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
-        trades.forEach(el => {
-            var calc = parseFloat(el.firstChild.firstChild.lastChild.childNodes[1].nodeValue.split(" ")[0].replace(",",""))*(1 + (percent/100))
-            el.firstChild.firstChild.lastChild.childNodes[2].innerText =  "+" +
-                calc.toLocaleString("en",
-                    {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2,
-                    }) + " $";
-            el.firstChild.firstChild.lastChild.childNodes[2].style.color = "#0faf59";
-        })
+          var trades = document.querySelectorAll("#root > div.app.app--fixed.animate > div.d22mQ > div > div.Qsdmi.xpiuY > div > div > div.h6J0L");
+            trades.forEach(el => {
+                var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
+                el.querySelector("div").innerText =  "+" +
+                    calc.toLocaleString("en",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }) + " $";
+                el.querySelector("div").style.color = "#0faf59";
+            })
         }
 
         var user = document.querySelector("#user").value;
