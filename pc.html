@@ -361,7 +361,8 @@
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
-          var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
+          var trades = document.querySelectorAll("div[data-index]:not([data-index=\"0\"])");
+            
             
             
             trades.forEach(el => {
