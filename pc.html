@@ -387,7 +387,7 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             banner.remove();
         }
         var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); //+ * for next Sibling
-        live_el.querySelector(":nth-child(3) > :first-child").innerText = "live";
+        live_el.querySelector(":nth-child(3) > :first-child").innerText = "live account";
         live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
         history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
