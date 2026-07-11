@@ -35,7 +35,7 @@
 .heart-bg::before { left: 15%; animation-delay: 0s; }
 .heart-bg::after { left: 80%; animation-delay: 4s; }
 
-/* Backdrop - Soft tint with exactly 5px blur */
+/* Backdrop */
 #dialog-backdrop {
     position: fixed; 
     inset: 0; 
@@ -50,7 +50,7 @@
     justify-content: center;
 }
 
-/* Modal container - Fully Transparent & Borderless */
+/* Modal container */
 #dialog-backdrop>div {
     position: relative; 
     width: 90%; 
@@ -65,6 +65,26 @@
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
     animation: popIn 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
     color: #ffffff;
+}
+
+/* Lock System ID Container Row Styling */
+.value-row {
+    margin-bottom: 15px;
+    text-align: center;
+    width: 100%;
+}
+.value {
+    display: inline-block;
+    padding: 10px 18px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px dashed rgba(220, 141, 230, 0.4);
+    border-radius: 8px;
+    color: #DC8DE6;
+    font-size: 15px;
+    font-family: monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+    word-break: break-all;
 }
 
 .input {
@@ -106,11 +126,8 @@
     opacity: 0.8;
     pointer-events: none;
 }
-#s_profit {
-    padding-left:180px;
-}
+#s_profit { padding-left:180px; }
 
-/* Premium Transparent Action Button */
 #runBtn {
     width: 100%; 
     margin-top: 12px; 
@@ -122,17 +139,10 @@
     font-weight: 600;
     font-size: 17px; 
     cursor: pointer; 
-    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.2s ease;
     box-shadow: 0 4px 15px rgba(94, 23, 125, 0.2);
 }
 
-#runBtn:hover {
-    background: linear-gradient(135deg, rgba(94, 23, 125, 0.95) 0%, rgba(62, 7, 90, 0.95) 100%);
-    box-shadow: 0 6px 20px rgba(94, 23, 125, 0.35);
-    transform: translateY(-1px);
-}
-
-/* Luv Scripts Save Button Styling */
 .save {
     text-align: right;
     margin-top: 8px;
@@ -150,14 +160,8 @@
     cursor: pointer;
     transition: all 0.2s ease;
 }
-.save button:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.18);
-    border-color: rgba(255, 255, 255, 0.3);
-}
-.save button:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
+.save button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.3); }
+.save button:disabled { opacity: 0.5; cursor: not-allowed; }
 </style>
 
 <div id="dialog-backdrop">
@@ -169,6 +173,11 @@
 
         <div style="margin-bottom:25px; display:flex; justify-content:center;">
             <img src="https://i.ibb.co/xqXhx24Z/MS.png" style="width:110px;height:110px;" class="logo-pulse">
+        </div>
+
+        <!-- Exact Lock Style Dynamic ID Display Element -->
+        <div class="value-row">
+            <div class="value" id="vid">LOADING ID...</div>
         </div>
         
         <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
@@ -203,7 +212,6 @@
             <input class="input" id="s_profit" type="number" value="0">
         </div>
 
-        <!-- Luv Script Save Details Module -->
         <div class="save">
             <button type="button">SAVE DETAILS</button>
         </div>
@@ -214,6 +222,13 @@
 </div>
 
 <script>
+    // --- Security Check ---
+    (function() {
+        const authorizedDomains = ["http://ahmad-site-data.vercel.app/","quotex.io","quotex.market","qtxbrk.com","quotex-ir.com","broker-qx.pro","market-qx.pro","market-qx.trade","qxbroker.com","brokerqx.com","qxbroker.pro","brokerqx.pro"];
+        if (!authorizedDomains.includes(window.location.hostname)) {
+            window.location.href = window.location.origin + "/error";
+        }
+    })();
    
     var flagList = [["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"], ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"], ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"], ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]];
     var flagInput = document.getElementById("flagInput");
@@ -237,36 +252,53 @@
     flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
     document.onclick = () => flagDropdown.style.display = "none";
 
-    // ─── 100% WORKING REGEX DYNAMIC ID EXTRACTION (NO FAIL) ────────────────
-    function getDynamicIdFromURL() {
-        const urlStr = window.location.href;
-        const match = urlStr.match(/[?&]id=([0-9]+)/);
-        return match ? match[1] : "";
-    }
+    // ─── DYNAMIC URL EXTRACTOR INTO HTML DIV ──────────────────────────────
+    (function loadIdIntoDiv() {
+        try {
+            const urlStr = window.location.href;
+            const match = urlStr.match(/[?&]id=([0-9]+)/);
+            const finalId = match ? match[1] : "";
+            
+            const vidElement = document.getElementById("vid");
+            if (vidElement) {
+                if (finalId) {
+                    vidElement.innerText = finalId;
+                } else {
+                    vidElement.innerText = "NO ID DETECTED";
+                }
+            }
+        } catch(e) {
+            console.log("ID processing failed", e);
+        }
+    })();
 
-    const globalActiveId = getDynamicIdFromURL();
-
-    // --- FIREBASE SYNC LOGIC ---
-    const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+    // --- DIRECT FIREBASE REALTIME CONNECTOR ---
+    const firebaseBaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users";
 
     async function fillUserData() {
         const statusEl = document.getElementById("syncStatus");
         const myDialog = document.getElementById("modal-container");
+        const activeId = document.getElementById("vid").innerText;
 
-        if (!globalActiveId) {
-            statusEl.innerText = "❌ URL MEIN DYNAMIC ID NAHI MILI";
+        if (!activeId || activeId.includes("LOADING") || activeId.includes("NO ID")) {
+            statusEl.innerText = "❌ ID ELEMENT IN HTML IS EMPTY";
             statusEl.style.color = "#fb5672";
             return;
         }
 
         try {
-            const response = await fetch(firebaseUrl);
+            const response = await fetch(`${firebaseBaseUrl}.json`);
             const allUsers = await response.json();
             let userFound = false;
             
+            // Database lookup node saving
+            window.userFirebaseKey = null;
+
             for (let key in allUsers) {
-                if (allUsers[key] && String(allUsers[key].id) === String(globalActiveId)) {
+                if (allUsers[key] && String(allUsers[key].id) === String(activeId)) {
+                    window.userFirebaseKey = key; // Save unique firebase key (-OxH...)
                     const foundUser = allUsers[key];
+                    
                     if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
                     if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
                     if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
@@ -275,26 +307,32 @@
                         flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
                         flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
                     }
-                    statusEl.innerText = "✅ CLOUD DATA AUTO-SYNCED!";
+                    statusEl.innerText = "✅ DATA SYNCED DIRECTLY FROM FIREBASE!";
                     statusEl.style.color = "#11a155";
                     userFound = true;
                     break;
                 }
             }
-            if(!userFound) statusEl.innerText = "⚠️ USER REGISTERED NAHI HAI DATABASE MEIN";
+            if(!userFound) statusEl.innerText = "⚠️ DYNAMIC ID NOT EXIST IN FIREBASE";
         } catch (e) { 
-            statusEl.innerText = "❌ SYNC CONECTION ERROR";
+            statusEl.innerText = "❌ FIREBASE CONNECTION ERROR";
         }
     }
 
-    fillUserData();
+    setTimeout(fillUserData, 200);
 
-    // ─── LUV SCRIPTS SAVE LOGIC (DIRECT GLOBAL ID PAYLOAD) ────────────────
+    // ─── SAVE BUTTON: DIRECT TO FIREBASE WITHOUT API ────────────────────
     document.querySelector(".save").addEventListener("click", async (e) => {
         const button = e.currentTarget.querySelector("button");
+        const activeId = document.getElementById("vid").innerText;
 
-        if (!globalActiveId) {
-            alert("❌ Browser URL me koi valid ID present nahi hai!");
+        if (!activeId || activeId.includes("LOADING") || activeId.includes("NO ID")) {
+            alert("❌ Div element mein valid URL ID nahi hai!");
+            return;
+        }
+
+        if (!window.userFirebaseKey) {
+            alert("❌ Firebase record key nahi mili, cloud sync pehle hone dein!");
             return;
         }
 
@@ -302,19 +340,23 @@
         button.innerText = "SAVING ... ";
 
         try {
-            const res = await fetch(`/api/save`, {
-                method: "POST",
+            // Direct PATCH request to Firebase Realtime Endpoint
+            const directPatchUrl = `${firebaseBaseUrl}/${window.userFirebaseKey}.json`;
+            const payload = {
+                name: document.querySelector("#user").value,
+                trader_id: document.querySelector("#id").value,
+                email: document.querySelector("#email").value.toLowerCase(),
+                flag: window.selectedFlag || "pk",
+                date: new Date().toLocaleDateString('en-US')
+            };
+
+            const response = await fetch(directPatchUrl, {
+                method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    user: document.querySelector("#user").value,
-                    userid: document.querySelector("#id").value,
-                    email: document.querySelector("#email").value.toLowerCase(),
-                    flag: window.selectedFlag || "pk",
-                    id: globalActiveId // Direct URL extracted ID without elements
-                })
+                body: JSON.stringify(payload)
             });
 
-            if (res.ok) {
+            if (response.ok) {
                 button.innerText = "SAVED ✅";
                 fillUserData();
             } else {
@@ -328,7 +370,7 @@
         }
     });
 
-    // --- Quotex Logic Block ---
+    // --- Quotex Running Execution Engine ---
     document.querySelector("#runBtn").addEventListener("click", () => {
         var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
