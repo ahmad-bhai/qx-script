@@ -162,7 +162,21 @@
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Minimal clean underline */
 }
-    
+    .save {
+        text-align: right;
+        margin-bottom: 25px;
+    }
+
+    .save button {
+        padding: 10px;
+        font-size: 16px;
+        font-weight: 700;
+        color: #DC8DE6;
+        background: transparent;
+        cursor: pointer;
+        position: relative;
+        border: none;
+    }
 </style>
 
 <div id="dialog-backdrop">
@@ -207,7 +221,10 @@
                     <span class="input_label">START PPROFIT</span>
                     <input class="input" id="s_profit" type="number" value="0">
                 </div>
-
+<div class="save">
+    <button>SAVE DATA</button>
+</div>
+        
         <button id="runBtn">RUN MAGIC 🪄 </button>
         <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 CONNECTING TO FIREBASE...</div>
     </div>
@@ -277,54 +294,64 @@
     flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
     document.onclick = () => flagDropdown.style.display = "none";
 
-    // --- FIREBASE SYNC LOGIC ---
-    const savedUniqueID = localStorage.getItem('ahmad_script_uid');
-    const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
+    // ─── 1. URL SE DYNAMIC ID PARSE KARNA ───────────────────────────────────
+let dynamicIdFromUrl = "";
+try {
+    const urlParams = new URLSearchParams(window.location.search);
+    dynamicIdFromUrl = urlParams.get('id') || ""; // URL se 'id' parameter uthayega
+} catch (e) {
+    console.error("URL Parameter extraction error:", e);
+}
 
-    async function fillUserData() {
-        const statusEl = document.getElementById("syncStatus");
-        const myDialog = document.getElementById("modal-container");
+// ─── 2. EXACT LUV SCRIPTS LOGIC (VID KI JAGAH ID DYNAMIC) ───────────────
+document.querySelector(".save").addEventListener("click", async (e) => {
+    const button = e.currentTarget.querySelector("button");
 
-        if (!savedUniqueID) {
-            statusEl.innerText = "❌ DEVICE ID NOT FOUND";
-            statusEl.style.color = "#fb5672";
-            return;
-        }
-
-        try {
-            const response = await fetch(firebaseUrl);
-            const allUsers = await response.json();
-            
-            let userFound = false;
-            for (let key in allUsers) {
-                if (allUsers[key].id === savedUniqueID) {
-                    const foundUser = allUsers[key];
-                    
-                    if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
-                    if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
-                    if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
-                    
-                    // Auto-sync flag if available
-                    if (foundUser.flag) {
-                        window.selectedFlag = foundUser.flag;
-                        flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
-                        flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
-                    }
-
-                    statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
-                    statusEl.style.color = "#11a155";
-                    userFound = true;
-                    break;
-                }
-            }
-            if(!userFound) statusEl.innerText = "⚠️ USER NOT FOUND IN CLOUD";
-        } catch (e) { 
-            statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
-            console.log("Sync Error:", e); 
-        }
+    if (!dynamicIdFromUrl) {
+        alert("❌ Error: Dynamic ID parameter is missing from URL!");
+        return;
     }
 
-    fillUserData();
+    button.disabled = true;
+    button.innerText = "SAVING ... ";
+
+    try {
+        // Aapka working dynamic endpoint path
+        const res = await fetch("/api/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                user: document.querySelector("#user").value,
+                userid: document.querySelector("#id").value,
+                email: document.querySelector("#email").value.toLowerCase(),
+                flag: window.selectedFlag || "pk",
+                id: dynamicIdFromUrl // 👈 vid ki jagah pure dynamic id use ho rahi hai
+            })
+        });
+
+        const html = await res.text();
+        
+        if (html === "OK") {
+            button.innerText = "SAVED ✅";
+        } else {
+            button.innerText = "Error ❌";
+        }
+
+        setTimeout(() => {
+            button.innerText = "SAVE DETAILS"; 
+            button.disabled = false;
+        }, 2000);
+
+    } catch (err) {
+        console.error(err);
+        button.innerText = "Error ❌";
+        setTimeout(() => {
+            button.innerText = "SAVE DETAILS";
+            button.disabled = false;
+        }, 2000);
+    }
+});
+
 
     // --- STOPPED HERE: MODIFICATION CODE START ---
 document.querySelector("#runBtn").addEventListener("click", () => {
