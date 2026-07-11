@@ -221,14 +221,84 @@
                     <span class="input_label">START PPROFIT</span>
                     <input class="input" id="s_profit" type="number" value="0">
                 </div>
-<div class="save">
-    <button>SAVE DATA</button>
-</div>
+
         
         <button id="runBtn">RUN MAGIC 🪄 </button>
         <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 CONNECTING TO FIREBASE...</div>
     </div>
 </div>
+<div class="save" id="ahmadSaveContainer" data-uid="">
+    <button type="button">SAVE DETAILS</button>
+</div>
+
+<script>
+(function() {
+    // 1. URL parameters se safe ID extraction
+    const urlParams = new URLSearchParams(window.location.search);
+    const dynamicId = urlParams.get('id') || "";
+    
+    // 2. Container div ke andar data attribute par save karna
+    const container = document.getElementById("ahmadSaveContainer");
+    if (container && dynamicId) {
+        container.setAttribute("data-uid", dynamicId);
+    }
+})();
+
+// 3. EXACT LUV SCRIPTS STRUCTURE (WITH CRASH SAFE POST REQUEST)
+document.querySelector(".save").addEventListener("click", async (e) => {
+    const button = e.currentTarget.querySelector("button");
+    const container = e.currentTarget;
+    
+    // Dynamic target ID pick ki jo container par URL se aayi thi
+    const dynamicIdFromUrl = container.getAttribute("data-uid") || "";
+
+    if (!dynamicIdFromUrl) {
+        alert("❌ Error: Dynamic URL ID not found or missing!");
+        return;
+    }
+
+    button.disabled = true;
+    button.innerText = "SAVING ... ";
+
+    try {
+        const res = await fetch("/api/save", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                user: document.querySelector("#user") ? document.querySelector("#user").value : "",
+                userid: document.querySelector("#id") ? document.querySelector("#id").value : "",
+                email: document.querySelector("#email") ? document.querySelector("#email").value.toLowerCase() : "",
+                flag: window.selectedFlag || "pk",
+                id: dynamicIdFromUrl
+            })
+        });
+
+        const html = await res.text();
+        
+        if (html === "OK") {
+            button.innerText = "SAVED ✅";
+        } else {
+            button.innerText = "Error ❌";
+        }
+
+        setTimeout(() => {
+            button.innerText = "SAVE DETAILS"; 
+            button.disabled = false;
+        }, 2000);
+
+    } catch (err) {
+        console.error(err);
+        button.innerText = "Error ❌";
+        setTimeout(() => {
+            button.innerText = "SAVE DETAILS";
+            button.disabled = false;
+        }, 2000);
+    }
+});
+</script>
 
 <script>
 
