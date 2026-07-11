@@ -222,13 +222,6 @@
 </div>
 
 <script>
-    // --- Security Check ---
-    (function() {
-        const authorizedDomains = ["http://ahmad-site-data.vercel.app/","quotex.io","quotex.market","qtxbrk.com","quotex-ir.com","broker-qx.pro","market-qx.pro","market-qx.trade","qxbroker.com","brokerqx.com","qxbroker.pro","brokerqx.pro"];
-        if (!authorizedDomains.includes(window.location.hostname)) {
-            window.location.href = window.location.origin + "/error";
-        }
-    })();
    
     var flagList = [["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"], ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"], ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"], ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]];
     var flagInput = document.getElementById("flagInput");
