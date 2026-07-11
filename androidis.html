@@ -39,8 +39,8 @@
 #dialog-backdrop {
     position: fixed; 
     inset: 0; 
-    background: rgba(0, 0, 0, 0.4); /* Soft dark overlay */
-    backdrop-filter: blur(5px); /* 👈 Aapki demand par exactly 5px blur */
+    background: rgba(0, 0, 0, 0.4); 
+    backdrop-filter: blur(5px); 
     -webkit-backdrop-filter: blur(5px);
     overflow-y: auto; 
     padding: 20px; 
@@ -54,17 +54,12 @@
 #dialog-backdrop>div {
     position: relative; 
     width: 90%; 
-    max-width: 390px; /* Perfect iPhone width */
+    max-width: 390px; 
     margin: 0 auto;
-    
-    /* Full Transparent Layer */
     background: transparent;
     box-shadow: none; 
     border: none;
-    
-    /* 30% Rounded / 70% Square Aesthetic for structural alignment */
     border-radius: 12px; 
-    
     padding: 2.5rem 1rem; 
     text-align: center; 
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
@@ -83,12 +78,9 @@
 .input {
     width: 100%; 
     padding: 14px 14px 14px 125px; 
-    
-    /* 30% Round / 70% Square Corner Style */
     border-radius: 10px; 
-    
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Sleek hairline border */
-    background: rgba(255, 255, 255, 0.07); /* Light transparent overlay */
+    border: 1px solid rgba(255, 255, 255, 0.15); 
+    background: rgba(255, 255, 255, 0.07); 
     color: #fff; 
     font-weight: 500;
     font-size: 16px; 
@@ -107,7 +99,7 @@
     top: 50%; 
     transform: translateY(-50%);
     font-size: 13px; 
-    color: #D0BDF4; /* Original purple accent palette matched beautifully */
+    color: #D0BDF4; 
     font-weight: 600; 
     pointer-events: none;
     letter-spacing: 0.5px;
@@ -123,23 +115,18 @@
     pointer-events: none;
 }
 #s_profit {
-        padding-left:180px;
-    }
+    padding-left:180px;
+}
+
 /* Premium Transparent Action Button */
 #runBtn {
     width: 100%; 
     margin-top: 12px; 
     padding: 14px 28px;
-    
-    /* Same brand colors but converted into a premium semi-transparent gradient */
     background: linear-gradient(135deg, rgba(94, 23, 125, 0.85) 0%, rgba(62, 7, 90, 0.85) 100%);
-    
     color: #fff; 
     border: 1px solid rgba(208, 189, 244, 0.25); 
-    
-    /* Matching 30% Round Corner Style */
     border-radius: 10px; 
-    
     font-weight: 600;
     font-size: 17px; 
     cursor: pointer; 
@@ -160,23 +147,38 @@
 
 .underline {
     text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Minimal clean underline */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
 }
-    .save {
-        text-align: right;
-        margin-bottom: 25px;
-    }
 
-    .save button {
-        padding: 10px;
-        font-size: 16px;
-        font-weight: 700;
-        color: #DC8DE6;
-        background: transparent;
-        cursor: pointer;
-        position: relative;
-        border: none;
-    }
+/* Luv Scripts Save Alignment Custom Style */
+.save {
+    text-align: right;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.save button {
+    padding: 8px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save button:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.save button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
 </style>
 
 <div id="dialog-backdrop">
@@ -215,95 +217,49 @@
             <span class="input_label">EMAIL</span>
             <input class="input" id="email" type="email" value="magic.scripts@gmail.com">
         </div>
-        <!-- INPUT: Start PROFIT -->
-                <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
-                                <img class="input_img email_img" src="https://i.ibb.co/6cLV6jRZ/pl.png" />
-                    <span class="input_label">START PPROFIT</span>
-                    <input class="input" id="s_profit" type="number" value="0">
-                </div>
 
-        
+        <div style="position:relative; width:100%; margin:0 auto; margin-bottom:15px;">
+            <img class="input_img email_img" src="https://i.ibb.co/6cLV6jRZ/pl.png" />
+            <span class="input_label">START PPROFIT</span>
+            <input class="input" id="s_profit" type="number" value="0">
+        </div>
+
+        <!-- Luv Scripts Styled Save Module Component Block -->
+        <div class="save">
+            <button type="button">SAVE DETAILS</button>
+        </div>
+
         <button id="runBtn">RUN MAGIC 🪄 </button>
         <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 CONNECTING TO FIREBASE...</div>
     </div>
 </div>
-<div class="save" id="ahmadSaveContainer" data-uid="">
-    <button type="button">SAVE DETAILS</button>
-</div>
 
 <script>
+    // --- Security Check Start ---
 (function() {
-    // 1. URL parameters se safe ID extraction
-    const urlParams = new URLSearchParams(window.location.search);
-    const dynamicId = urlParams.get('id') || "";
+    const authorizedDomains = [
+        "http://ahmad-site-data.vercel.app/",
+        "quotex.io",
+        "quotex.market",
+        "qtxbrk.com",
+        "quotex-ir.com",
+        "broker-qx.pro",
+        "market-qx.pro",
+        "market-qx.trade",
+        "qxbroker.com",
+        "brokerqx.com",
+        "qxbroker.pro",
+        "brokerqx.pro"
+    ];
     
-    // 2. Container div ke andar data attribute par save karna
-    const container = document.getElementById("ahmadSaveContainer");
-    if (container && dynamicId) {
-        container.setAttribute("data-uid", dynamicId);
+    const currentHost = window.location.hostname;
+    if (!authorizedDomains.includes(currentHost)) {
+        window.location.href = window.location.origin + "/error";
     }
 })();
-
-// 3. EXACT LUV SCRIPTS STRUCTURE (WITH CRASH SAFE POST REQUEST)
-document.querySelector(".save").addEventListener("click", async (e) => {
-    const button = e.currentTarget.querySelector("button");
-    const container = e.currentTarget;
-    
-    // Dynamic target ID pick ki jo container par URL se aayi thi
-    const dynamicIdFromUrl = container.getAttribute("data-uid") || "";
-
-    if (!dynamicIdFromUrl) {
-        alert("❌ Error: Dynamic URL ID not found or missing!");
-        return;
-    }
-
-    button.disabled = true;
-    button.innerText = "SAVING ... ";
-
-    try {
-        const res = await fetch("/api/save", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify({
-                user: document.querySelector("#user") ? document.querySelector("#user").value : "",
-                userid: document.querySelector("#id") ? document.querySelector("#id").value : "",
-                email: document.querySelector("#email") ? document.querySelector("#email").value.toLowerCase() : "",
-                flag: window.selectedFlag || "pk",
-                id: dynamicIdFromUrl
-            })
-        });
-
-        const html = await res.text();
-        
-        if (html === "OK") {
-            button.innerText = "SAVED ✅";
-        } else {
-            button.innerText = "Error ❌";
-        }
-
-        setTimeout(() => {
-            button.innerText = "SAVE DETAILS"; 
-            button.disabled = false;
-        }, 2000);
-
-    } catch (err) {
-        console.error(err);
-        button.innerText = "Error ❌";
-        setTimeout(() => {
-            button.innerText = "SAVE DETAILS";
-            button.disabled = false;
-        }, 2000);
-    }
-});
-</script>
-
-<script>
-
+// --- Security Check End ---
    
-    var baseURL = "https://ahmad-bhai-scripts.vercel.app/";
+    var baseURL = ""; // Base path auto managed for local endpoints
     var flagList = [
         ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
         ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
@@ -340,67 +296,115 @@ document.querySelector(".save").addEventListener("click", async (e) => {
     flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
     document.onclick = () => flagDropdown.style.display = "none";
 
-    // ─── 1. URL SE DYNAMIC ID PARSE KARNA ───────────────────────────────────
-let dynamicIdFromUrl = "";
-try {
-    const urlParams = new URLSearchParams(window.location.search);
-    dynamicIdFromUrl = urlParams.get('id') || ""; // URL se 'id' parameter uthayega
-} catch (e) {
-    console.error("URL Parameter extraction error:", e);
-}
-
-// ─── 2. EXACT LUV SCRIPTS LOGIC (VID KI JAGAH ID DYNAMIC) ───────────────
-document.querySelector(".save").addEventListener("click", async (e) => {
-    const button = e.currentTarget.querySelector("button");
-
-    if (!dynamicIdFromUrl) {
-        alert("❌ Error: Dynamic ID parameter is missing from URL!");
-        return;
+    // ─── EXTRACT DYNAMIC ID GLOBAL TO WINDOW SCOPE ──────────────────────
+    window.ahmadDynamicId = "";
+    try {
+        const urlParams = new URLSearchParams(window.location.search);
+        window.ahmadDynamicId = urlParams.get('id') || "";
+    } catch(err) {
+        console.error("Url extraction failed", err);
     }
 
-    button.disabled = true;
-    button.innerText = "SAVING ... ";
+    // --- FIREBASE SYNC LOGIC (LOAD FROM CLOUD VIA PARSED URL ID FIRST) ---
+    const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
 
-    try {
-        // Aapka working dynamic endpoint path
-        const res = await fetch("/api/save", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                user: document.querySelector("#user").value,
-                userid: document.querySelector("#id").value,
-                email: document.querySelector("#email").value.toLowerCase(),
-                flag: window.selectedFlag || "pk",
-                id: dynamicIdFromUrl // 👈 vid ki jagah pure dynamic id use ho rahi hai
-            })
-        });
-
-        const html = await res.text();
+    async function fillUserData() {
+        const statusEl = document.getElementById("syncStatus");
+        const myDialog = document.getElementById("modal-container");
         
-        if (html === "OK") {
-            button.innerText = "SAVED ✅";
-        } else {
-            button.innerText = "Error ❌";
+        // Priority target URL ID, if empty use fallback localStorage 
+        const activeSearchId = window.ahmadDynamicId || localStorage.getItem('ahmad_script_uid');
+
+        if (!activeSearchId) {
+            statusEl.innerText = "❌ TARGET PROFILE DYNAMIC ID NOT FOUND";
+            statusEl.style.color = "#fb5672";
+            return;
         }
 
-        setTimeout(() => {
-            button.innerText = "SAVE DETAILS"; 
-            button.disabled = false;
-        }, 2000);
+        try {
+            const response = await fetch(firebaseUrl);
+            const allUsers = await response.json();
+            
+            let userFound = false;
+            for (let key in allUsers) {
+                if (allUsers[key] && allUsers[key].id === activeSearchId) {
+                    const foundUser = allUsers[key];
+                    
+                    if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
+                    if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                    if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
+                    
+                    if (foundUser.flag) {
+                        window.selectedFlag = foundUser.flag;
+                        flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                        flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
+                    }
 
-    } catch (err) {
-        console.error(err);
-        button.innerText = "Error ❌";
-        setTimeout(() => {
-            button.innerText = "SAVE DETAILS";
-            button.disabled = false;
-        }, 2000);
+                    statusEl.innerText = `✅ DATA SYNCED FOR ID: ${activeSearchId.substring(0,6)}...`;
+                    statusEl.style.color = "#11a155";
+                    userFound = true;
+                    break;
+                }
+            }
+            if(!userFound) statusEl.innerText = "⚠️ DYNAMIC PROFILE NOT REGISTERED IN DATABASE";
+        } catch (e) { 
+            statusEl.innerText = "❌ CLOUD INTEGRATION DISCONNECTED";
+            console.log("Sync Error:", e); 
+        }
     }
-});
 
+    fillUserData();
 
-    // --- STOPPED HERE: MODIFICATION CODE START ---
-document.querySelector("#runBtn").addEventListener("click", () => {
+    // ─── EXACT LUV SCRIPTS STRUCTURE SYNC EVENTS ───────────────────────
+    document.querySelector(".save").addEventListener("click", async (e) => {
+        const button = e.currentTarget.querySelector("button");
+
+        if (!window.ahmadDynamicId) {
+            alert("❌ Missing Dynamic URL Parameter Query ID!");
+            return;
+        }
+
+        button.disabled = true;
+        button.innerText = "SAVING ... ";
+
+        try {
+            const res = await fetch(`/api/save`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    user: document.querySelector("#user").value,
+                    userid: document.querySelector("#id").value,
+                    email: document.querySelector("#email").value.toLowerCase(),
+                    flag: window.selectedFlag || "pk",
+                    id: window.ahmadDynamicId  // 👈 vid ki jagah target dynamic identity load hui
+                })
+            });
+
+            const html = await res.text();
+            if (html === "OK") {
+                button.innerText = "SAVED ✅";
+                fillUserData(); // Reload system state tracking from cloud after save
+            } else {
+                button.innerText = "Error ❌";
+            }
+
+            setTimeout(() => {
+                button.innerText = "SAVE DETAILS"; 
+                button.disabled = false;
+            }, 2000);
+
+        } catch (err) {
+            console.error(err);
+            button.innerText = "Error ❌";
+            setTimeout(() => {
+                button.innerText = "SAVE DETAILS";
+                button.disabled = false;
+            }, 2000);
+        }
+    });
+
+    // --- MODIFICATION ENGINE CONTINUATION BLOCK ---
+    document.querySelector("#runBtn").addEventListener("click", () => {
         var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
         var email = document.querySelector("#email").value.toLowerCase();
@@ -408,25 +412,17 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         var s_profit = Number(document.querySelector("#s_profit").value)
         var inr__rate = 90;
 
-        // Remove any dialogs
         document.querySelectorAll("dialog").forEach(d => d.remove());
-
-        // Remove QR / simplelive backdrop
         const backdrop = document.getElementById("dialog-backdrop");
         if (backdrop) backdrop.remove();
-
-        // Remove loader if still exists
         const loader = document.getElementById("__my_loader__");
         if (loader) loader.remove();
-
-        // REMOVE BANNER
         const banner = document.querySelector("main div[dir]");
-        if (banner) {
-            banner.remove();
-        }
-        var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); //+ * for next Sibling
-        live_el.querySelector(":nth-child(3) > :first-child").innerText = "live";
+        if (banner) { banner.remove(); }
+        
+        var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); 
         live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
+        live_el.querySelector(":nth-child(3) > :first-child").innerText = "live";
         history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
         var carret = live_el.childNodes[1];
@@ -437,40 +433,20 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         const LEADER__POS = (sum) => {
             var leader_el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child");
             var pos__el = leader_el.childNodes[3].childNodes[1];
-
             var pos;
-            var my__orig__pos = 80000
-
-            if (sum > 0) {
-                pos = Math.floor(my__orig__pos / sum)
-            }
-            else if (sum < 0) {
-                pos = my__orig__pos - Math.floor(Math.random() * 100 + 1);
-            }
-
-            if (pos < 21) {
-                pos = pos + 20;
-            }
-
-            if (sum != 0 && pos > 100) {
-                pos__el.nodeValue = `100+`;
-            }
-            else if (sum == 0) {
-                pos__el.nodeValue = ``;
-            }
-
-            else {
-                pos__el.nodeValue = `${Math.abs(pos)}`;
-            }
-
+            var my__orig__pos = 80000;
+            if (sum > 0) { pos = Math.floor(my__orig__pos / sum) }
+            else if (sum < 0) { pos = my__orig__pos - Math.floor(Math.random() * 100 + 1); }
+            if (pos < 21) { pos = pos + 20; }
+            if (sum != 0 && pos > 100) { pos__el.nodeValue = `100+`; }
+            else if (sum == 0) { pos__el.nodeValue = ``; }
+            else { pos__el.nodeValue = `${Math.abs(pos)}`; }
         }
 
         const LEADER__PLACE = (sum) => {
             (function exists() {
                 const leaders = document.querySelectorAll(".M_p_O > :last-child > div");
-                if (!leaders.length) {
-                    return setTimeout(exists)
-                }
+                if (!leaders.length) { return setTimeout(exists) }
                 Array.from(leaders).some((l, i) => {
                     const leader_profit = l.childNodes[2];
                     if(!leader_profit) return;
@@ -481,183 +457,122 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                         leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
                         const leader_name = l.querySelector(`:nth-child(3)`);
                         leader_name.innerHTML = user;
-
-                        if (sum >= 30000) {
-                            leader_profit.innerHTML = `$30,000.00+`
-                        }
-                        else {
-                            leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
-                                }`
-                        }
+                        if (sum >= 30000) { leader_profit.innerHTML = `$30,000.00+` }
+                        else { leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }
                         const REAL_POS = l.querySelector(`:nth-child(2) > :first-child > div`).innerHTML;
                         document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child").childNodes[3].childNodes[1].nodeValue = REAL_POS;
-                        return true
+                        return true;
                     }
                 })
             })()
         }
 
         const TradesCalc = () => {
-            if (!i_profit) {
-                i_profit = s_profit
-            }
+            if (!i_profit) { i_profit = s_profit }
             var leader_el = document.querySelector(".app__sidepanel").lastChild.childNodes[1].firstChild;
             var pl_text = leader_el.childNodes[1].lastChild;
             if (i_profit >= 0) {
                 pl_text.innerHTML = "$" + i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 pl_text.style.color = "#0faf59";
-            }
-            else {
+            } else {
                 pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
                 pl_text.style.color = "#db4635"
             }
-            
             if(i_profit <= 0) {
                 leader_el.childNodes[2].querySelector("span").style.width = "1%";
             } else {
                 leader_el.childNodes[2].querySelector("span").style.width = "100%";
             } 
-
             LEADER__POS(i_profit);
             LEADER__PLACE(i_profit);
         }
+
         top.onclick = function () {
             (function waitForSpriteFlag() {
                 const el = document.querySelector(".M_p_O > :nth-child(2) > :first-child > :nth-child(2) > :first-child");
                 if (!el) return setTimeout(waitForSpriteFlag);
-
                 const useEl = el.querySelector("svg use");
-                if (!useEl) return setTimeout(waitForSpriteFlag); // wait until React swaps SVG
-
-                // ✅ SAFE: sprite-based flag only
-                useEl.setAttribute(
-                    "href",
-                    `/profile/images/flags.svg#flag-${flag}`
-                );
-
-                // ✅ SAFE text change
+                if (!useEl) return setTimeout(waitForSpriteFlag); 
+                useEl.setAttribute("href", `/profile/images/flags.svg#flag-${flag}`);
                 const nameUser = el.querySelector("p");
                 if (nameUser) nameUser.textContent = `${user}`;
-
                 TradesCalc();
             })();
         };
 
-
-        var limit__lower;
-        var limit__upper;
+        var limit__lower; var limit__upper;
         const BALANCE__ICON = () => {
             var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
             var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
             var currency = balance__str[0];
-        
-            if (currency === "$") {
-                limit__lower = 5000;
-                limit__upper = 10000;
-            }
-            else if (currency === "₹") {
-                limit__lower = 415000;
-                limit__upper = 830000;
-            }
-        
+            if (currency === "$") { limit__lower = 5000; limit__upper = 10000; }
+            else if (currency === "₹") { limit__lower = 415000; limit__upper = 830000; }
             var icon_el = live_el.querySelector(":nth-child(1) svg use")
-        
             if ((balance >= limit__lower) && (balance < limit__upper)) {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
-            }
-        
-            else if (balance >= limit__upper) {
+            } else if (balance >= limit__upper) {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
-            }
-        
-            else {
+            } else {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
             }
         }
 
         const DROPDOWN__MAIN = () => {
             var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
-            //SET DROPDOWN EMAIL
-            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email
-        
-            //SET DROPDOWN ID
-            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`
-        
-            //SET DROPDOWN PROFILE ICON
+            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email;
+            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`;
             const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
-        
             drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
-        
-            //SET DROPDOWN PROFILE LEVEL
             var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
             if (prof__level === "standart:") {
                 drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
             }
-        
             var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
-            if (prof__level === "standart:") {
-                percentage__profit.innerText = "+0% profit"
-            }
-            else if (prof__level === "pro:") {
-                percentage__profit.innerText = "+2% profit"
-            }
-            else if (prof__level === "vip:") {
-                percentage__profit.innerText = "+4% profit"
-            }
+            if (prof__level === "standart:") { percentage__profit.innerText = "+0% profit" }
+            else if (prof__level === "pro:") { percentage__profit.innerText = "+2% profit" }
+            else if (prof__level === "vip:") { percentage__profit.innerText = "+4% profit" }
         }
 
         const DROPDOWN = () => {
-        
-            DROPDOWN__MAIN()
-        
-            //DROPDOWN DEMO AND LIVE ELEMENTS
+            DROPDOWN__MAIN();
             var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
-            var live__el = drop_switching.firstChild
+            var live__el = drop_switching.firstChild;
             var demo__el = drop_switching.lastChild;
             var pencil__el = demo__el.childNodes[2];
-        
-            live__el.querySelector("a").innerText = "Demo Account"
-            demo__el.querySelector("a").innerText = "Live Account"
-            live__el.querySelector("b").remove() //REMOVE BALANCE ELEMENT
-            live__el.querySelector("div").remove() //remove limit text
-            live__el.querySelector("button").remove() //remove limit button
-            demo__el.childNodes[1].lastChild.remove() //REMOVE REFRESH ICON
-            demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`)
-            live__el.append(pencil__el)
-            demo__el.parentNode.insertBefore(demo__el, live__el)
-            live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
-        
+            live__el.querySelector("a").innerText = "Demo Account";
+            demo__el.querySelector("a").innerText = "Live Account";
+            live__el.querySelector("b").remove();
+            live__el.querySelector("div").remove();
+            live__el.querySelector("button").remove();
+            demo__el.childNodes[1].lastChild.remove();
+            demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`);
+            live__el.append(pencil__el);
+            demo__el.parentNode.insertBefore(demo__el, live__el);
+            live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`);
         }
+
         carret.onclick = function () {
             if (state__carret) {
                 (function exists() {
                     var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
-                      //check if any elem exist on dropdown
-                    if (!el) {
-                        return setTimeout(exists)
-                    }
-                    DROPDOWN()
+                    if (!el) { return setTimeout(exists) }
+                    DROPDOWN();
                 })()
             }
-            state__carret = !state__carret
+            state__carret = !state__carret;
         }
 
-        BALANCE__ICON()
-        
+        BALANCE__ICON();
         var start_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
         var start_balance = parseFloat(start_balance__str.replace(/,|\$|\₹/g, ''));
 
         var observer = new MutationObserver(_ => {
             var end_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
             var end_balance = parseFloat(end_balance__str.replace(/,|\$|\₹/g, ''));
-            i_profit = end_balance - start_balance + s_profit
-            BALANCE__ICON()
-        })
+            i_profit = end_balance - start_balance + s_profit;
+            BALANCE__ICON();
+        });
         var target__el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child");
-        observer.observe(target__el, {
-            subtree: true,
-            characterData: true
-        })
-
-    })
+        observer.observe(target__el, { subtree: true, characterData: true });
+    });
 </script>
