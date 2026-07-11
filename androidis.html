@@ -118,6 +118,26 @@
     padding-left:180px;
 }
 
+/* Lock System ID Container Row Styling */
+.value-row {
+    margin-bottom: 12px;
+    text-align: center;
+    width: 100%;
+}
+.value {
+    display: inline-block;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    color: #DC8DE6;
+    font-size: 14px;
+    font-family: monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+    word-break: break-all;
+}
+
 /* Premium Transparent Action Button */
 #runBtn {
     width: 100%; 
@@ -145,19 +165,13 @@
     opacity: 0.85;
 }
 
-.underline {
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4); 
-}
-
-/* Luv Scripts Save Alignment Custom Style */
+/* Luv Scripts Save Module */
 .save {
     text-align: right;
-    margin-top: 10px;
-    margin-bottom: 15px;
+    margin-top: 8px;
+    margin-bottom: 12px;
     width: 100%;
 }
-
 .save button {
     padding: 8px 18px;
     font-size: 14px;
@@ -169,12 +183,10 @@
     cursor: pointer;
     transition: all 0.2s ease;
 }
-
 .save button:hover:not(:disabled) {
     background: rgba(255, 255, 255, 0.18);
     border-color: rgba(255, 255, 255, 0.3);
 }
-
 .save button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -190,6 +202,11 @@
 
         <div style="margin-bottom:25px; display:flex; justify-content:center;">
             <img src="https://i.ibb.co/xqXhx24Z/MS.png" style="width:110px;height:110px;" class="logo-pulse">
+        </div>
+
+        <!-- Lock System Jaisa Dynamic ID Element Panel -->
+        <div class="value-row">
+            <div class="value" id="vid">LOADING ID...</div>
         </div>
         
         <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
@@ -224,7 +241,7 @@
             <input class="input" id="s_profit" type="number" value="0">
         </div>
 
-        <!-- Luv Scripts Styled Save Module Component Block -->
+        <!-- Luv Scripts Save Button -->
         <div class="save">
             <button type="button">SAVE DETAILS</button>
         </div>
@@ -235,65 +252,60 @@
 </div>
 
 <script>
+    // --- Security Check ---
+    (function() {
+        const authorizedDomains = ["http://ahmad-site-data.vercel.app/","quotex.io","quotex.market","qtxbrk.com","quotex-ir.com","broker-qx.pro","market-qx.pro","market-qx.trade","qxbroker.com","brokerqx.com","qxbroker.pro","brokerqx.pro"];
+        if (!authorizedDomains.includes(window.location.hostname)) {
+            window.location.href = window.location.origin + "/error";
+        }
+    })();
    
-    var baseURL = ""; // Base path auto managed for local endpoints
-    var flagList = [
-        ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
-        ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
-        ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
-        ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
-    ];
-
+    var flagList = [["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"], ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"], ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"], ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]];
     var flagInput = document.getElementById("flagInput");
     var flagDropdown = document.getElementById("flagDropdown");
     var flagImg = document.getElementById("flagImg");
     var flagText = document.getElementById("flagText");
 
-    // Default Flag
     flagText.innerText = "Pakistan";
     flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
     flagList.forEach(f => {
         const div = document.createElement("div");
-        div.style.padding = "8px 15px";
-        div.style.display = "flex";
-        div.style.alignItems = "center";
-        div.style.cursor = "pointer";
+        div.style.padding = "8px 15px"; div.style.display = "flex"; div.style.alignItems = "center"; div.style.cursor = "pointer";
         div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
         div.onclick = (e) => {
             e.stopPropagation();
-            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
-            flagText.innerText = f[1];
-            window.selectedFlag = f[0];
-            flagDropdown.style.display = "none";
+            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`; flagText.innerText = f[1]; window.selectedFlag = f[0]; flagDropdown.style.display = "none";
         };
         flagDropdown.appendChild(div);
     });
-
     flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
     document.onclick = () => flagDropdown.style.display = "none";
 
-    // ─── EXTRACT DYNAMIC ID GLOBAL TO WINDOW SCOPE ──────────────────────
-    window.ahmadDynamicId = "";
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        window.ahmadDynamicId = urlParams.get('id') || "";
-    } catch(err) {
-        console.error("Url extraction failed", err);
-    }
+    // ─── LOCK STYLE ID EXTRACTION SYSTEM ──────────────────────────────────
+    (function injectLockStyleId() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const extractedId = urlParams.get('id') || "";
+            const vidDiv = document.getElementById("vid");
+            if (vidDiv) {
+                vidDiv.innerText = extractedId ? extractedId : "NO ID PARAMETER FOUND";
+            }
+        } catch(err) {
+            console.error("ID setup crashed:", err);
+        }
+    })();
 
-    // --- FIREBASE SYNC LOGIC (LOAD FROM CLOUD VIA PARSED URL ID FIRST) ---
+    // --- FIREBASE SYNC LOGIC ---
     const firebaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users.json";
 
     async function fillUserData() {
         const statusEl = document.getElementById("syncStatus");
         const myDialog = document.getElementById("modal-container");
-        
-        // Priority target URL ID, if empty use fallback localStorage 
-        const activeSearchId = window.ahmadDynamicId || localStorage.getItem('ahmad_script_uid');
+        const targetId = document.getElementById("vid").innerText;
 
-        if (!activeSearchId) {
-            statusEl.innerText = "❌ TARGET PROFILE DYNAMIC ID NOT FOUND";
+        if (!targetId || targetId.includes("FOUND") || targetId.includes("LOADING")) {
+            statusEl.innerText = "❌ CANNOT SYNC: VALID ID NOT DETECTED IN HTML DIV";
             statusEl.style.color = "#fb5672";
             return;
         }
@@ -301,43 +313,41 @@
         try {
             const response = await fetch(firebaseUrl);
             const allUsers = await response.json();
-            
             let userFound = false;
+            
             for (let key in allUsers) {
-                if (allUsers[key] && allUsers[key].id === activeSearchId) {
+                if (allUsers[key] && String(allUsers[key].id) === String(targetId)) {
                     const foundUser = allUsers[key];
-                    
                     if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
                     if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
                     if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
-                    
                     if (foundUser.flag) {
                         window.selectedFlag = foundUser.flag;
                         flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
                         flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
                     }
-
-                    statusEl.innerText = `✅ DATA SYNCED FOR ID: ${activeSearchId.substring(0,6)}...`;
+                    statusEl.innerText = "✅ DATA SYNCED FROM CLOUD!";
                     statusEl.style.color = "#11a155";
                     userFound = true;
                     break;
                 }
             }
-            if(!userFound) statusEl.innerText = "⚠️ DYNAMIC PROFILE NOT REGISTERED IN DATABASE";
+            if(!userFound) statusEl.innerText = "⚠️ DYNAMIC ID NOT IN DB";
         } catch (e) { 
-            statusEl.innerText = "❌ CLOUD INTEGRATION DISCONNECTED";
-            console.log("Sync Error:", e); 
+            statusEl.innerText = "❌ CLOUD ERROR";
         }
     }
 
-    fillUserData();
+    // Dynamic timeout loading trace
+    setTimeout(fillUserData, 100);
 
-    // ─── EXACT LUV SCRIPTS STRUCTURE SYNC EVENTS ───────────────────────
+    // ─── LUV SCRIPTS SAVE EXECUTION (READING ID FROM DIV) ────────────────
     document.querySelector(".save").addEventListener("click", async (e) => {
         const button = e.currentTarget.querySelector("button");
+        const finalActiveId = document.getElementById("vid").innerText;
 
-        if (!window.ahmadDynamicId) {
-            alert("❌ Missing Dynamic URL Parameter Query ID!");
+        if (!finalActiveId || finalActiveId.includes("FOUND") || finalActiveId.includes("LOADING")) {
+            alert("❌ HTML Div ID element is empty or invalid!");
             return;
         }
 
@@ -353,49 +363,37 @@
                     userid: document.querySelector("#id").value,
                     email: document.querySelector("#email").value.toLowerCase(),
                     flag: window.selectedFlag || "pk",
-                    id: window.ahmadDynamicId  // 👈 vid ki jagah target dynamic identity load hui
+                    id: finalActiveId // 👈 `<div id="vid">` se reading exact pick ho rahi hai
                 })
             });
 
-            const html = await res.text();
-            if (html === "OK") {
+            const txt = await res.text();
+            if (txt === "OK") {
                 button.innerText = "SAVED ✅";
-                fillUserData(); // Reload system state tracking from cloud after save
+                fillUserData();
             } else {
                 button.innerText = "Error ❌";
             }
-
-            setTimeout(() => {
-                button.innerText = "SAVE DETAILS"; 
-                button.disabled = false;
-            }, 2000);
-
+            setTimeout(() => { button.innerText = "SAVE DETAILS"; button.disabled = false; }, 2000);
         } catch (err) {
             console.error(err);
             button.innerText = "Error ❌";
-            setTimeout(() => {
-                button.innerText = "SAVE DETAILS";
-                button.disabled = false;
-            }, 2000);
+            setTimeout(() => { button.innerText = "SAVE DETAILS"; button.disabled = false; }, 2000);
         }
     });
 
-    // --- MODIFICATION ENGINE CONTINUATION BLOCK ---
+    // --- Quotex Manipulation Logic Block ---
     document.querySelector("#runBtn").addEventListener("click", () => {
         var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
         var email = document.querySelector("#email").value.toLowerCase();
         var flag = window.selectedFlag || "pk";
-        var s_profit = Number(document.querySelector("#s_profit").value)
-        var inr__rate = 90;
+        var s_profit = Number(document.querySelector("#s_profit").value);
 
         document.querySelectorAll("dialog").forEach(d => d.remove());
-        const backdrop = document.getElementById("dialog-backdrop");
-        if (backdrop) backdrop.remove();
-        const loader = document.getElementById("__my_loader__");
-        if (loader) loader.remove();
-        const banner = document.querySelector("main div[dir]");
-        if (banner) { banner.remove(); }
+        const backdrop = document.getElementById("dialog-backdrop"); if (backdrop) backdrop.remove();
+        const loader = document.getElementById("__my_loader__"); if (loader) loader.remove();
+        const banner = document.querySelector("main div[dir]"); if (banner) banner.remove();
         
         var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); 
         live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
@@ -404,14 +402,12 @@
         document.title = "Live trading | Quotex";
         var carret = live_el.childNodes[1];
         var state__carret = true;
-        var pl__line__width;
         var i_profit;
 
         const LEADER__POS = (sum) => {
             var leader_el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child");
             var pos__el = leader_el.childNodes[3].childNodes[1];
-            var pos;
-            var my__orig__pos = 80000;
+            var pos; var my__orig__pos = 80000;
             if (sum > 0) { pos = Math.floor(my__orig__pos / sum) }
             else if (sum < 0) { pos = my__orig__pos - Math.floor(Math.random() * 100 + 1); }
             if (pos < 21) { pos = pos + 20; }
@@ -423,17 +419,14 @@
         const LEADER__PLACE = (sum) => {
             (function exists() {
                 const leaders = document.querySelectorAll(".M_p_O > :last-child > div");
-                if (!leaders.length) { return setTimeout(exists) }
-                Array.from(leaders).some((l, i) => {
-                    const leader_profit = l.childNodes[2];
-                    if(!leader_profit) return;
+                if (!leaders.length) return setTimeout(exists);
+                Array.from(leaders).some((l) => {
+                    const leader_profit = l.childNodes[2]; if(!leader_profit) return;
                     const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
                     if (leader_profit_simplify <= sum) {
-                        const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
-                        if(!leader__flag) return;
+                        const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`); if(!leader__flag) return;
                         leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
-                        const leader_name = l.querySelector(`:nth-child(3)`);
-                        leader_name.innerHTML = user;
+                        const leader_name = l.querySelector(`:nth-child(3)`); leader_name.innerHTML = user;
                         if (sum >= 30000) { leader_profit.innerHTML = `$30,000.00+` }
                         else { leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}` }
                         const REAL_POS = l.querySelector(`:nth-child(2) > :first-child > div`).innerHTML;
@@ -445,34 +438,27 @@
         }
 
         const TradesCalc = () => {
-            if (!i_profit) { i_profit = s_profit }
+            if (!i_profit) i_profit = s_profit;
             var leader_el = document.querySelector(".app__sidepanel").lastChild.childNodes[1].firstChild;
             var pl_text = leader_el.childNodes[1].lastChild;
             if (i_profit >= 0) {
                 pl_text.innerHTML = "$" + i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
                 pl_text.style.color = "#0faf59";
             } else {
-                pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
-                pl_text.style.color = "#db4635"
+                pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$";
+                pl_text.style.color = "#db4635";
             }
-            if(i_profit <= 0) {
-                leader_el.childNodes[2].querySelector("span").style.width = "1%";
-            } else {
-                leader_el.childNodes[2].querySelector("span").style.width = "100%";
-            } 
-            LEADER__POS(i_profit);
-            LEADER__PLACE(i_profit);
+            if(i_profit <= 0) { leader_el.childNodes[2].querySelector("span").style.width = "1%"; } 
+            else { leader_el.childNodes[2].querySelector("span").style.width = "100%"; } 
+            LEADER__POS(i_profit); LEADER__PLACE(i_profit);
         }
 
         top.onclick = function () {
             (function waitForSpriteFlag() {
-                const el = document.querySelector(".M_p_O > :nth-child(2) > :first-child > :nth-child(2) > :first-child");
-                if (!el) return setTimeout(waitForSpriteFlag);
-                const useEl = el.querySelector("svg use");
-                if (!useEl) return setTimeout(waitForSpriteFlag); 
+                const el = document.querySelector(".M_p_O > :nth-child(2) > :first-child > :nth-child(2) > :first-child"); if (!el) return setTimeout(waitForSpriteFlag);
+                const useEl = el.querySelector("svg use"); if (!useEl) return setTimeout(waitForSpriteFlag); 
                 useEl.setAttribute("href", `/profile/images/flags.svg#flag-${flag}`);
-                const nameUser = el.querySelector("p");
-                if (nameUser) nameUser.textContent = `${user}`;
+                const nameUser = el.querySelector("p"); if (nameUser) nameUser.textContent = `${user}`;
                 TradesCalc();
             })();
         };
@@ -494,46 +480,14 @@
             }
         }
 
-        const DROPDOWN__MAIN = () => {
-            var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
-            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email;
-            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`;
-            const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
-            drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
-            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
-            if (prof__level === "standart:") {
-                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
-            }
-            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
-            if (prof__level === "standart:") { percentage__profit.innerText = "+0% profit" }
-            else if (prof__level === "pro:") { percentage__profit.innerText = "+2% profit" }
-            else if (prof__level === "vip:") { percentage__profit.innerText = "+4% profit" }
-        }
-
-        const DROPDOWN = () => {
-            DROPDOWN__MAIN();
-            var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
-            var live__el = drop_switching.firstChild;
-            var demo__el = drop_switching.lastChild;
-            var pencil__el = demo__el.childNodes[2];
-            live__el.querySelector("a").innerText = "Demo Account";
-            demo__el.querySelector("a").innerText = "Live Account";
-            live__el.querySelector("b").remove();
-            live__el.querySelector("div").remove();
-            live__el.querySelector("button").remove();
-            demo__el.childNodes[1].lastChild.remove();
-            demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`);
-            live__el.append(pencil__el);
-            demo__el.parentNode.insertBefore(demo__el, live__el);
-            live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`);
-        }
-
         carret.onclick = function () {
             if (state__carret) {
                 (function exists() {
                     var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
-                    if (!el) { return setTimeout(exists) }
-                    DROPDOWN();
+                    if (!el) return setTimeout(exists);
+                    var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
+                    drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email;
+                    drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`;
                 })()
             }
             state__carret = !state__carret;
@@ -546,10 +500,8 @@
         var observer = new MutationObserver(_ => {
             var end_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
             var end_balance = parseFloat(end_balance__str.replace(/,|\$|\₹/g, ''));
-            i_profit = end_balance - start_balance + s_profit;
-            BALANCE__ICON();
+            i_profit = end_balance - start_balance + s_profit; BALANCE__ICON();
         });
-        var target__el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child");
-        observer.observe(target__el, { subtree: true, characterData: true });
+        observer.observe(document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child"), { subtree: true, characterData: true });
     });
 </script>
