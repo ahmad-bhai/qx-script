@@ -231,11 +231,13 @@
 
         <!-- Direct Save Feature Hook -->
         <div class="save-row">
-            <button type="button" id="saveCloudBtn">SAVE DETAILS</button>
+            <button type="button" id="saveCloudBtn">SAVE DATA</button>
         </div>
 
-        <button id="runBtn">RUN MAGIC 🪄 </button>
-        <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 CONNECTING TO FIREBASE...</div>
+        <button id="runBtn">RUN MAGIC 🪄</button>
+<!-- 🔥 Default text updated to Pro Version text 🔥 -->
+<div id="syncStatus" style="text-align: center; color: #11a155; margin-top: 2rem; font-weight: bold;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+
     </div>
 </div>
 
@@ -308,11 +310,10 @@
     async function fillUserData() {
         const statusEl = document.getElementById("syncStatus");
         const myDialog = document.getElementById("modal-container");
-        const activeId = window.activeDeviceID; // Variable se ID fetch ho rahi hai
+        const activeId = window.activeDeviceID;
 
+        // Agar ID nahi milti toh silently background mein return ho jayega, status change nahi karega
         if (!activeId) {
-            statusEl.innerText = "❌ UNIQUE DEVICE ID NOT RUNNING";
-            statusEl.style.color = "#fb5672";
             return;
         }
 
@@ -338,35 +339,39 @@
                         flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
                     }
 
-                    statusEl.innerText = "✅ DATA SYNCED FROM FIREBASE CLOUD!";
+                    // Firebase se data match hone par bhi status clean hi rahega
+                    statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
                     statusEl.style.color = "#11a155";
                     userFound = true;
                     break;
                 }
             }
+            // New user hone par status change nahi hoga
             if(!userFound) {
-                statusEl.innerText = "⚠️ NEW USER ID (NOT IN DATABASE YET)";
-                statusEl.style.color = "#DC8DE6";
+                statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+                statusEl.style.color = "#11a155";
             }
         } catch (e) { 
-            statusEl.innerText = "❌ CLOUD CONNECTION ERROR";
+            // Network error par bhi status clean rahega
+            statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+            statusEl.style.color = "#11a155";
         }
     }
 
     setTimeout(fillUserData, 200);
 
-    // ─── DIRECT SAVE OPERATION WITH NO-DIV WORKAROUND ───
+    // ─── DIRECT SAVE OPERATION (NO ALERTS) ───
     document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
         const button = e.currentTarget;
         const activeId = window.activeDeviceID;
 
+        // Alert block removed - Silently stops execution if ID is missing
         if (!activeId) {
-            alert("❌ System unique user ID verify nahi kar pa raha!");
             return;
         }
 
         button.disabled = true;
-        button.innerText = "SAVING...⏳";
+        button.innerText = "SAVING...";
 
         try {
             let targetUrl = `${firebaseBaseUrl}.json`;
@@ -393,17 +398,18 @@
             });
 
             if (response.ok) {
-                button.innerText = "SUCCESS ✅";
+                button.innerText = "SUCCESS";
                 fillUserData();
             } else {
-                button.innerText = "FAILED ❌";
+                button.innerText = "FAILED";
             }
-            setTimeout(() => { button.innerText = "SAVE DETAILS"; button.disabled = false; }, 2000);
+            setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         } catch (err) {
-            button.innerText = "ERROR ❌";
-            setTimeout(() => { button.innerText = "SAVE DETAILS"; button.disabled = false; }, 2000);
+            button.innerText = "ERROR";
+            setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         }
     });
+
 
 
     // --- STOPPED HERE: MODIFICATION CODE START ---
