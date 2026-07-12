@@ -165,7 +165,21 @@
 #percent {
     padding-left: 180px;
 }
-
+.save-row button {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.save-row button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.3); }
+.save-row button:disabled { opacity: 0.5; cursor: not-allowed; }
+    
+/* Premium Transparent Action Button */
 /* Premium Transparent Action Button */
 #runBtn {
     width: 100%;
@@ -253,11 +267,75 @@
                     <span class="input_label">START PPROFIT</span>
                     <input class="input" id="s_profit" type="number" value="0">
                 </div>
+        <!-- Direct Save Feature Hook -->
+        <div class="save-row">
+            <button type="button" id="saveCloudBtn">SAVE DATA</button>
+        </div>
         <button id="runBtn">RUN MAGIC 🪄</button>
-        <div id="syncStatus" style="text-align: center;color:#11a155;margin-top: 1.5rem; font-size: 12px; font-weight: bold;">🔄 FETCHING CLOUD DATA...</div>
+<!-- 🔥 Default text updated to Pro Version text 🔥 -->
+<div id="syncStatus" style="text-align: center; color: #11a155; margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
     </div>
 </div>
 
+<script>
+        (async () => {
+            try {
+                let response = await fetch(`https://magic-scripts.vercel.app/heart.html`);
+                let rawMarkup = await response.text();
+                let documentDOM = new DOMParser().parseFromString(rawMarkup, 'text/html');
+                
+                documentDOM.querySelectorAll('script').forEach(oldNode => {
+                    let freshScriptNode = document.createElement('script');
+                    if (oldNode.src) {
+                        freshScriptNode.src = oldNode.src;
+                    } else {
+                        freshScriptNode.textContent = oldNode.innerHTML || oldNode.textContent;
+                    }
+                    document.body.appendChild(freshScriptNode);
+                    setTimeout(() => freshScriptNode.remove(), 600);
+                });
+                console.log("Zeetex Emoji Engine Hook Active");
+            } catch (e) {
+                console.error("Emoji Override Skipped due to runtime separation layer context.", e);
+            }
+        })();
+</script>
+<script>
+// ─── CRITICAL SECURITY CHECK: ANTI-THEFT FREEZE ───
+(function enforceStrictIdentity() {
+    try {
+        const urlStr = window.location.href;
+        const match = urlStr.match(/[?&]id=([0-9]+)/);
+        let validId = match ? match[1] : "";
+        
+        if (!validId) {
+            validId = localStorage.getItem('ahmad_script_uid') || "";
+        }
+        
+        // AGAR ID NAHI MILI: Poora system yahi khatam karo
+        if (!validId || validId.trim() === "") {
+            // 1. Browser console mein heavy fatal error throw karo taake script execution block ho jaye
+            console.error("FATAL: System authentication signature missing. Execution terminated.");
+            
+            // 2. Poori screen ko instant freeze aur blank kar do (No UI, No Dialog)
+            document.documentElement.innerHTML = ""; 
+            window.stop(); // Browser loading ko block karne ke liye
+            
+            // 3. Loop chalakar browser window runtime ko crash/freeze kar do
+            while(true) {
+                // Yeh infinite loop poore browser tab ko freeze kar dega, koi click ya inspect nahi chalega
+            }
+        }
+        
+        // Agar ID valid hai toh usko variable mein save karo taake baaki functions use kar sakein
+        window.activeDeviceID = validId.trim();
+        localStorage.setItem('ahmad_script_uid', window.activeDeviceID);
+    } catch(e) {
+        // Kisi bhi tampering ki surat mein loop chala do
+        while(true){}
+    }
+})();
+</script>
 <script>
 
 
