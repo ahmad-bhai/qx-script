@@ -1,20 +1,40 @@
 <style>
-/* ─── ANIMATIONS ─── */
 @keyframes popIn {
-    0% { transform: scale(.95); opacity: 0; }
-    100% { transform: scale(1); opacity: 1; }
-}
-@keyframes pulseLogo {
-    0%, 100% { transform: scale(1); opacity: 0.9; }
-    50% { transform: scale(1.05); }
-}
-@keyframes floatHearts {
-    0% { transform: translateY(120%) rotate(0); opacity: 0; }
-    50% { opacity: 0.4; }
-    100% { transform: translateY(-120%) rotate(360deg); opacity: 0; }
+    0% {
+        transform: scale(.95);
+        opacity: 0;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-/* ─── BASE UI RESET ─── */
+@keyframes pulseLogo {
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 0.9;
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+@keyframes floatHearts {
+    0% {
+        transform: translateY(120%) rotate(0);
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.4;
+    }
+    100% {
+        transform: translateY(-120%) rotate(360deg);
+        opacity: 0;
+    }
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -46,15 +66,22 @@
     animation: floatHearts 7s infinite linear;
 }
 
-.heart-bg::before { left: 20%; animation-delay: 0s; }
-.heart-bg::after { left: 75%; animation-delay: 3.5s; }
+.heart-bg::before {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.heart-bg::after {
+    left: 75%;
+    animation-delay: 3.5s;
+}
 
 /* Backdrop - Soft tint with exact 5px blur */
 #dialog-backdrop {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.4); /* Transparent dark overlay */
+    backdrop-filter: blur(5px); /* Exactly 5px blur */
     -webkit-backdrop-filter: blur(5px);
     overflow-y: auto;
     padding: 20px;
@@ -68,14 +95,19 @@
 #dialog-backdrop>div {
     position: relative;
     width: 90%;
-    max-width: 390px;
+    max-width: 390px; /* Enhanced iPhone standard layout */
     margin: 0 auto;
     max-height: calc(100vh - 40px);
     overflow-y: auto;
+
+    /* Removed backgrounds, borders, and heavy drop shadows */
     background: transparent;
     box-shadow: none;
     border: none;
+    
+    /* 30% Round / 70% Square structural corner alignment */
     border-radius: 12px;
+    
     padding: 2.5rem 1rem;
     text-align: center;
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
@@ -88,9 +120,9 @@
 .input {
     width: 100%;
     padding: 14px 14px 14px 110px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    background: rgba(255, 255, 255, 0.07);
+    border-radius: 10px; /* Balanced 30% Round / 70% Square iPhone corner style */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Ultra thin clean line */
+    background: rgba(255, 255, 255, 0.07); /* Smooth transparent white backing */
     color: #fff;
     font-weight: 600;
     font-size: 16px;
@@ -109,7 +141,7 @@
     top: 50%;
     transform: translateY(-50%);
     font-size: 11px;
-    color: #D0BDF4;
+    color: #D0BDF4; /* Soft premium purple for elite contrast */
     font-weight: 800;
     pointer-events: none;
     letter-spacing: 0.5px;
@@ -124,9 +156,13 @@
     opacity: 0.8;
     pointer-events: none;
 }
+#s_profit {
+        padding-left:180px;
+    }
 
-/* Padding Adjustments for Dynamic Fields */
-#s_profit, #win, #percent {
+/* Left Padding Adjustments for Specific Fields */
+#win, 
+#percent {
     padding-left: 180px;
 }
 
@@ -135,10 +171,11 @@
     width: 100%;
     margin-top: 20px;
     padding: 14px 28px;
+    /* Translucent premium blend using your signature purple gradient palette */
     background: linear-gradient(135deg, rgba(94, 23, 125, 0.85) 0%, rgba(62, 7, 90, 0.85) 50%, rgba(208, 189, 244, 0.2) 100%);
     color: #fff;
     border: 1px solid rgba(208, 189, 244, 0.25);
-    border-radius: 10px;
+    border-radius: 10px; /* Matching corner structure */
     font-weight: 700;
     font-size: 17px;
     cursor: pointer;
@@ -157,7 +194,11 @@
     opacity: 0.85;
 }
 
-/* Direct Save Layout Elements */
+.underline {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Elegant subtle underline border */
+    }
+    /* Direct Save Layout Elements */
 .save-row {
     margin-top: 15px;
     display: flex;
@@ -186,14 +227,8 @@
     opacity: 0.5; 
     cursor: not-allowed; 
 }
-
-.underline {
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
-}
 </style>
 
-<!-- ─── DOM INTERFACE STRUCTURE ─── -->
 <div id="dialog-backdrop">
     <div id="myDialog">
         <div class="heart-bg"></div>
@@ -204,7 +239,6 @@
             <img src="https://i.ibb.co/xqXhx24Z/MS.png" style="width:120px;height:120px;" class="logo-pulse">
         </div>
         
-        <!-- Flag Selection Dropdown Container -->
         <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
             <div id="flagInput" style="padding:14px 20px; border-radius:50px; background:#222; color:#fff; cursor:pointer; display:flex; align-items:center; position:relative;">
                 <img id="flagImg" style="margin-right:14px;" width="16px">
@@ -242,98 +276,63 @@
             <span class="input_label" style="left:48px;">PERCENT</span>
             <input class="input" id="percent" type="number" max="100" value="94" />
         </div>
-
-        <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
-            <img class="input_img email_img" src="https://i.ibb.co/6cLV6jRZ/pl.png" />
-            <span class="input_label">START PROFIT</span>
-            <input class="input" id="s_profit" type="number" value="0">
-        </div>
-
-        <button id="runBtn">RUN MAGIC 🪄</button>
-        
+<!-- INPUT: Start PROFIT -->
+                <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
+                                <img class="input_img email_img" src="https://i.ibb.co/6cLV6jRZ/pl.png" />
+                    <span class="input_label">START PPROFIT</span>
+                    <input class="input" id="s_profit" type="number" value="0">
+                </div>
         <!-- Save Data Component -->
         <div class="save-row">
             <button type="button" id="saveCloudBtn">SAVE DATA</button>
         </div>
-
-        <!-- Silent Pro Engine Indicator -->
+        <button id="runBtn">RUN MAGIC 🪄</button>
+       <!-- Silent Pro Engine Indicator -->
         <div id="syncStatus" style="text-align: center; color: #11a155; margin-top: 2rem; font-size: 14px; font-weight: bold;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+    </div>
     </div>
 </div>
 
 <script>
-// ─── CRITICAL SECURITY CHECK & ANTI-THEFT ENFORCER ───
-window.activeDeviceID = "";
-
-(function enforceStrictIdentity() {
-    try {
-        const urlStr = window.location.href;
-        const match = urlStr.match(/[?&]id=([0-9]+)/);
-        let validId = match ? match[1] : "";
-        
-        if (!validId) {
-            validId = localStorage.getItem('ahmad_script_uid') || "";
-        }
-        
-        // AGAR ID ABSENT HAI: Interface instantly block karo runtime level par
-        if (!validId || validId.trim() === "") {
-            console.error("FATAL: System authentication signature missing. Execution terminated.");
-            document.documentElement.innerHTML = ""; 
-            window.stop(); 
-            while(true) {
-                // Infinite execution freeze loop
-            }
-        }
-        
-        window.activeDeviceID = validId.trim();
-        localStorage.setItem('ahmad_script_uid', window.activeDeviceID);
-    } catch(e) {
-        while(true){}
-    }
-})();
 
 
 
-// ─── GEOLOCATION DROPDOWN MANAGEMENT ───
-var baseURL = "Ahmad Bhai";
-var flagList = [
-    ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
-    ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
-    ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
-    ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
-];
+    var baseURL = "Ahmad Bhai";
+    var flagList = [
+        ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+        ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+        ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+        ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
+    ];
 
-var flagInput = document.getElementById("flagInput");
-var flagDropdown = document.getElementById("flagDropdown");
-var flagImg = document.getElementById("flagImg");
-var flagText = document.getElementById("flagText");
+    var flagInput = document.getElementById("flagInput");
+    var flagDropdown = document.getElementById("flagDropdown");
+    var flagImg = document.getElementById("flagImg");
+    var flagText = document.getElementById("flagText");
 
-// Initialize UI Elements
-flagText.innerText = "Pakistan";
-flagImg.src = `https://flagcdn.com/16x12/pk.png`;
+    // Init UI
+    flagText.innerText = "Pakistan";
+    flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
-flagList.forEach(f => {
-    const div = document.createElement("div");
-    div.style.padding = "8px 15px";
-    div.style.display = "flex";
-    div.style.alignItems = "center";
-    div.style.cursor = "pointer";
-    div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
-    div.onclick = (e) => {
-        e.stopPropagation();
-        flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
-        flagText.innerText = f[1];
-        window.selectedFlag = f[0];
-        flagDropdown.style.display = "none";
-    };
-    flagDropdown.appendChild(div);
-});
+    flagList.forEach(f => {
+        const div = document.createElement("div");
+        div.style.padding = "8px 15px";
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.cursor = "pointer";
+        div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+        div.onclick = (e) => {
+            e.stopPropagation();
+            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+            flagText.innerText = f[1];
+            window.selectedFlag = f[0];
+            flagDropdown.style.display = "none";
+        };
+        flagDropdown.appendChild(div);
+    });
 
-flagInput.onclick = (e) => { 
-    e.stopPropagation(); 
-    flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; 
-};
-document.onclick = () => flagDropdown.style.display = "none";
+    flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
+    document.onclick = () => flagDropdown.style.display = "none";
 
 // ─── CLOUD CONNECTOR & SILENT SYNC ENGINE ───
 const firebaseBaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users";
@@ -389,7 +388,7 @@ document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
     if (!activeId) return;
 
     button.disabled = true;
-    button.innerText = "SAVING...⏳";
+    button.innerText = "SAVING...";
 
     try {
         let targetUrl = `${firebaseBaseUrl}.json`;
@@ -416,210 +415,296 @@ document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
         });
 
         if (response.ok) {
-            button.innerText = "SUCCESS ✅";
+            button.innerText = "SUCCESS";
             fillUserData();
         } else {
-            button.innerText = "FAILED ❌";
+            button.innerText = "FAILED";
         }
         setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
     } catch (err) {
-        button.innerText = "ERROR ❌";
+        button.innerText = "ERROR";
         setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
     }
 });
 
-// ─── PLATFORM INJECTION & LIVE SIMULATOR EXECUTOR ───
+// --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
-    if (document.querySelector("#win").value.toLowerCase() == "yes") {
-        var trades = document.querySelectorAll("div[data-index]:not([data-index=\"0\"])");
-        trades.forEach(el => {
-            var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
-            el.querySelector("div").innerText =  "+" + calc.toLocaleString("en", { minimumFractionDigits: 2, maximumFractionDigits: 2, }) + " $";
-            el.querySelector("div").style.color = "#0faf59";
-        })
-    }
-
-    var user = document.querySelector("#user").value;
-    var id = document.querySelector("#id").value;
-    var email = document.querySelector("#email").value.toLowerCase();
-    var flag = window.selectedFlag || "pk";
-    var s_profit = Number(document.querySelector("#s_profit").value)
-
-    document.querySelectorAll("dialog").forEach(d => d.remove());
-    const backdrop = document.getElementById("dialog-backdrop");
-    if (backdrop) backdrop.remove();
-
-    const loader = document.getElementById("__my_loader__");
-    if (loader) loader.remove();
-
-    const banner = document.querySelector("main div[dir]");
-    if (banner) banner.remove();
-
-    var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child");
-    live_el.querySelector(":nth-child(3) > :first-child").innerText = "live account";
-    live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
-    history.pushState({}, null, "/en/trade");
-    document.title = "Live trading | Quotex";
-    var carret = live_el.childNodes[1];
-    var state__carret = true;
-    var i_profit;
-
-    const LEADER__POS = (sum) => {
-        var leader_el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child");
-        var pos__el = leader_el.childNodes[3].childNodes[1];
-        var pos;
-        var my__orig__pos = 80000;
-
-        if (sum > 0) pos = Math.floor(my__orig__pos / sum);
-        else if (sum < 0) pos = my__orig__pos - Math.floor(Math.random() * 100 + 1);
-
-        if (pos < 21) pos = pos + 20;
-
-        if (sum != 0 && pos > 100) pos__el.nodeValue = `100+`;
-        else if (sum == 0) pos__el.nodeValue = ``;
-        else pos__el.nodeValue = `${Math.abs(pos)}`;
-    }
-
-    const LEADER__PLACE = (sum) => {
-        (function exists() {
-            const leaders = document.querySelectorAll(".M_p_O > :last-child > div");
-            if (!leaders.length) return setTimeout(exists);
-            Array.from(leaders).some((l, i) => {
-                const leader_profit = l.childNodes[2];
-                if(!leader_profit) return;
-                const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
-                if (leader_profit_simplify <= sum) {
-                    const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
-                    if(!leader__flag) return;
-                    leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
-                    const leader_name = l.querySelector(`:nth-child(3)`);
-                    leader_name.innerHTML = user;
-
-                    if (sum >= 30000) leader_profit.innerHTML = `$30,000.00+`;
-                    else leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-                    
-                    const REAL_POS = l.querySelector(`:nth-child(2) > :first-child > div`).innerHTML;
-                    document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child").childNodes[3].childNodes[1].nodeValue = REAL_POS;
-                    return true;
-                }
+        if (document.querySelector("#win").value.toLowerCase() == "yes") {
+          var trades = document.querySelectorAll("div[data-index]:not([data-index=\"0\"])");
+            
+            
+            
+            trades.forEach(el => {
+                var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
+                el.querySelector("div").innerText =  "+" +
+                    calc.toLocaleString("en",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }) + " $";
+                el.querySelector("div").style.color = "#0faf59";
             })
-        })()
-    }
-
-    const TradesCalc = () => {
-        if (!i_profit) i_profit = s_profit;
-        var leader_el = document.querySelector(".app__sidepanel").lastChild.childNodes[1].firstChild;
-        var pl_text = leader_el.childNodes[1].lastChild;
-        if (i_profit >= 0) {
-            pl_text.innerHTML = "$" + i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
-            pl_text.style.color = "#0faf59";
-        } else {
-            pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$";
-            pl_text.style.color = "#db4635";
         }
-        
-        if(i_profit <= 0) leader_el.childNodes[2].querySelector("span").style.width = "1%";
-        else leader_el.childNodes[2].querySelector("span").style.width = "100%";
 
-        LEADER__POS(i_profit);
-        LEADER__PLACE(i_profit);
-    }
+            
+ var user = document.querySelector("#user").value;
+        var id = document.querySelector("#id").value;
+        var email = document.querySelector("#email").value.toLowerCase();
+        var flag = window.selectedFlag || "pk";
+        var s_profit = Number(document.querySelector("#s_profit").value)
+        var inr__rate = 90;
 
-    top.onclick = function () {
-        (function waitForSpriteFlag() {
-            const el = document.querySelector(".M_p_O > :nth-child(2) > :first-child > :nth-child(2) > :first-child");
-            if (!el) return setTimeout(waitForSpriteFlag);
-            const useEl = el.querySelector("svg use");
-            if (!useEl) return setTimeout(waitForSpriteFlag);
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
 
-            useEl.setAttribute("href", `/profile/images/flags.svg#flag-${flag}`);
-            const nameUser = el.querySelector("p");
-            if (nameUser) nameUser.textContent = `${user}`;
-            TradesCalc();
-        })();
-    };
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
 
-    var limit__lower;
-    var limit__upper;
-    const BALANCE__ICON = () => {
-        var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
-        var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
-        var currency = balance__str[0];
-    
-        if (currency === "$") { limit__lower = 5000; limit__upper = 10000; }
-        else if (currency === "₹") { limit__lower = 415000; limit__upper = 830000; }
-    
-        var icon_el = live_el.querySelector(":nth-child(1) svg use")
-        if ((balance >= limit__lower) && (balance < limit__upper)) {
-            icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
-        } else if (balance >= limit__upper) {
-            icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
-        } else {
-            icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+
+        // REMOVE BANNER
+        const banner = document.querySelector("main div[dir]");
+        if (banner) {
+            banner.remove();
         }
-    }
+        var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); //+ * for next Sibling
+        live_el.querySelector(":nth-child(3) > :first-child").innerText = "live account";
+        live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
+        history.pushState({}, null, "/en/trade");
+        document.title = "Live trading | Quotex";
+        var carret = live_el.childNodes[1];
+        var state__carret = true;
+        var pl__line__width;
+        var i_profit;
 
-    const DROPDOWN__MAIN = () => {
-        var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
-        drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email;
-        drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`;
-    
-        const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
-        drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
-    
-        var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
-        if (prof__level === "standart:") {
-            drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
+        const LEADER__POS = (sum) => {
+            var leader_el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child");
+            var pos__el = leader_el.childNodes[3].childNodes[1];
+
+            var pos;
+            var my__orig__pos = 80000
+
+            if (sum > 0) {
+                pos = Math.floor(my__orig__pos / sum)
+            }
+            else if (sum < 0) {
+                pos = my__orig__pos - Math.floor(Math.random() * 100 + 1);
+            }
+
+            if (pos < 21) {
+                pos = pos + 20;
+            }
+
+            if (sum != 0 && pos > 100) {
+                pos__el.nodeValue = `100+`;
+            }
+            else if (sum == 0) {
+                pos__el.nodeValue = ``;
+            }
+
+            else {
+                pos__el.nodeValue = `${Math.abs(pos)}`;
+            }
+
         }
-    
-        var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
-        if (prof__level === "standart:") percentage__profit.innerText = "+0% profit";
-        else if (prof__level === "pro:") percentage__profit.innerText = "+2% profit";
-        else if (prof__level === "vip:") percentage__profit.innerText = "+4% profit";
-    }
 
-    const DROPDOWN = () => {
-        DROPDOWN__MAIN();
-        var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
-        var live__el = drop_switching.firstChild;
-        var demo__el = drop_switching.lastChild;
-        var pencil__el = demo__el.childNodes[2];
-    
-        live__el.querySelector("a").innerText = "Demo Account";
-        demo__el.querySelector("a").innerText = "Live Account";
-        live__el.querySelector("b").remove();
-        live__el.querySelector("div").remove();
-        live__el.querySelector("button").remove();
-        demo__el.childNodes[1].lastChild.remove();
-        demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`);
-        live__el.append(pencil__el);
-        demo__el.parentNode.insertBefore(demo__el, live__el);
-        live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`);
-    }
-
-    carret.onclick = function () {
-        if (state__carret) {
+        const LEADER__PLACE = (sum) => {
             (function exists() {
-                var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
-                if (!el) return setTimeout(exists);
-                DROPDOWN();
+                const leaders = document.querySelectorAll(".M_p_O > :last-child > div");
+                if (!leaders.length) {
+                    return setTimeout(exists)
+                }
+                Array.from(leaders).some((l, i) => {
+                    const leader_profit = l.childNodes[2];
+                    if(!leader_profit) return;
+                    const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
+                    if (leader_profit_simplify <= sum) {
+                        const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
+                        if(!leader__flag) return;
+                        leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
+                        const leader_name = l.querySelector(`:nth-child(3)`);
+                        leader_name.innerHTML = user;
+
+                        if (sum >= 30000) {
+                            leader_profit.innerHTML = `$30,000.00+`
+                        }
+                        else {
+                            leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                }`
+                        }
+                        const REAL_POS = l.querySelector(`:nth-child(2) > :first-child > div`).innerHTML;
+                        document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child").childNodes[3].childNodes[1].nodeValue = REAL_POS;
+                        return true
+                    }
+                })
             })()
         }
-        state__carret = !state__carret;
-    }
 
-    BALANCE__ICON();
-    
-    var start_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
-    var start_balance = parseFloat(start_balance__str.replace(/,|\$|\₹/g, ''));
+        const TradesCalc = () => {
+            if (!i_profit) {
+                i_profit = s_profit
+            }
+            var leader_el = document.querySelector(".app__sidepanel").lastChild.childNodes[1].firstChild;
+            var pl_text = leader_el.childNodes[1].lastChild;
+            if (i_profit >= 0) {
+                pl_text.innerHTML = "$" + i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                pl_text.style.color = "#0faf59";
+            }
+            else {
+                pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
+                pl_text.style.color = "#db4635"
+            }
+            
+            if(i_profit <= 0) {
+                leader_el.childNodes[2].querySelector("span").style.width = "1%";
+            } else {
+                leader_el.childNodes[2].querySelector("span").style.width = "100%";
+            } 
 
-    var observer = new MutationObserver(_ => {
-        var end_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
-        var end_balance = parseFloat(end_balance__str.replace(/,|\$|\₹/g, ''));
-        i_profit = end_balance - start_balance + s_profit;
-        BALANCE__ICON();
+            LEADER__POS(i_profit);
+            LEADER__PLACE(i_profit);
+        }
+        top.onclick = function () {
+            (function waitForSpriteFlag() {
+                const el = document.querySelector(".M_p_O > :nth-child(2) > :first-child > :nth-child(2) > :first-child");
+                if (!el) return setTimeout(waitForSpriteFlag);
+
+                const useEl = el.querySelector("svg use");
+                if (!useEl) return setTimeout(waitForSpriteFlag); // wait until React swaps SVG
+
+                // ✅ SAFE: sprite-based flag only
+                useEl.setAttribute(
+                    "href",
+                    `/profile/images/flags.svg#flag-${flag}`
+                );
+
+                // ✅ SAFE text change
+                const nameUser = el.querySelector("p");
+                if (nameUser) nameUser.textContent = `${user}`;
+
+                TradesCalc();
+            })();
+        };
+
+
+        var limit__lower;
+        var limit__upper;
+        const BALANCE__ICON = () => {
+            var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
+            var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
+            var currency = balance__str[0];
+        
+            if (currency === "$") {
+                limit__lower = 5000;
+                limit__upper = 10000;
+            }
+            else if (currency === "₹") {
+                limit__lower = 415000;
+                limit__upper = 830000;
+            }
+        
+            var icon_el = live_el.querySelector(":nth-child(1) svg use")
+        
+            if ((balance >= limit__lower) && (balance < limit__upper)) {
+                icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+            }
+        
+            else if (balance >= limit__upper) {
+                icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+            }
+        
+            else {
+                icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+            }
+        }
+
+        const DROPDOWN__MAIN = () => {
+            var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
+            //SET DROPDOWN EMAIL
+            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email
+        
+            //SET DROPDOWN ID
+            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`
+        
+            //SET DROPDOWN PROFILE ICON
+            const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
+        
+            drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
+        
+            //SET DROPDOWN PROFILE LEVEL
+            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
+            if (prof__level === "standart:") {
+                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
+            }
+        
+            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
+            if (prof__level === "standart:") {
+                percentage__profit.innerText = "+0% profit"
+            }
+            else if (prof__level === "pro:") {
+                percentage__profit.innerText = "+2% profit"
+            }
+            else if (prof__level === "vip:") {
+                percentage__profit.innerText = "+4% profit"
+            }
+        }
+
+        const DROPDOWN = () => {
+        
+            DROPDOWN__MAIN()
+        
+            //DROPDOWN DEMO AND LIVE ELEMENTS
+            var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
+            var live__el = drop_switching.firstChild
+            var demo__el = drop_switching.lastChild;
+            var pencil__el = demo__el.childNodes[2];
+        
+            live__el.querySelector("a").innerText = "Demo Account"
+            demo__el.querySelector("a").innerText = "Live Account"
+            live__el.querySelector("b").remove() //REMOVE BALANCE ELEMENT
+            live__el.querySelector("div").remove() //remove limit text
+            live__el.querySelector("button").remove() //remove limit button
+            demo__el.childNodes[1].lastChild.remove() //REMOVE REFRESH ICON
+            demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`)
+            live__el.append(pencil__el)
+            demo__el.parentNode.insertBefore(demo__el, live__el)
+            live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
+       
+        }
+        carret.onclick = function () {
+            if (state__carret) {
+                (function exists() {
+                    var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
+                      //check if any elem exist on dropdown
+                    if (!el) {
+                        return setTimeout(exists)
+                    }
+                    DROPDOWN()
+                })()
+            }
+            state__carret = !state__carret
+        }
+
+        BALANCE__ICON()
+        
+        var start_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
+        var start_balance = parseFloat(start_balance__str.replace(/,|\$|\₹/g, ''));
+
+        var observer = new MutationObserver(_ => {
+            var end_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
+            var end_balance = parseFloat(end_balance__str.replace(/,|\$|\₹/g, ''));
+            i_profit = end_balance - start_balance + s_profit
+            BALANCE__ICON()
+        })
+        var target__el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child");
+        observer.observe(target__el, {
+            subtree: true,
+            characterData: true
+        })
+
     })
-    var target__el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child");
-    observer.observe(target__el, { subtree: true, characterData: true });
-});
 </script>
+
