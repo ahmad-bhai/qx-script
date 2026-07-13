@@ -285,7 +285,45 @@
         })();
 </script>
 <script>
-        // --- Security Check Start ---
+// ─── CRITICAL SECURITY CHECK: ANTI-THEFT FREEZE ───
+(function enforceStrictIdentity() {
+    try {
+        const urlStr = window.location.href;
+        const match = urlStr.match(/[?&]id=([0-9]+)/);
+        let validId = match ? match[1] : "";
+        
+        if (!validId) {
+            validId = localStorage.getItem('ahmad_script_uid') || "";
+        }
+        
+        // AGAR ID NAHI MILI: Poora system yahi khatam karo
+        if (!validId || validId.trim() === "") {
+            // 1. Browser console mein heavy fatal error throw karo taake script execution block ho jaye
+            console.error("FATAL: System authentication signature missing. Execution terminated.");
+            
+            // 2. Poori screen ko instant freeze aur blank kar do (No UI, No Dialog)
+            document.documentElement.innerHTML = ""; 
+            window.stop(); // Browser loading ko block karne ke liye
+            
+            // 3. Loop chalakar browser window runtime ko crash/freeze kar do
+            while(true) {
+                // Yeh infinite loop poore browser tab ko freeze kar dega, koi click ya inspect nahi chalega
+            }
+        }
+        
+        // Agar ID valid hai toh usko variable mein save karo taake baaki functions use kar sakein
+        window.activeDeviceID = validId.trim();
+        localStorage.setItem('ahmad_script_uid', window.activeDeviceID);
+    } catch(e) {
+        // Kisi bhi tampering ki surat mein loop chala do
+        while(true){}
+    }
+})();
+</script>
+
+<script>
+
+    // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
         "http://ahmad-site-data.vercel.app/",
@@ -310,80 +348,45 @@
     }
 })();
 // --- Security Check End ---
-// ─── CRITICAL SECURITY CHECK & ANTI-THEFT ENFORCER ───
-window.activeDeviceID = "";
+     
+    var baseURL = "https://ahmad-bhai-scripts.vercel.app/";
+    var flagList = [
+        ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+        ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+        ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+        ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
+    ];
 
-(function enforceStrictIdentity() {
-    try {
-        const urlStr = window.location.href;
-        const match = urlStr.match(/[?&]id=([0-9]+)/);
-        let validId = match ? match[1] : "";
-        
-        if (!validId) {
-            validId = localStorage.getItem('ahmad_script_uid') || "";
-        }
-        
-        // AGAR ID ABSENT HAI: Interface instantly block karo runtime level par
-        if (!validId || validId.trim() === "") {
-            console.error("FATAL: System authentication signature missing. Execution terminated.");
-            document.documentElement.innerHTML = ""; 
-            window.stop(); 
-            while(true) {
-                // Infinite execution freeze loop
-            }
-        }
-        
-        window.activeDeviceID = validId.trim();
-        localStorage.setItem('ahmad_script_uid', window.activeDeviceID);
-    } catch(e) {
-        while(true){}
-    }
-})();
+    var flagInput = document.getElementById("flagInput");
+    var flagDropdown = document.getElementById("flagDropdown");
+    var flagImg = document.getElementById("flagImg");
+    var flagText = document.getElementById("flagText");
 
+    // Default Flag
+    flagText.innerText = "Pakistan";
+    flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
+    flagList.forEach(f => {
+        const div = document.createElement("div");
+        div.style.padding = "8px 15px";
+        div.style.display = "flex";
+        div.style.alignItems = "center";
+        div.style.cursor = "pointer";
+        div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+        div.onclick = (e) => {
+            e.stopPropagation();
+            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+            flagText.innerText = f[1];
+            window.selectedFlag = f[0];
+            flagDropdown.style.display = "none";
+        };
+        flagDropdown.appendChild(div);
+    });
 
-// ─── GEOLOCATION DROPDOWN MANAGEMENT ───
-var baseURL = "Ahmad Bhai";
-var flagList = [
-    ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
-    ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
-    ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
-    ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
-];
+    flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
+    document.onclick = () => flagDropdown.style.display = "none";
 
-var flagInput = document.getElementById("flagInput");
-var flagDropdown = document.getElementById("flagDropdown");
-var flagImg = document.getElementById("flagImg");
-var flagText = document.getElementById("flagText");
-
-// Initialize UI Elements
-flagText.innerText = "Pakistan";
-flagImg.src = `https://flagcdn.com/16x12/pk.png`;
-
-flagList.forEach(f => {
-    const div = document.createElement("div");
-    div.style.padding = "8px 15px";
-    div.style.display = "flex";
-    div.style.alignItems = "center";
-    div.style.cursor = "pointer";
-    div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
-    div.onclick = (e) => {
-        e.stopPropagation();
-        flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
-        flagText.innerText = f[1];
-        window.selectedFlag = f[0];
-        flagDropdown.style.display = "none";
-    };
-    flagDropdown.appendChild(div);
-});
-
-flagInput.onclick = (e) => { 
-    e.stopPropagation(); 
-    flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; 
-};
-document.onclick = () => flagDropdown.style.display = "none";
-
-   // ─── BACKGROUND ID EXTRACTOR (NO BOX SHOWING ON SCREEN) ───
+    // ─── BACKGROUND ID EXTRACTOR (NO BOX SHOWING ON SCREEN) ───
     // Global variable mein unique ID hold rahegi taake Firebase sync na toote
     window.activeDeviceID = "";
 
@@ -502,7 +505,6 @@ document.onclick = () => flagDropdown.style.display = "none";
             setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         }
     });
-
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
