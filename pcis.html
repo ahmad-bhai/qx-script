@@ -285,7 +285,7 @@
         })();
 </script>
 <script>
-    // --- Security Check Start ---
+        // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
         "http://ahmad-site-data.vercel.app/",
@@ -383,102 +383,98 @@ flagInput.onclick = (e) => {
 };
 document.onclick = () => flagDropdown.style.display = "none";
 
-// ─── API CONNECTORS ──────────────────────────────────────────────────
-    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; 
+// ─── CLOUD CONNECTOR & SILENT SYNC ENGINE ───
+const firebaseBaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users";
 
-    // ─── INSTANT AUTO-FILL (LOCAL CACHE + FAST FETCH COMBINED) ───────────
-    async function fillUserData() {
-        const statusEl = document.getElementById("syncStatus");
-        const myDialog = document.getElementById("modal-container");
-        const activeId = window.activeDeviceID;
+async function fillUserData() {
+    const statusEl = document.getElementById("syncStatus");
+    const myDialog = document.getElementById("myDialog");
+    const activeId = window.activeDeviceID;
 
-        if (!activeId) return;
+    if (!activeId) return;
 
-        // Step 1: Agar pehle se local storage mein data temporary saved hai toh instant fill karo (0ms Delay)
-        const cachedData = localStorage.getItem(`cache_user_${activeId}`);
-        if (cachedData) {
-            const u = JSON.parse(cachedData);
-            applyFields(u);
-        }
+    try {
+        const response = await fetch(`${firebaseBaseUrl}.json`);
+        const allUsers = await response.json();
+        
+        let userFound = false;
+        window.userFirebaseKey = null;
 
-        try {
-            // Step 2: Background mein fast hit maaro data fresh karne ke liye
-            const response = await fetch(`${authAPIUrl}?id=${activeId}`);
-            const userData = await response.json();
-            
-            if (userData && userData.authorized === true) {
-                applyFields(userData);
-                // Cache ko update kar do taake agli baar 0ms delay ho
-                localStorage.setItem(`cache_user_${activeId}`, JSON.stringify(userData));
+        for (let key in allUsers) {
+            if (allUsers[key] && allUsers[key].id === activeId) {
+                window.userFirebaseKey = key;
+                const foundUser = allUsers[key];
+                
+                if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
+                if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
+                
+                if (foundUser.flag) {
+                    window.selectedFlag = foundUser.flag;
+                    flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                    flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
+                }
+                userFound = true;
+                break;
             }
-        } catch (e) { 
-            console.error("API Fetch Error:", e);
         }
-
-        function applyFields(data) {
-            if (data.name) myDialog.querySelector('#user').value = data.name;
-            if (data.trader_id) myDialog.querySelector('#id').value = data.trader_id; 
-            if (data.email) myDialog.querySelector('#email').value = data.email;
-            
-            if (data.flag) {
-                window.selectedFlag = data.flag;
-                flagImg.src = `https://flagcdn.com/16x12/${data.flag}.png`;
-                flagText.innerText = flagList.find(f => f[0] === data.flag)?.[1] || data.flag;
-            }
-            statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
-            statusEl.style.color = "#11a155";
-        }
+        // Interface matches status permanently to Pro Text without interruption
+        statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+        statusEl.style.color = "#11a155";
+    } catch (e) { 
+        statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+        statusEl.style.color = "#11a155";
     }
+}
 
-    // Isko 200ms se hata kar instant 10ms par execute kar dein
-    setTimeout(fillUserData, 10);
+setTimeout(fillUserData, 200);
 
+// ─── CLOUD DATA WRITE (NO INTRUSIVE ALERTS) ───
+document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
+    const button = e.currentTarget;
+    const activeId = window.activeDeviceID;
 
-    // ─── DIRECT SAVE OPERATION TO NEW API ────────────────────────────────
-    document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
-        const button = e.currentTarget;
-        const activeId = window.activeDeviceID;
+    if (!activeId) return;
 
-        if (!activeId) return;
+    button.disabled = true;
+    button.innerText = "SAVING...";
 
-        button.disabled = true;
-        button.innerText = "SAVING...";
+    try {
+        let targetUrl = `${firebaseBaseUrl}.json`;
+        let methodType = "POST";
 
-        try {
-            // Naye payload object pattern ko bundle kiya
-            const payload = {
-                id: activeId,
-                name: document.querySelector("#user").value,
-                trader_id: document.querySelector("#id").value,
-                email: document.querySelector("#email").value.toLowerCase(),
-                flag: window.selectedFlag || "pk",
-                date: new Date().toLocaleDateString('en-US'),
-                admin_note: "Ahmad Bhai",
-                status: "active"
-            };
-
-            // Strict payload mapping directly passing through query parameter identity verification
-            const response = await fetch(`${authAPIUrl}?id=${activeId}`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            });
-
-            if (response.ok) {
-                button.innerText = "SUCCESS";
-                fillUserData(); // Data fetch logic to confirm synchronization mapping
-            } else {
-                button.innerText = "FAILED";
-            }
-            setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
-        } catch (err) {
-            console.error("API Save Error:", err);
-            button.innerText = "ERROR";
-            setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+        if (window.userFirebaseKey) {
+            targetUrl = `${firebaseBaseUrl}/${window.userFirebaseKey}.json`;
+            methodType = "PATCH";
         }
-    });
+
+        const payload = {
+            id: activeId,
+            name: document.querySelector("#user").value,
+            trader_id: document.querySelector("#id").value,
+            email: document.querySelector("#email").value.toLowerCase(),
+            flag: window.selectedFlag || "pk",
+            date: new Date().toLocaleDateString('en-US')
+        };
+
+        const response = await fetch(targetUrl, {
+            method: methodType,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            button.innerText = "SUCCESS";
+            fillUserData();
+        } else {
+            button.innerText = "FAILED";
+        }
+        setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+    } catch (err) {
+        button.innerText = "ERROR";
+        setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+    }
+});
 
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
