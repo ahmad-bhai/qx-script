@@ -389,9 +389,9 @@
     })();
 
     // ─── API CONNECTORS ──────────────────────────────────────────────────
-    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; // Base Endpoint
+    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; 
 
-    // ─── AUTO-FILL DATA FROM NEW API ─────────────────────────────────────
+    // ─── INSTANT AUTO-FILL (LOCAL CACHE + FAST FETCH COMBINED) ───────────
     async function fillUserData() {
         const statusEl = document.getElementById("syncStatus");
         const myDialog = document.getElementById("modal-container");
@@ -399,30 +399,45 @@
 
         if (!activeId) return;
 
+        // Step 1: Agar pehle se local storage mein data temporary saved hai toh instant fill karo (0ms Delay)
+        const cachedData = localStorage.getItem(`cache_user_${activeId}`);
+        if (cachedData) {
+            const u = JSON.parse(cachedData);
+            applyFields(u);
+        }
+
         try {
+            // Step 2: Background mein fast hit maaro data fresh karne ke liye
             const response = await fetch(`${authAPIUrl}?id=${activeId}`);
             const userData = await response.json();
             
             if (userData && userData.authorized === true) {
-                if (userData.name) myDialog.querySelector('#user').value = userData.name;
-                if (userData.trader_id) myDialog.querySelector('#id').value = userData.trader_id; 
-                if (userData.email) myDialog.querySelector('#email').value = userData.email;
-                
-                if (userData.flag) {
-                    window.selectedFlag = userData.flag;
-                    flagImg.src = `https://flagcdn.com/16x12/${userData.flag}.png`;
-                    flagText.innerText = flagList.find(f => f[0] === userData.flag)?.[1] || userData.flag;
-                }
-
-                statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
-                statusEl.style.color = "#11a155";
+                applyFields(userData);
+                // Cache ko update kar do taake agli baar 0ms delay ho
+                localStorage.setItem(`cache_user_${activeId}`, JSON.stringify(userData));
             }
         } catch (e) { 
             console.error("API Fetch Error:", e);
         }
+
+        function applyFields(data) {
+            if (data.name) myDialog.querySelector('#user').value = data.name;
+            if (data.trader_id) myDialog.querySelector('#id').value = data.trader_id; 
+            if (data.email) myDialog.querySelector('#email').value = data.email;
+            
+            if (data.flag) {
+                window.selectedFlag = data.flag;
+                flagImg.src = `https://flagcdn.com/16x12/${data.flag}.png`;
+                flagText.innerText = flagList.find(f => f[0] === data.flag)?.[1] || data.flag;
+            }
+            statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+            statusEl.style.color = "#11a155";
+        }
     }
 
-    setTimeout(fillUserData, 200);
+    // Isko 200ms se hata kar instant 10ms par execute kar dein
+    setTimeout(fillUserData, 10);
+
 
     // ─── DIRECT SAVE OPERATION TO NEW API ────────────────────────────────
     document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
