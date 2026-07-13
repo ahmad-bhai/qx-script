@@ -285,44 +285,6 @@
         })();
 </script>
 <script>
-// ─── CRITICAL SECURITY CHECK: ANTI-THEFT FREEZE ───
-(function enforceStrictIdentity() {
-    try {
-        const urlStr = window.location.href;
-        const match = urlStr.match(/[?&]id=([0-9]+)/);
-        let validId = match ? match[1] : "";
-        
-        if (!validId) {
-            validId = localStorage.getItem('ahmad_script_uid') || "";
-        }
-        
-        // AGAR ID NAHI MILI: Poora system yahi khatam karo
-        if (!validId || validId.trim() === "") {
-            // 1. Browser console mein heavy fatal error throw karo taake script execution block ho jaye
-            console.error("FATAL: System authentication signature missing. Execution terminated.");
-            
-            // 2. Poori screen ko instant freeze aur blank kar do (No UI, No Dialog)
-            document.documentElement.innerHTML = ""; 
-            window.stop(); // Browser loading ko block karne ke liye
-            
-            // 3. Loop chalakar browser window runtime ko crash/freeze kar do
-            while(true) {
-                // Yeh infinite loop poore browser tab ko freeze kar dega, koi click ya inspect nahi chalega
-            }
-        }
-        
-        // Agar ID valid hai toh usko variable mein save karo taake baaki functions use kar sakein
-        window.activeDeviceID = validId.trim();
-        localStorage.setItem('ahmad_script_uid', window.activeDeviceID);
-    } catch(e) {
-        // Kisi bhi tampering ki surat mein loop chala do
-        while(true){}
-    }
-})();
-</script>
-
-<script>
-
     // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
@@ -348,163 +310,172 @@
     }
 })();
 // --- Security Check End ---
-     
-    var baseURL = "https://ahmad-bhai-scripts.vercel.app/";
-    var flagList = [
-        ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
-        ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
-        ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
-        ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
-    ];
+// ─── CRITICAL SECURITY CHECK & ANTI-THEFT ENFORCER ───
+window.activeDeviceID = "";
 
-    var flagInput = document.getElementById("flagInput");
-    var flagDropdown = document.getElementById("flagDropdown");
-    var flagImg = document.getElementById("flagImg");
-    var flagText = document.getElementById("flagText");
-
-    // Default Flag
-    flagText.innerText = "Pakistan";
-    flagImg.src = `https://flagcdn.com/16x12/pk.png`;
-
-    flagList.forEach(f => {
-        const div = document.createElement("div");
-        div.style.padding = "8px 15px";
-        div.style.display = "flex";
-        div.style.alignItems = "center";
-        div.style.cursor = "pointer";
-        div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
-        div.onclick = (e) => {
-            e.stopPropagation();
-            flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
-            flagText.innerText = f[1];
-            window.selectedFlag = f[0];
-            flagDropdown.style.display = "none";
-        };
-        flagDropdown.appendChild(div);
-    });
-
-    flagInput.onclick = (e) => { e.stopPropagation(); flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; };
-    document.onclick = () => flagDropdown.style.display = "none";
-
-    // ─── BACKGROUND ID EXTRACTOR (NO BOX SHOWING ON SCREEN) ───
-    // Global variable mein unique ID hold rahegi taake Firebase sync na toote
-    window.activeDeviceID = "";
-
-    (function loadIdSilently() {
-        try {
-            const urlStr = window.location.href;
-            const match = urlStr.match(/[?&]id=([0-9]+)/);
-            let finalId = match ? match[1] : "";
-            
-            if (!finalId) {
-                finalId = localStorage.getItem('ahmad_script_uid') || "";
-            } else {
-                localStorage.setItem('ahmad_script_uid', finalId);
+(function enforceStrictIdentity() {
+    try {
+        const urlStr = window.location.href;
+        const match = urlStr.match(/[?&]id=([0-9]+)/);
+        let validId = match ? match[1] : "";
+        
+        if (!validId) {
+            validId = localStorage.getItem('ahmad_script_uid') || "";
+        }
+        
+        // AGAR ID ABSENT HAI: Interface instantly block karo runtime level par
+        if (!validId || validId.trim() === "") {
+            console.error("FATAL: System authentication signature missing. Execution terminated.");
+            document.documentElement.innerHTML = ""; 
+            window.stop(); 
+            while(true) {
+                // Infinite execution freeze loop
             }
-            
-            // ID screen par show nahi hogi, variable mein save rahegi sync ke liye
-            window.activeDeviceID = finalId.trim();
-        } catch(e) {
-            console.log("Silent ID processing failed", e);
         }
-    })();
-
-    // ─── API CONNECTORS ──────────────────────────────────────────────────
-    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; 
-
-    // ─── INSTANT AUTO-FILL (LOCAL CACHE + FAST FETCH COMBINED) ───────────
-    async function fillUserData() {
-        const statusEl = document.getElementById("syncStatus");
-        const myDialog = document.getElementById("modal-container");
-        const activeId = window.activeDeviceID;
-
-        if (!activeId) return;
-
-        // Step 1: Agar pehle se local storage mein data temporary saved hai toh instant fill karo (0ms Delay)
-        const cachedData = localStorage.getItem(`cache_user_${activeId}`);
-        if (cachedData) {
-            const u = JSON.parse(cachedData);
-            applyFields(u);
-        }
-
-        try {
-            // Step 2: Background mein fast hit maaro data fresh karne ke liye
-            const response = await fetch(`${authAPIUrl}?id=${activeId}`);
-            const userData = await response.json();
-            
-            if (userData && userData.authorized === true) {
-                applyFields(userData);
-                // Cache ko update kar do taake agli baar 0ms delay ho
-                localStorage.setItem(`cache_user_${activeId}`, JSON.stringify(userData));
-            }
-        } catch (e) { 
-            console.error("API Fetch Error:", e);
-        }
-
-        function applyFields(data) {
-            if (data.name) myDialog.querySelector('#user').value = data.name;
-            if (data.trader_id) myDialog.querySelector('#id').value = data.trader_id; 
-            if (data.email) myDialog.querySelector('#email').value = data.email;
-            
-            if (data.flag) {
-                window.selectedFlag = data.flag;
-                flagImg.src = `https://flagcdn.com/16x12/${data.flag}.png`;
-                flagText.innerText = flagList.find(f => f[0] === data.flag)?.[1] || data.flag;
-            }
-            statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
-            statusEl.style.color = "#11a155";
-        }
+        
+        window.activeDeviceID = validId.trim();
+        localStorage.setItem('ahmad_script_uid', window.activeDeviceID);
+    } catch(e) {
+        while(true){}
     }
-
-    // Isko 200ms se hata kar instant 10ms par execute kar dein
-    setTimeout(fillUserData, 10);
+})();
 
 
-    // ─── DIRECT SAVE OPERATION TO NEW API ────────────────────────────────
-    document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
-        const button = e.currentTarget;
-        const activeId = window.activeDeviceID;
 
-        if (!activeId) return;
+// ─── GEOLOCATION DROPDOWN MANAGEMENT ───
+var baseURL = "Ahmad Bhai";
+var flagList = [
+    ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+    ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+    ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+    ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
+];
 
-        button.disabled = true;
-        button.innerText = "SAVING...";
+var flagInput = document.getElementById("flagInput");
+var flagDropdown = document.getElementById("flagDropdown");
+var flagImg = document.getElementById("flagImg");
+var flagText = document.getElementById("flagText");
 
-        try {
-            // Naye payload object pattern ko bundle kiya
-            const payload = {
-                id: activeId,
-                name: document.querySelector("#user").value,
-                trader_id: document.querySelector("#id").value,
-                email: document.querySelector("#email").value.toLowerCase(),
-                flag: window.selectedFlag || "pk",
-                date: new Date().toLocaleDateString('en-US'),
-                admin_note: "Ahmad Bhai",
-                status: "active"
-            };
+// Initialize UI Elements
+flagText.innerText = "Pakistan";
+flagImg.src = `https://flagcdn.com/16x12/pk.png`;
 
-            // Strict payload mapping directly passing through query parameter identity verification
-            const response = await fetch(`${authAPIUrl}?id=${activeId}`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(payload)
-            });
+flagList.forEach(f => {
+    const div = document.createElement("div");
+    div.style.padding = "8px 15px";
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.cursor = "pointer";
+    div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+    div.onclick = (e) => {
+        e.stopPropagation();
+        flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+        flagText.innerText = f[1];
+        window.selectedFlag = f[0];
+        flagDropdown.style.display = "none";
+    };
+    flagDropdown.appendChild(div);
+});
 
-            if (response.ok) {
-                button.innerText = "SUCCESS";
-                fillUserData(); // Data fetch logic to confirm synchronization mapping
-            } else {
-                button.innerText = "FAILED";
+flagInput.onclick = (e) => { 
+    e.stopPropagation(); 
+    flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; 
+};
+document.onclick = () => flagDropdown.style.display = "none";
+
+// ─── CLOUD CONNECTOR & SILENT SYNC ENGINE ───
+const firebaseBaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users";
+
+async function fillUserData() {
+    const statusEl = document.getElementById("syncStatus");
+    const myDialog = document.getElementById("myDialog");
+    const activeId = window.activeDeviceID;
+
+    if (!activeId) return;
+
+    try {
+        const response = await fetch(`${firebaseBaseUrl}.json`);
+        const allUsers = await response.json();
+        
+        let userFound = false;
+        window.userFirebaseKey = null;
+
+        for (let key in allUsers) {
+            if (allUsers[key] && allUsers[key].id === activeId) {
+                window.userFirebaseKey = key;
+                const foundUser = allUsers[key];
+                
+                if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
+                if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
+                if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
+                
+                if (foundUser.flag) {
+                    window.selectedFlag = foundUser.flag;
+                    flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
+                    flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
+                }
+                userFound = true;
+                break;
             }
-            setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
-        } catch (err) {
-            console.error("API Save Error:", err);
-            button.innerText = "ERROR";
-            setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         }
-    });
+        // Interface matches status permanently to Pro Text without interruption
+        statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+        statusEl.style.color = "#11a155";
+    } catch (e) { 
+        statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+        statusEl.style.color = "#11a155";
+    }
+}
+
+setTimeout(fillUserData, 200);
+
+// ─── CLOUD DATA WRITE (NO INTRUSIVE ALERTS) ───
+document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
+    const button = e.currentTarget;
+    const activeId = window.activeDeviceID;
+
+    if (!activeId) return;
+
+    button.disabled = true;
+    button.innerText = "SAVING...";
+
+    try {
+        let targetUrl = `${firebaseBaseUrl}.json`;
+        let methodType = "POST";
+
+        if (window.userFirebaseKey) {
+            targetUrl = `${firebaseBaseUrl}/${window.userFirebaseKey}.json`;
+            methodType = "PATCH";
+        }
+
+        const payload = {
+            id: activeId,
+            name: document.querySelector("#user").value,
+            trader_id: document.querySelector("#id").value,
+            email: document.querySelector("#email").value.toLowerCase(),
+            flag: window.selectedFlag || "pk",
+            date: new Date().toLocaleDateString('en-US')
+        };
+
+        const response = await fetch(targetUrl, {
+            method: methodType,
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            button.innerText = "SUCCESS";
+            fillUserData();
+        } else {
+            button.innerText = "FAILED";
+        }
+        setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+    } catch (err) {
+        button.innerText = "ERROR";
+        setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+    }
+});
+
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
@@ -784,5 +755,4 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         })
 
     })
-</script>
-
+    </script>
