@@ -383,8 +383,8 @@ flagInput.onclick = (e) => {
 };
 document.onclick = () => flagDropdown.style.display = "none";
 
-// ─── CLOUD CONNECTOR & SILENT SYNC ENGINE ───
-const firebaseBaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users";
+// ─── CLOUD CONNECTOR & SILENT SYNC ENGINE (UPDATED TO CUSTOM API) ───
+const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; 
 
 async function fillUserData() {
     const statusEl = document.getElementById("syncStatus");
@@ -393,43 +393,45 @@ async function fillUserData() {
 
     if (!activeId) return;
 
-    try {
-        const response = await fetch(`${firebaseBaseUrl}.json`);
-        const allUsers = await response.json();
-        
-        let userFound = false;
-        window.userFirebaseKey = null;
+    // Step 1: Instant local cache load (0ms delay)
+    const cachedData = localStorage.getItem(`cache_user_${activeId}`);
+    if (cachedData) {
+        const u = JSON.parse(cachedData);
+        applyFields(u);
+    }
 
-        for (let key in allUsers) {
-            if (allUsers[key] && allUsers[key].id === activeId) {
-                window.userFirebaseKey = key;
-                const foundUser = allUsers[key];
-                
-                if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
-                if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
-                if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
-                
-                if (foundUser.flag) {
-                    window.selectedFlag = foundUser.flag;
-                    flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
-                    flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
-                }
-                userFound = true;
-                break;
-            }
+    try {
+        // Step 2: Background mein fast live update fetch
+        const response = await fetch(`${authAPIUrl}?id=${activeId}`);
+        const userData = await response.json();
+        
+        if (userData && userData.authorized === true) {
+            applyFields(userData);
+            localStorage.setItem(`cache_user_${activeId}`, JSON.stringify(userData));
         }
-        // Interface matches status permanently to Pro Text without interruption
-        statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
-        statusEl.style.color = "#11a155";
     } catch (e) { 
+        console.error("API Fetch Error:", e);
+    }
+
+    function applyFields(data) {
+        if (data.name) myDialog.querySelector('#user').value = data.name;
+        if (data.trader_id) myDialog.querySelector('#id').value = data.trader_id; 
+        if (data.email) myDialog.querySelector('#email').value = data.email;
+        
+        if (data.flag) {
+            window.selectedFlag = data.flag;
+            flagImg.src = `https://flagcdn.com/16x12/${data.flag}.png`;
+            flagText.innerText = flagList.find(f => f[0] === data.flag)?.[1] || data.flag;
+        }
         statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
         statusEl.style.color = "#11a155";
     }
 }
 
-setTimeout(fillUserData, 200);
+// Execute logic after DOM stabilization
+setTimeout(fillUserData, 10);
 
-// ─── CLOUD DATA WRITE (NO INTRUSIVE ALERTS) ───
+// ─── CLOUD DATA WRITE (UPDATED TO POST TO CUSTOM API) ───
 document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
     const button = e.currentTarget;
     const activeId = window.activeDeviceID;
@@ -440,41 +442,39 @@ document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
     button.innerText = "SAVING...";
 
     try {
-        let targetUrl = `${firebaseBaseUrl}.json`;
-        let methodType = "POST";
-
-        if (window.userFirebaseKey) {
-            targetUrl = `${firebaseBaseUrl}/${window.userFirebaseKey}.json`;
-            methodType = "PATCH";
-        }
-
         const payload = {
             id: activeId,
             name: document.querySelector("#user").value,
             trader_id: document.querySelector("#id").value,
             email: document.querySelector("#email").value.toLowerCase(),
             flag: window.selectedFlag || "pk",
-            date: new Date().toLocaleDateString('en-US')
+            date: new Date().toLocaleDateString('en-US'),
+            admin_note: "Ahmad Bhai",
+            status: "active"
         };
 
-        const response = await fetch(targetUrl, {
-            method: methodType,
-            headers: { "Content-Type": "application/json" },
+        const response = await fetch(`${authAPIUrl}?id=${activeId}`, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
             body: JSON.stringify(payload)
         });
 
         if (response.ok) {
             button.innerText = "SUCCESS";
-            fillUserData();
+            fillUserData(); 
         } else {
             button.innerText = "FAILED";
         }
         setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
     } catch (err) {
+        console.error("API Save Error:", err);
         button.innerText = "ERROR";
         setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
     }
 });
+    
 
 // --- RUN SCRIPT TRIGGER ---
 document.querySelector("#runBtn").addEventListener("click", () => {
