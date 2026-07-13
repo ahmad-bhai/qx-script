@@ -389,7 +389,7 @@
     })();
 
     // ─── API CONNECTORS ──────────────────────────────────────────────────
-    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; // Ahmad Bhai ki Nayi Base API
+    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; // Base Endpoint
 
     // ─── AUTO-FILL DATA FROM NEW API ─────────────────────────────────────
     async function fillUserData() {
@@ -400,17 +400,14 @@
         if (!activeId) return;
 
         try {
-            // Nayi full JSON API se direct hit maar kar data uthana
             const response = await fetch(`${authAPIUrl}?id=${activeId}`);
             const userData = await response.json();
             
-            // Agar user authorized hai aur uska valid data mila hai
             if (userData && userData.authorized === true) {
                 if (userData.name) myDialog.querySelector('#user').value = userData.name;
                 if (userData.trader_id) myDialog.querySelector('#id').value = userData.trader_id; 
                 if (userData.email) myDialog.querySelector('#email').value = userData.email;
                 
-                // Flag handle karna dynamic JSON response se
                 if (userData.flag) {
                     window.selectedFlag = userData.flag;
                     flagImg.src = `https://flagcdn.com/16x12/${userData.flag}.png`;
@@ -422,8 +419,6 @@
             }
         } catch (e) { 
             console.error("API Fetch Error:", e);
-            statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
-            statusEl.style.color = "#11a155";
         }
     }
 
@@ -440,7 +435,7 @@
         button.innerText = "SAVING...";
 
         try {
-            // Payload taiyar kiya aapke complete JSON schema ke mutabiq
+            // Naye payload object pattern ko bundle kiya
             const payload = {
                 id: activeId,
                 name: document.querySelector("#user").value,
@@ -448,20 +443,22 @@
                 email: document.querySelector("#email").value.toLowerCase(),
                 flag: window.selectedFlag || "pk",
                 date: new Date().toLocaleDateString('en-US'),
-                admin_note: "Ahmad Bhai", // Default fallback standard tag
+                admin_note: "Ahmad Bhai",
                 status: "active"
             };
 
-            // Nayi API par secure POST/PUT handling request bhejna
+            // Strict payload mapping directly passing through query parameter identity verification
             const response = await fetch(`${authAPIUrl}?id=${activeId}`, {
-                method: "POST", 
-                headers: { "Content-Type": "application/json" },
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
                 body: JSON.stringify(payload)
             });
 
             if (response.ok) {
                 button.innerText = "SUCCESS";
-                fillUserData(); // Refresh system values after saving
+                fillUserData(); // Data fetch logic to confirm synchronization mapping
             } else {
                 button.innerText = "FAILED";
             }
@@ -472,6 +469,7 @@
             setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         }
     });
+
 
 
 
