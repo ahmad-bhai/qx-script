@@ -388,55 +388,40 @@
         }
     })();
 
-    // --- DIRECT FIREBASE CONNECTOR & SYNC ENGINE ---
-    const firebaseBaseUrl = "https://reactions-maker-site-default-rtdb.firebaseio.com/users";
+    // ─── API CONNECTORS ──────────────────────────────────────────────────
+    const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; // Ahmad Bhai ki Nayi Base API
 
+    // ─── AUTO-FILL DATA FROM NEW API ─────────────────────────────────────
     async function fillUserData() {
         const statusEl = document.getElementById("syncStatus");
         const myDialog = document.getElementById("modal-container");
         const activeId = window.activeDeviceID;
 
-        // Agar ID nahi milti toh silently background mein return ho jayega, status change nahi karega
-        if (!activeId) {
-            return;
-        }
+        if (!activeId) return;
 
         try {
-            const response = await fetch(`${firebaseBaseUrl}.json`);
-            const allUsers = await response.json();
+            // Nayi full JSON API se direct hit maar kar data uthana
+            const response = await fetch(`${authAPIUrl}?id=${activeId}`);
+            const userData = await response.json();
             
-            let userFound = false;
-            window.userFirebaseKey = null;
-
-            for (let key in allUsers) {
-                if (allUsers[key] && allUsers[key].id === activeId) {
-                    window.userFirebaseKey = key;
-                    const foundUser = allUsers[key];
-                    
-                    if (foundUser.name) myDialog.querySelector('#user').value = foundUser.name;
-                    if (foundUser.trader_id) myDialog.querySelector('#id').value = foundUser.trader_id; 
-                    if (foundUser.email) myDialog.querySelector('#email').value = foundUser.email;
-                    
-                    if (foundUser.flag) {
-                        window.selectedFlag = foundUser.flag;
-                        flagImg.src = `https://flagcdn.com/16x12/${foundUser.flag}.png`;
-                        flagText.innerText = flagList.find(f => f[0] === foundUser.flag)?.[1] || foundUser.flag;
-                    }
-
-                    // Firebase se data match hone par bhi status clean hi rahega
-                    statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
-                    statusEl.style.color = "#11a155";
-                    userFound = true;
-                    break;
+            // Agar user authorized hai aur uska valid data mila hai
+            if (userData && userData.authorized === true) {
+                if (userData.name) myDialog.querySelector('#user').value = userData.name;
+                if (userData.trader_id) myDialog.querySelector('#id').value = userData.trader_id; 
+                if (userData.email) myDialog.querySelector('#email').value = userData.email;
+                
+                // Flag handle karna dynamic JSON response se
+                if (userData.flag) {
+                    window.selectedFlag = userData.flag;
+                    flagImg.src = `https://flagcdn.com/16x12/${userData.flag}.png`;
+                    flagText.innerText = flagList.find(f => f[0] === userData.flag)?.[1] || userData.flag;
                 }
-            }
-            // New user hone par status change nahi hoga
-            if(!userFound) {
+
                 statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
                 statusEl.style.color = "#11a155";
             }
         } catch (e) { 
-            // Network error par bhi status clean rahega
+            console.error("API Fetch Error:", e);
             statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
             statusEl.style.color = "#11a155";
         }
@@ -444,55 +429,50 @@
 
     setTimeout(fillUserData, 200);
 
-    // ─── DIRECT SAVE OPERATION (NO ALERTS) ───
+    // ─── DIRECT SAVE OPERATION TO NEW API ────────────────────────────────
     document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
         const button = e.currentTarget;
         const activeId = window.activeDeviceID;
 
-        // Alert block removed - Silently stops execution if ID is missing
-        if (!activeId) {
-            return;
-        }
+        if (!activeId) return;
 
         button.disabled = true;
         button.innerText = "SAVING...";
 
         try {
-            let targetUrl = `${firebaseBaseUrl}.json`;
-            let methodType = "POST";
-
-            if (window.userFirebaseKey) {
-                targetUrl = `${firebaseBaseUrl}/${window.userFirebaseKey}.json`;
-                methodType = "PATCH";
-            }
-
+            // Payload taiyar kiya aapke complete JSON schema ke mutabiq
             const payload = {
                 id: activeId,
                 name: document.querySelector("#user").value,
                 trader_id: document.querySelector("#id").value,
                 email: document.querySelector("#email").value.toLowerCase(),
                 flag: window.selectedFlag || "pk",
-                date: new Date().toLocaleDateString('en-US')
+                date: new Date().toLocaleDateString('en-US'),
+                admin_note: "Ahmad Bhai", // Default fallback standard tag
+                status: "active"
             };
 
-            const response = await fetch(targetUrl, {
-                method: methodType,
+            // Nayi API par secure POST/PUT handling request bhejna
+            const response = await fetch(`${authAPIUrl}?id=${activeId}`, {
+                method: "POST", 
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(payload)
             });
 
             if (response.ok) {
                 button.innerText = "SUCCESS";
-                fillUserData();
+                fillUserData(); // Refresh system values after saving
             } else {
                 button.innerText = "FAILED";
             }
             setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         } catch (err) {
+            console.error("API Save Error:", err);
             button.innerText = "ERROR";
             setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
         }
     });
+
 
 
 
