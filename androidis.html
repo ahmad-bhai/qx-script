@@ -302,31 +302,7 @@
 
 <script>
 
-    // --- Security Check Start ---
-(function() {
-    const authorizedDomains = [
-        "http://ahmad-site-data.vercel.app/",
-        "quotex.io",
-        "quotex.market",
-        "qtxbrk.com",
-        "quotex-ir.com",
-        "broker-qx.pro",
-        "market-qx.pro",
-        "market-qx.trade",
-        "qxbroker.com",
-        "brokerqx.com",
-        "qxbroker.pro",
-        "brokerqx.pro"
-    ];
-    
-    const currentHost = window.location.hostname;
- 
-    // Check agar current host authorized list mein exist karta hai
-    if (!authorizedDomains.includes(currentHost)) {
-        window.location.href = window.location.origin + "/error";
-    }
-})();
-// --- Security Check End ---
+
      
     var baseURL = "https://ahmad-bhai-scripts.vercel.app/";
     var flagList = [
@@ -546,7 +522,7 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 pos__el.nodeValue = `100+`;
             }
             else if (sum == 0) {
-                pos__el.nodeValue = ``;
+                pos__el.nodeValue = `-`;
             }
 
             else {
@@ -563,11 +539,11 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 }
                 Array.from(leaders).some((l, i) => {
                     const leader_profit = l.childNodes[2];
-                    if(!leader_profit) return;
+                    if (!leader_profit) return;
                     const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
                     if (leader_profit_simplify <= sum) {
                         const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
-                        if(!leader__flag) return;
+                        if (!leader__flag) return;
                         leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
                         const leader_name = l.querySelector(`:nth-child(3)`);
                         leader_name.innerHTML = user;
@@ -598,15 +574,15 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 pl_text.style.color = "#0faf59";
             }
             else {
-                pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
+                pl_text.innerHTML = Math.abs(i_profit).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
                 pl_text.style.color = "#db4635"
             }
-            
-            if(i_profit <= 0) {
+
+            if (i_profit <= 0) {
                 leader_el.childNodes[2].querySelector("span").style.width = "1%";
             } else {
                 leader_el.childNodes[2].querySelector("span").style.width = "100%";
-            } 
+            }
 
             LEADER__POS(i_profit);
             LEADER__PLACE(i_profit);
@@ -640,7 +616,7 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
             var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
             var currency = balance__str[0];
-        
+
             if (currency === "$") {
                 limit__lower = 5000;
                 limit__upper = 10000;
@@ -649,17 +625,17 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 limit__lower = 415000;
                 limit__upper = 830000;
             }
-        
+
             var icon_el = live_el.querySelector(":nth-child(1) svg use")
-        
+
             if ((balance >= limit__lower) && (balance < limit__upper)) {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
             }
-        
+
             else if (balance >= limit__upper) {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
             }
-        
+
             else {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
             }
@@ -669,22 +645,22 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
             //SET DROPDOWN EMAIL
             drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email
-        
+
             //SET DROPDOWN ID
             drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`
-        
+
             //SET DROPDOWN PROFILE ICON
             const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
-        
+
             drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
-        
+
             //SET DROPDOWN PROFILE LEVEL
-            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
+            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :first-child").innerText = `${main__icon.split("-").pop()}:`
             if (prof__level === "standart:") {
-                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
+                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :first-child").innerText = "standard:"
             }
-        
-            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
+
+            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :last-child");
             if (prof__level === "standart:") {
                 percentage__profit.innerText = "+0% profit"
             }
@@ -697,15 +673,15 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         }
 
         const DROPDOWN = () => {
-        
+
             DROPDOWN__MAIN()
-        
+
             //DROPDOWN DEMO AND LIVE ELEMENTS
             var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
             var live__el = drop_switching.firstChild
             var demo__el = drop_switching.lastChild;
             var pencil__el = demo__el.childNodes[2];
-        
+
             live__el.querySelector("a").innerText = "Demo Account"
             demo__el.querySelector("a").innerText = "Live Account"
             live__el.querySelector("b").remove() //REMOVE BALANCE ELEMENT
@@ -716,13 +692,13 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             live__el.append(pencil__el)
             demo__el.parentNode.insertBefore(demo__el, live__el)
             live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
-        
+
         }
         carret.onclick = function () {
             if (state__carret) {
                 (function exists() {
                     var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
-                      //check if any elem exist on dropdown
+                    //check if any elem exist on dropdown
                     if (!el) {
                         return setTimeout(exists)
                     }
@@ -733,7 +709,7 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         }
 
         BALANCE__ICON()
-        
+
         var start_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
         var start_balance = parseFloat(start_balance__str.replace(/,|\$|\₹/g, ''));
 
