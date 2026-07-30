@@ -477,30 +477,36 @@ document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
     
 
 // --- RUN SCRIPT TRIGGER ---
-document.querySelector("#runBtn").addEventListener("click", () => {
+
+        document.querySelector("#runBtn").addEventListener("click", () => {
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
-          var trades = document.querySelectorAll("div[data-index]:not([data-index=\"0\"])");
-            
-            
-            
+        function TradesUpdate() {
+            var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
             trades.forEach(el => {
-                var calc = parseFloat(el.innerText.split(" ")[0].replace(",",""))*(1 + (Number(document.querySelector("#percent").value) /100))
-                el.querySelector("div").innerText =  "+" +
+                var calc = parseFloat(el.firstChild.firstChild.lastChild.childNodes[1].nodeValue.split(" ")[0].replace(",", "")) * (1 + (Number(document.querySelector("#percent").value) / 100))
+                el.firstChild.firstChild.lastChild.childNodes[2].innerText = "+" +
                     calc.toLocaleString("en",
                         {
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                         }) + " $";
-                el.querySelector("div").style.color = "#0faf59";
+                el.firstChild.firstChild.lastChild.childNodes[2].style.color = "#0faf59";
             })
+           }
+            TradesUpdate()
+            var observer = new MutationObserver(_ => {
+                console.log("changed")
+                TradesUpdate()
+            })
+            var target__el = document.querySelector('div[data-index]').parentElement;
+            observer.observe(target__el, { attributes: true, subtree: true })
         }
 
-            
- var user = document.querySelector("#user").value;
+        var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
         var email = document.querySelector("#email").value.toLowerCase();
         var flag = window.selectedFlag || "pk";
-        var s_profit = Number(document.querySelector("#s_profit").value)
+        var s_profit = Number(document.querySelector("#s_profit").value);
         var inr__rate = 90;
 
         // Remove any dialogs
@@ -515,17 +521,22 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         if (loader) loader.remove();
 
         // REMOVE BANNER
-        const banner = document.querySelector('.q04vx.o2msZ');
+        const banner = document.querySelector("header div[dir=ltr]");
         if (banner) {
-            banner.remove();
+            banner.style.display = "none";
         }
+
+        // CHANGE MAIN DEMO
         var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); //+ * for next Sibling
         live_el.querySelector(":nth-child(3) > :first-child").innerText = "live account";
         live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
+
+        //GLOBAL VARIABLES
         history.pushState({}, null, "/en/trade");
         document.title = "Live trading | Quotex";
         var carret = live_el.childNodes[1];
         var state__carret = true;
+        var state__top = true;
         var pl__line__width;
         var i_profit;
 
@@ -551,7 +562,7 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 pos__el.nodeValue = `100+`;
             }
             else if (sum == 0) {
-                pos__el.nodeValue = ``;
+                pos__el.nodeValue = `-`;
             }
 
             else {
@@ -568,11 +579,11 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 }
                 Array.from(leaders).some((l, i) => {
                     const leader_profit = l.childNodes[2];
-                    if(!leader_profit) return;
+                    if (!leader_profit) return;
                     const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
                     if (leader_profit_simplify <= sum) {
                         const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
-                        if(!leader__flag) return;
+                        if (!leader__flag) return;
                         leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
                         const leader_name = l.querySelector(`:nth-child(3)`);
                         leader_name.innerHTML = user;
@@ -603,18 +614,22 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 pl_text.style.color = "#0faf59";
             }
             else {
-                pl_text.innerHTML = i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
+                pl_text.innerHTML = Math.abs(i_profit).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
                 pl_text.style.color = "#db4635"
             }
-            
-            if(i_profit <= 0) {
+
+            if (i_profit <= 0) {
                 leader_el.childNodes[2].querySelector("span").style.width = "1%";
             } else {
                 leader_el.childNodes[2].querySelector("span").style.width = "100%";
-            } 
+            }
 
             LEADER__POS(i_profit);
             LEADER__PLACE(i_profit);
+        }
+        var more = document.querySelector("button[data-text=More]");
+        more.onclick = function () {
+            var top = document.querySelector("a[href='/en/analytics'] + *");
         }
         top.onclick = function () {
             (function waitForSpriteFlag() {
@@ -638,14 +653,13 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             })();
         };
 
-
         var limit__lower;
         var limit__upper;
         const BALANCE__ICON = () => {
             var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
             var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
             var currency = balance__str[0];
-        
+
             if (currency === "$") {
                 limit__lower = 5000;
                 limit__upper = 10000;
@@ -654,17 +668,17 @@ document.querySelector("#runBtn").addEventListener("click", () => {
                 limit__lower = 415000;
                 limit__upper = 830000;
             }
-        
-            var icon_el = live_el.querySelector(":nth-child(1) svg use")
-        
+
+            var icon_el = live_el.querySelector(":first-child > svg use")
+
             if ((balance >= limit__lower) && (balance < limit__upper)) {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
             }
-        
+
             else if (balance >= limit__upper) {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
             }
-        
+
             else {
                 icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
             }
@@ -674,22 +688,22 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
             //SET DROPDOWN EMAIL
             drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email
-        
+
             //SET DROPDOWN ID
             drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`
-        
+
             //SET DROPDOWN PROFILE ICON
             const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
-        
+
             drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
-        
+
             //SET DROPDOWN PROFILE LEVEL
-            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = `${main__icon.split("-").pop()}:`
+            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :first-child").innerText = `${main__icon.split("-").pop()}:`
             if (prof__level === "standart:") {
-                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :last-child > :first-child").innerText = "standard:"
+                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :first-child").innerText = "standard:"
             }
-        
-            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :last-child > :last-child");
+
+            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :last-child");
             if (prof__level === "standart:") {
                 percentage__profit.innerText = "+0% profit"
             }
@@ -702,15 +716,15 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         }
 
         const DROPDOWN = () => {
-        
+
             DROPDOWN__MAIN()
-        
+
             //DROPDOWN DEMO AND LIVE ELEMENTS
             var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
             var live__el = drop_switching.firstChild
             var demo__el = drop_switching.lastChild;
             var pencil__el = demo__el.childNodes[2];
-        
+
             live__el.querySelector("a").innerText = "Demo Account"
             demo__el.querySelector("a").innerText = "Live Account"
             live__el.querySelector("b").remove() //REMOVE BALANCE ELEMENT
@@ -721,13 +735,13 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             live__el.append(pencil__el)
             demo__el.parentNode.insertBefore(demo__el, live__el)
             live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
-       
+
         }
         carret.onclick = function () {
             if (state__carret) {
                 (function exists() {
                     var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
-                      //check if any elem exist on dropdown
+                    //check if any elem exist on dropdown
                     if (!el) {
                         return setTimeout(exists)
                     }
@@ -737,10 +751,10 @@ document.querySelector("#runBtn").addEventListener("click", () => {
             state__carret = !state__carret
         }
 
-        BALANCE__ICON()
-        
         var start_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
         var start_balance = parseFloat(start_balance__str.replace(/,|\$|\₹/g, ''));
+
+        BALANCE__ICON()
 
         var observer = new MutationObserver(_ => {
             var end_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
@@ -755,4 +769,4 @@ document.querySelector("#runBtn").addEventListener("click", () => {
         })
 
     })
-    </script>
+</script>
