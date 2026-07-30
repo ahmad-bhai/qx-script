@@ -412,7 +412,7 @@
         Transation();
     }
 
-    function Transation() {
+function Transation() {
         document.querySelector("#runBtn").addEventListener("click", () => {
 
             var req__type = document.querySelector("#wd").value.toLowerCase();
@@ -434,9 +434,9 @@
             // Remove loader if still exists
             const loader = document.getElementById("__my_loader__");
             if (loader) loader.remove();
-            
+
             // REMOVE BANNER
-            const banner = document.querySelector(".q04vx.o2msZ.lhhwX");
+            const banner = document.querySelector("main div[dir]");
             if (banner) {
                 banner.remove();
             }
@@ -447,7 +447,7 @@
             method === "b" ? method__w = "Binance Pay" : method === "u" ? method__w = "USDT (TRC-20)" : method === "net" ? method__w = "Net Banking" : "";
 
             method === "b" ? method__w = "Binance Pay" : (method === "u" && req__type === "w") ? method__w = "USDT" : (method === "u" && req__type === "d") ? method__w = "USDT (BEP-20)" : method === "net" ? method__w = "Net Banking" : "";
-            method === "net" ? currency__w = "₹" : currency__w = "$"
+            method === "net" ? currency__w = "â‚¹" : currency__w = "$"
 
             const balance_cur = balance_str.innerText[0];
             var balance = parseFloat(bal).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -459,7 +459,7 @@
                 limit__lower = 5000;
                 limit__upper = 10000;
             }
-            else if (balance_cur === "₹") {
+            else if (balance_cur === "â‚¹") {
                 limit__lower = 5000 * inr__rate;
                 limit__upper = 10000 * inr__rate;
             }
@@ -477,12 +477,57 @@
                 icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
             }
             
-            //var get_names = document.querySelector("#root > div > div.UFs_m.app__page > main > div.DckO3 > div > div.transactions-list-wrapper > div > div.transactions-list__header").nextElementSibling;
-
             var add__row = `
+<div style="display:flex;justify-content:space-between;align-items:flex-start;color:#e7e7e7;border-top:1px solid hsla(0,0%,100%,.05);margin: 10px 0;
+    padding: 20px 10px 0;">
+
+    <!-- Left -->
+    <div style="display:flex;flex-direction:column;gap:5px;">
+
+        <div>
+            ${id}
+        </div>
+
+        <div>
+            ${date}, ${time}
+        </div>
+
+        <div style="display:flex;align-items:center;height: 18px;">
+            
+            <span style="color:${req__status === "c" ? "#ff6251" : req__status === "s" ? "#0faf59" : ""}">${req__status === "s" ? "Successed" : req__status === "c" ? "Failed" : req__status === "p" ? "Waiting confirmation" : ""}
+            </span>
+            ${((req__type === "w") && (req__status === "p")) ? `<a href="https://market-qx.trade/en/withdrawal/reject/40737182015" style="align-items: center;background: #353a4d;border: 0;border-radius: 8px;box-shadow: 2px 2px 6px rgba(27, 31, 45, .2);color: #fff;cursor: pointer;display: flex;height: 30px;justify-content: center;padding: 0 10px;user-select: none;margin-left: 8px">Cancel</a>` : ""}
+        </div>
+                ${((req__type === "w") && (req__status === "p")) ? `
+        <div style="background: hsla(0, 0%, 100%, .05);border-radius: 10px;font-size: 12px;line-height: 16px;margin-top: 5px;padding: 12px;width: max-content;max-width:218px">The withdrawal is currently being processed on the side of the financial operator. Please wait - the funds should be received within 48 hours.
+        </div>` : ""}
+
+    </div>
+
+    <!-- Right -->
+    <div style="display:flex;flex-direction:column;align-items:flex-end;gap:5px;">
+
+        <b style="color:${req__type === "w" ? "#ff6251" : "#0faf59"}">
+            ${req__type === "w" ? `-${currency__w}${amount.replace(",", "")}` : `+${currency__w}${amount}`}
+        </b>
+
+        <div style="color:#fff;">
+            ${method__w}
+        </div>
+
+        <div style="color:#fff;">
+            ${req__type === "w" ? "Payout" : "Deposit"}
+        </div>
+
+    </div>
+
+</div>`
+
+
+            var add__rows = `
 <div class="iJpIP">
-    <div class="VZvOf">${id}</div>
-    <div class="Sf_Tx">${date}, ${time}</div>
+    <div class="QqK5X"></div>
+    <div class="nKgsu">${date}, ${time}</div>
     <div class="MPlaR">
         <div class="pxEYH">
             <div class="cnv6i ---react-ui-TransactionsScreenItem-styles-module__${req__status === "c" ? "danger--YdX2Q" : req__status === "s" ? "success--ZBMVh" : req__status === "p" ? "muted--FGTfS" : ""}">
@@ -505,7 +550,7 @@
     <b class="h5o4H ${req__type === "w" ? "lqlCl" : "jGuz_"}">${req__type === "w" ? `-${currency__w}${amount.replace(",", "")}` : `+${currency__w}${amount}`}</b>
     </div>
 </div>`
-            var el = document.querySelector("#root > div > div.QUbaw.app__page > main > div.TSiNI > div > div.transactions-list-wrapper > div > div.transactions-list__header")
+            var el = document.querySelector("div.transactions-list-wrapper > div > div.transactions-list__header")
             el.insertAdjacentHTML("afterend", add__row);
         })
 
@@ -536,7 +581,7 @@
             var method__w;
 
             method === "b" ? method__w = "Binance Pay" : (method === "u" && req__type === "w") ? method__w = "USDT" : (method === "u" && req__type === "d") ? method__w = "USDT (BEP-20)" : method === "net" ? method__w = "Net Banking" : "";
-            method === "net" ? currency__w = "Ã¢â€šÂ¹" : currency__w = "$"
+            method === "net" ? currency__w = "ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹" : currency__w = "$"
 
             var limit__lower;
             var limit__upper;
@@ -552,7 +597,7 @@
                 limit__lower = 5000;
                 limit__upper = 10000;
             }
-            else if (balance_cur === "Ã¢â€šÂ¹") {
+            else if (balance_cur === "ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¹") {
                 limit__lower = 5000 * inr__rate;
                 limit__upper = 10000 * inr__rate;
             }
