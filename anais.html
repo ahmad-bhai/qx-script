@@ -424,6 +424,10 @@
         const loader = document.getElementById("__my_loader__");
         if (loader) loader.remove();
 
+       // Remove Banner if still exists
+        const banner = document.getElementById("q04vx o2msZ lhhwX");
+        if (banner) banner.remove();
+
         var profit__percent = Math.round((profit__count / trades__count) * 100);
         var strokeDashoffset = 150.796 * (1 - profit__percent / 100)
 
