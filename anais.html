@@ -444,95 +444,118 @@
         document.querySelector("#trades-bar").style.stroke = "#0faf59";
         document.querySelector(".analytics__profile-statistics__item-cont").setAttribute("data-pct", trades__count);
 
-        //COUNTRY
+        // COUNTRY
+const countryEl = document.querySelector("div.analytics__profile-container > div:nth-child(2) > div.analytics__profile-value");
+if (countryEl) countryEl.innerHTML = country;
 
-        document.querySelector(" div.analytics__profile-container > div:nth-child(2) > div.analytics__profile-value").innerHTML = country
+// BRICKED (Statistics & Bars)
+var money = document.querySelectorAll("div.analytics__profile-statistics__item-money");
+var bars = document.querySelectorAll("div.analytics__profile-statistics__item-progress");
 
-        //BRICKED
-        var money = document.querySelectorAll("div.analytics__profile-statistics__item-money");
-        var bars = document.querySelectorAll("div.analytics__profile-statistics__item-progress");
+if (money.length >= 7) {
+    money[0].innerHTML = parseFloat(trades__profit.toFixed(2)) + " $";
+    BARS(trades__profit, 0);
 
-        money[0].innerHTML = parseFloat(trades__profit.toFixed(2)) + " $";
-        BARS(trades__profit, 0)
+    money[1].innerHTML = parseFloat(average__profit.toFixed(2)) + " $";
+    BARS(average__profit, 1);
 
-        money[1].innerHTML = parseFloat(average__profit.toFixed(2)) + " $";
-        BARS(average__profit, 1)
+    money[2].innerHTML = parseFloat(net__turnover.toFixed(2)) + " $";
+    BARS(net__turnover, 2);
 
-        money[2].innerHTML = parseFloat(net__turnover.toFixed(2)) + " $";
-        BARS(net__turnover, 2)
+    money[3].innerHTML = parseFloat(hedge__trades.toFixed(2)) + " $";
+    BARS(hedge__trades, 3);
 
-        money[3].innerHTML = parseFloat(hedge__trades.toFixed(2)) + " $";
-        BARS(hedge__trades, 3)
+    money[4].innerHTML = parseFloat(min__amount.toFixed(2)) + " $";
+    BARS(min__amount, 4);
 
-        money[4].innerHTML = parseFloat(min__amount.toFixed(2)) + " $";
-        BARS(min__amount, 4)
+    money[5].innerHTML = parseFloat(max__amount.toFixed(2)) + " $";
+    BARS(max__amount, 5);
 
-        money[5].innerHTML = parseFloat(max__amount.toFixed(2)) + " $";
-        BARS(max__amount, 5)
-
-        money[6].innerHTML = parseFloat(max__profit.toFixed(2)) + " $";
-        BARS(max__profit, 6)
-
-
-        function BARS(value, index) {
-            if (value < 0) {
-                var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
-                bar[0].querySelector("div").style = "width:100%;"
-                bar[0].querySelector("div").setAttribute("class", "red")
-            }
-            else if (value > 0 && value < 1000) {
-                var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
-                bar[0].querySelector("div").style = "width:100%;"
-                bar[1].querySelector("div").style = "width:100%;"
-                bar[0].querySelector("div").setAttribute("class", "yellow")
-                bar[1].querySelector("div").setAttribute("class", "yellow")
-            }
-            else if (value >= 1000) {
-                var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
-                bar[0].querySelector("div").style = "width:100%;"
-                bar[1].querySelector("div").style = "width:100%;"
-                bar[2].querySelector("div").style = "width:100%;"
-                bar[3].querySelector("div").style = "width:100%;"
-                bar[0].querySelector("div").setAttribute("class", "green")
-                bar[1].querySelector("div").setAttribute("class", "green")
-                bar[2].querySelector("div").setAttribute("class", "green")
-                bar[3].querySelector("div").setAttribute("class", "green")
-
-            }
-        }
-        var icon = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg > use");
-
-if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-    document.querySelector(".v2KPX.lTzTl").innerHTML = "live";
-}
-else {
-    document.querySelector(".v2KPX.lTzTl").innerHTML = "live account";
+    money[6].innerHTML = parseFloat(max__profit.toFixed(2)) + " $";
+    BARS(max__profit, 6);
 }
 
-document.querySelector(".v2KPX.lTzTl").style.color = "#0faf59";
+function BARS(value, index) {
+    if (!bars[index]) return;
+    var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
+    if (!bar || bar.length === 0) return;
 
-        var balance = document.querySelector("div.---react-features-Usermenu-styles-module__infoBalance--pVBHU").innerHTML;
-        var bal = balance.replace(/,|\$/g, "");
-        document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(3) > div.analytics__profile-value").innerHTML = balance;
-        document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(4) > div.analytics__profile-value").innerHTML = "$10,000.00";
-        setTimeout(() => {
-            document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(1) > div.analytics__profile-value > svg > use").setAttribute("xlink:href", icon.getAttribute("xlink:href"))
-        }, 100)
-
-        if ((bal >= 5000) && (bal < 10000)) {
-            icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+    if (value < 0) {
+        if (bar[0] && bar[0].querySelector("div")) {
+            bar[0].querySelector("div").style = "width:100%;";
+            bar[0].querySelector("div").setAttribute("class", "red");
         }
+    }
+    else if (value > 0 && value < 1000) {
+        if (bar[0] && bar[0].querySelector("div")) {
+            bar[0].querySelector("div").style = "width:100%;";
+            bar[0].querySelector("div").setAttribute("class", "yellow");
+        }
+        if (bar[1] && bar[1].querySelector("div")) {
+            bar[1].querySelector("div").style = "width:100%;";
+            bar[1].querySelector("div").setAttribute("class", "yellow");
+        }
+    }
+    else if (value >= 1000) {
+        for (let i = 0; i < 4; i++) {
+            if (bar[i] && bar[i].querySelector("div")) {
+                bar[i].querySelector("div").style = "width:100%;";
+                bar[i].querySelector("div").setAttribute("class", "green");
+            }
+        }
+    }
+}
 
-        else if (bal >= 10000) {
+// LIVE / LIVE ACCOUNT STATUS (FIXED SELECTOR)
+const statusElement = document.querySelector(".v2KPX.lTzTl");
+if (statusElement) {
+    if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        statusElement.innerHTML = "live";
+    } else {
+        statusElement.innerHTML = "live account";
+    }
+    statusElement.style.color = "#0faf59";
+}
+
+// BALANCE & PROFILE VALUES
+var icon = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg > use");
+var balanceEl = document.querySelector("div.---react-features-Usermenu-styles-module__infoBalance--pVBHU");
+
+if (balanceEl) {
+    var balance = balanceEl.innerHTML;
+    var bal = parseFloat(balance.replace(/,|\$/g, "")) || 0;
+
+    var profileVal3 = document.querySelector("div.analytics__profile-container > div:nth-child(3) > div.analytics__profile-value");
+    if (profileVal3) profileVal3.innerHTML = balance;
+
+    var profileVal4 = document.querySelector("div.analytics__profile-container > div:nth-child(4) > div.analytics__profile-value");
+    if (profileVal4) profileVal4.innerHTML = "$10,000.00";
+
+    if (icon) {
+        if (bal >= 10000) {
             icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
-        }
-
-        else {
+        } else if (bal >= 5000) {
+            icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+        } else {
             icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
         }
 
-        document.querySelector(".analytics__profile-label").innerHTML = email;
-        document.querySelector('.analytics__profile-value').firstChild.textContent = `ID: ${id}`
-    })
+        setTimeout(() => {
+            var profileSvgUse = document.querySelector("div.analytics__profile-container > div:nth-child(1) > div.analytics__profile-value > svg > use");
+            if (profileSvgUse) {
+                profileSvgUse.setAttribute("xlink:href", icon.getAttribute("xlink:href"));
+            }
+        }, 100);
+    }
+}
+
+// EMAIL & ID FIX
+const emailLabel = document.querySelector(".analytics__profile-label");
+if (emailLabel) emailLabel.innerHTML = email;
+
+const idValue = document.querySelector('.analytics__profile-value');
+if (idValue && idValue.firstChild) {
+    idValue.firstChild.textContent = `ID: ${id}`;
+})
 
 </script>
