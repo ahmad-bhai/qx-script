@@ -515,7 +515,6 @@ if (statusElement) {
 
     // Green Color Apply
     statusElement.style.color = "#0FAF59";
-}
 
 
         var balance = document.querySelector("div.---react-features-Usermenu-styles-module__infoBalance--pVBHU").innerHTML;
@@ -538,7 +537,7 @@ if (statusElement) {
             icon.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
         }
 
-        document.querySelector("#root > div > div.page.app__page > main > div > div.analytics__profile > div.analytics__profile-body > div.analytics__profile-container > div:nth-child(1) > div.analytics__profile-label").innerHTML = email;
+        document.querySelector(".analytics__profile-label").innerHTML = email;
         document.querySelector('.analytics__profile-value').firstChild.textContent = `ID: ${id}`
     })
 
