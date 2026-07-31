@@ -445,13 +445,14 @@
         document.querySelector(".analytics__profile-statistics__item-cont").setAttribute("data-pct", trades__count);
 
         // COUNTRY
-document.querySelector(".analytics__profile-container > div:nth-child(2) > .analytics__profile-value").innerHTML = country;
+var countryEl = document.querySelector(".analytics__profile-container > div:nth-child(2) > .analytics__profile-value");
+if (countryEl) countryEl.innerHTML = country;
 
-// BRICKED
+// BRICKED (UPDATING BARS WITH NEW DOM STRUCTURE)
 var money = document.querySelectorAll("div.analytics__profile-statistics__item-money");
-var bars = document.querySelectorAll("div.analytics__profile-statistics__item-progress");
+var progressContainers = document.querySelectorAll("div.analytics__profile-statistics__item-value");
 
-if (money.length > 0 && bars.length > 0) {
+if (money.length > 0 && progressContainers.length > 0) {
     money[0].innerHTML = parseFloat(trades__profit.toFixed(2)) + " $";
     BARS(trades__profit, 0);
 
@@ -475,33 +476,46 @@ if (money.length > 0 && bars.length > 0) {
 }
 
 function BARS(value, index) {
-    if (!bars[index]) return;
-    var bar = bars[index].querySelectorAll(".analytics__profile-statistics__item-progress__block");
-    if (!bar || bar.length === 0) return;
+    if (!progressContainers[index]) return;
+    
+    // Support for both old and new progress block class selectors (.HOsH5 > .RsnIv or old classes)
+    var blocks = progressContainers[index].querySelectorAll(".RsnIv, .analytics__profile-statistics__item-progress__block");
+    if (!blocks || blocks.length === 0) return;
+
+    // Reset all blocks
+    blocks.forEach(function(block) {
+        var innerDiv = block.querySelector("div");
+        if (innerDiv) {
+            innerDiv.style.width = "0%";
+            innerDiv.removeAttribute("class");
+        }
+    });
 
     if (value < 0) {
-        bar[0].querySelector("div").style = "width:100%;";
-        bar[0].querySelector("div").setAttribute("class", "red");
+        var div0 = blocks[0].querySelector("div");
+        if (div0) {
+            div0.style.width = "100%";
+            div0.setAttribute("class", "red");
+        }
     }
     else if (value > 0 && value < 1000) {
-        bar[0].querySelector("div").style = "width:100%;";
-        bar[1].querySelector("div").style = "width:100%;";
-        bar[0].querySelector("div").setAttribute("class", "yellow");
-        bar[1].querySelector("div").setAttribute("class", "yellow");
+        var div0 = blocks[0].querySelector("div");
+        var div1 = blocks[1] ? blocks[1].querySelector("div") : null;
+        if (div0) { div0.style.width = "100%"; div0.setAttribute("class", "yellow"); }
+        if (div1) { div1.style.width = "100%"; div1.setAttribute("class", "yellow"); }
     }
     else if (value >= 1000) {
-        bar[0].querySelector("div").style = "width:100%;";
-        bar[1].querySelector("div").style = "width:100%;";
-        bar[2].querySelector("div").style = "width:100%;";
-        bar[3].querySelector("div").style = "width:100%;";
-        bar[0].querySelector("div").setAttribute("class", "green");
-        bar[1].querySelector("div").setAttribute("class", "green");
-        bar[2].querySelector("div").setAttribute("class", "green");
-        bar[3].querySelector("div").setAttribute("class", "green");
+        for (var i = 0; i < Math.min(4, blocks.length); i++) {
+            var innerDiv = blocks[i].querySelector("div");
+            if (innerDiv) {
+                innerDiv.style.width = "100%";
+                innerDiv.setAttribute("class", "green");
+            }
+        }
     }
 }
 
-// LIVE / LIVE ACCOUNT FIX
+// LIVE / LIVE ACCOUNT TEXT FIX
 var statusEl = document.querySelector(".v2KPX.lTzTl");
 if (statusEl) {
     if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
@@ -512,25 +526,25 @@ if (statusEl) {
     statusEl.style.color = "#0faf59";
 }
 
-// BALANCE FETCH & DYNAMIC LEVEL ICONS FIX
+// BALANCE FETCH & REAL-TIME DYNAMIC LEVEL ICONS FIX
 var balanceFetchEl = document.querySelector("div.Zt1hG");
 if (balanceFetchEl) {
     var rawBalanceText = balanceFetchEl.innerText || balanceFetchEl.textContent || "$0.00";
     var bal = parseFloat(rawBalanceText.replace(/,/g, "").replace(/[^0-9.]/g, "")) || 0;
 
-    // Set Live Balance (div:nth-child(3))
+    // Live Balance update
     var liveBalContainer = document.querySelector(".analytics__profile-container > div:nth-child(3) > .analytics__profile-value");
     if (liveBalContainer) {
         liveBalContainer.innerHTML = rawBalanceText.includes("$") ? rawBalanceText : "$" + rawBalanceText;
     }
 
-    // Set Demo Balance to fixed $10,000.00 (div:nth-child(4))
+    // Demo Balance override ($10,000.00)
     var demoBalContainer = document.querySelector(".analytics__profile-container > div:nth-child(4) > .analytics__profile-value");
     if (demoBalContainer) {
         demoBalContainer.innerHTML = "$10,000.00";
     }
 
-    // Determine level name
+    // Real-time recalculation of level based on fetched balance
     var levelName = "standart";
     if (bal >= 10000) {
         levelName = "vip";
@@ -540,11 +554,8 @@ if (balanceFetchEl) {
 
     var hrefVal = "/profile/images/spritemap.svg#icon-profile-level-" + levelName;
 
-    // 1. Live Header SVG Icon
-    var liveHeaderSvg = document.querySelector(".h5aTJ svg");
-    if (!liveHeaderSvg) {
-        liveHeaderSvg = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg");
-    }
+    // Update Header Icon
+    var liveHeaderSvg = document.querySelector(".h5aTJ svg, div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg");
     if (liveHeaderSvg) {
         liveHeaderSvg.setAttribute("class", "icon-profile-level-" + levelName);
         var liveUse = liveHeaderSvg.querySelector("use");
@@ -554,7 +565,7 @@ if (balanceFetchEl) {
         }
     }
 
-    // 2. Profile ID Level SVG Icon
+    // Update Profile Level Icon instantly
     var profileSvg = document.querySelector(".analytics__profile-container > div:nth-child(1) .analytics__profile-value svg");
     if (profileSvg) {
         profileSvg.setAttribute("class", "icon-profile-level-" + levelName + " analytics__profile-level");
