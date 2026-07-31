@@ -483,34 +483,38 @@ setInterval(function() {
         if (value < 0) {
             bar[0].style.width = "100%";
             bar[0].setAttribute("class", "red");
-        }
-        else if (value >= 0 && value <= 100) { // 1 BOX
-            bar[0].style.width = "100%";
-            bar[0].setAttribute("class", "yellow");
-        }
-        else if (value > 100 && value <= 370) { // 2 BOXES
-            bar[0].style.width = "100%";
-            bar[1].style.width = "100%";
-            bar[0].setAttribute("class", "yellow");
-            bar[1].setAttribute("class", "yellow");
-        }
-        else if (value > 370 && value <= 880) { // 3 BOXES
-            bar[0].style.width = "100%";
-            bar[1].style.width = "100%";
-            bar[2].style.width = "100%";
-            bar[0].setAttribute("class", "green");
-            bar[1].setAttribute("class", "green");
-            bar[2].setAttribute("class", "green");
-        }
-        else if (value > 880) { // 4 BOXES (100%)
-            bar[0].style.width = "100%";
-            bar[1].style.width = "100%";
-            bar[2].style.width = "100%";
-            bar[3].style.width = "100%";
-            bar[0].setAttribute("class", "green");
-            bar[1].setAttribute("class", "green");
-            bar[2].setAttribute("class", "green");
-            bar[3].setAttribute("class", "green");
+        } else {
+            // Box 1 Range: 0 to 100
+            // Box 2 Range: 101 to 370 (span = 270)
+            // Box 3 Range: 371 to 880 (span = 510)
+            // Box 4 Range: 881+ (let's scale up to e.g. 1500 or proportional)
+            
+            var b1_val = Math.min(Math.max(value, 0), 100);
+            var p1 = (b1_val / 100) * 100;
+            bar[0].style.width = p1 + "%";
+            bar[0].setAttribute("class", p1 > 0 ? "yellow" : "");
+
+            if (value > 100) {
+                var b2_val = Math.min(value - 100, 270);
+                var p2 = (b2_val / 270) * 100;
+                bar[1].style.width = p2 + "%";
+                bar[1].setAttribute("class", p2 > 0 ? "yellow" : "");
+            }
+
+            if (value > 370) {
+                var b3_val = Math.min(value - 370, 510);
+                var p3 = (b3_val / 510) * 100;
+                bar[2].style.width = p3 + "%";
+                bar[2].setAttribute("class", p3 > 0 ? "green" : "");
+            }
+
+            if (value > 880) {
+                // For 881 onwards, calculate proportional or fill based on extra amount (max out at some reasonable cap like 1500 or dynamic)
+                var extra = value - 880;
+                var p4 = Math.min((extra / 500) * 100, 100); // 500 range for 4th box full
+                bar[3].style.width = p4 + "%";
+                bar[3].setAttribute("class", p4 > 0 ? "green" : "");
+            }
         }
     }
 
@@ -600,7 +604,8 @@ setInterval(function() {
         }
     }
 
-}, 150); // Fast 150ms Loop: Balance ya kuch bhi change hone pe instantly refresh hoga!
+}, 150);
+ // Fast 150ms Loop: Balance ya kuch bhi change hone pe instantly refresh hoga!
 
 })
 </script>
