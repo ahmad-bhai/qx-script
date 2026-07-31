@@ -502,20 +502,14 @@
         }
         var icon = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg > use");
 
-// --- Account Status Text (Mobile vs Desktop) & Green Color ---
-const statusElement = document.querySelector(".v2KPX.lTzTl"); // Fix: Dots added for class selector
-if (statusElement) {
-    const isMobile = /Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    const targetStatusText = isMobile ? "live" : "live account";
+if (/Mobi|Android|iPhone|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+    document.querySelector(".v2KPX.lTzTl").innerHTML = "live";
+}
+else {
+    document.querySelector(".v2KPX.lTzTl").innerHTML = "live account";
+}
 
-    // Text change tabhi hoga jab already same na ho
-    if (statusElement.innerText.trim().toLowerCase() !== targetStatusText) {
-        statusElement.innerText = targetStatusText;
-    }
-
-    // Green Color Apply
-    statusElement.style.color = "#0FAF59";
-   }
+document.querySelector(".v2KPX.lTzTl").style.color = "#0faf59";
 
         var balance = document.querySelector("div.---react-features-Usermenu-styles-module__infoBalance--pVBHU").innerHTML;
         var bal = balance.replace(/,|\$/g, "");
