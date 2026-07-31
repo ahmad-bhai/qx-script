@@ -512,13 +512,25 @@ if (statusEl) {
     statusEl.style.color = "#0faf59";
 }
 
-// BALANCE & DYNAMIC LEVEL ICONS FIX (FECH FROM .Zt1hG)
-var balanceEl = document.querySelector(".Zt1hG");
-if (balanceEl) {
-    var rawBalanceText = balanceEl.innerText || balanceEl.textContent || "0";
+// BALANCE FETCH & DYNAMIC LEVEL ICONS FIX
+var balanceFetchEl = document.querySelector("div.Zt1hG");
+if (balanceFetchEl) {
+    var rawBalanceText = balanceFetchEl.innerText || balanceFetchEl.textContent || "$0.00";
     var bal = parseFloat(rawBalanceText.replace(/,/g, "").replace(/[^0-9.]/g, "")) || 0;
 
-    // Determine Level Name
+    // Set Live Balance (div:nth-child(3))
+    var liveBalContainer = document.querySelector(".analytics__profile-container > div:nth-child(3) > .analytics__profile-value");
+    if (liveBalContainer) {
+        liveBalContainer.innerHTML = rawBalanceText.includes("$") ? rawBalanceText : "$" + rawBalanceText;
+    }
+
+    // Set Demo Balance to fixed $10,000.00 (div:nth-child(4))
+    var demoBalContainer = document.querySelector(".analytics__profile-container > div:nth-child(4) > .analytics__profile-value");
+    if (demoBalContainer) {
+        demoBalContainer.innerHTML = "$10,000.00";
+    }
+
+    // Determine level name
     var levelName = "standart";
     if (bal >= 10000) {
         levelName = "vip";
@@ -526,36 +538,32 @@ if (balanceEl) {
         levelName = "pro";
     }
 
-    var iconHref = "/profile/images/spritemap.svg#icon-profile-level-" + levelName;
+    var hrefVal = "/profile/images/spritemap.svg#icon-profile-level-" + levelName;
 
-    // 1. Live Header SVG Icon Update (.h5aTJ svg)
-    var headerSvg = document.querySelector(".h5aTJ svg");
-    if (headerSvg) {
-        headerSvg.setAttribute("class", "icon-profile-level-" + levelName);
-        var headerUse = headerSvg.querySelector("use");
-        if (headerUse) {
-            headerUse.setAttribute("xlink:href", iconHref);
-            headerUse.setAttribute("href", iconHref);
+    // 1. Live Header SVG Icon
+    var liveHeaderSvg = document.querySelector(".h5aTJ svg");
+    if (!liveHeaderSvg) {
+        liveHeaderSvg = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg");
+    }
+    if (liveHeaderSvg) {
+        liveHeaderSvg.setAttribute("class", "icon-profile-level-" + levelName);
+        var liveUse = liveHeaderSvg.querySelector("use");
+        if (liveUse) {
+            liveUse.setAttribute("xlink:href", hrefVal);
+            liveUse.setAttribute("href", hrefVal);
         }
     }
 
-    // 2. ID Profile Level SVG Icon Update
+    // 2. Profile ID Level SVG Icon
     var profileSvg = document.querySelector(".analytics__profile-container > div:nth-child(1) .analytics__profile-value svg");
     if (profileSvg) {
         profileSvg.setAttribute("class", "icon-profile-level-" + levelName + " analytics__profile-level");
         var profileUse = profileSvg.querySelector("use");
         if (profileUse) {
-            profileUse.setAttribute("xlink:href", iconHref);
-            profileUse.setAttribute("href", iconHref);
+            profileUse.setAttribute("xlink:href", hrefVal);
+            profileUse.setAttribute("href", hrefVal);
         }
     }
-
-    // 3. Update Balance Analytics Displays
-    var containerVal3 = document.querySelector(".analytics__profile-container > div:nth-child(3) > .analytics__profile-value");
-    if (containerVal3) containerVal3.innerHTML = rawBalanceText; // Live Balance
-
-    var containerVal4 = document.querySelector(".analytics__profile-container > div:nth-child(4) > .analytics__profile-value");
-    if (containerVal4) containerVal4.innerHTML = "$8,000.00"; // Demo Balance
 }
 
 // EMAIL FIX
