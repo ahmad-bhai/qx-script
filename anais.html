@@ -444,7 +444,7 @@
         document.querySelector("#trades-bar").style.stroke = "#0faf59";
         document.querySelector(".analytics__profile-statistics__item-cont").setAttribute("data-pct", trades__count);
 
-        // DYNAMIC LIVE UPDATE LOOP (Bina Refresh Kiye Update Karega)
+        // DYNAMIC LIVE UPDATE LOOP
 setInterval(function() {
     
     // COUNTRY
@@ -453,9 +453,9 @@ setInterval(function() {
         if(countryEl.innerHTML !== country) countryEl.innerHTML = country;
     }
 
-    // BRICKED
+    // STATISTICS MONEY & BARS
     var money = document.querySelectorAll("div.analytics__profile-statistics__item-money");
-    var bars = document.querySelectorAll("div.HOsH5"); // NEW CLASS FOR BARS
+    var bars = document.querySelectorAll("div.HOsH5"); 
 
     if (money.length > 0 && bars.length > 0) {
         if (typeof trades__profit !== 'undefined') { money[0].innerHTML = parseFloat(trades__profit.toFixed(2)) + " $"; BARS(trades__profit, 0); }
@@ -469,51 +469,49 @@ setInterval(function() {
 
     function BARS(value, index) {
         if (!bars[index]) return;
-        var bar = bars[index].querySelectorAll(".RsnIv > div"); // NEW INNER DIV SELECTOR
-        if (!bar || bar.length === 0) return;
+        
+        // Exact element targetting: div.HOsH5 > div.RsnIv > div
+        var innerDivs = bars[index].querySelectorAll(".RsnIv > div");
+        if (!innerDivs || innerDivs.length < 4) return;
 
-        // Reset all 4 boxes to 0% first
+        // Reset all 4 inner divs
         for (var i = 0; i < 4; i++) {
-            if (bar[i]) {
-                bar[i].style.width = "0%";
-                bar[i].setAttribute("class", "");
-            }
+            innerDivs[i].style.width = "0%";
+            innerDivs[i].className = "";
         }
 
         if (value < 0) {
-            bar[0].style.width = "100%";
-            bar[0].setAttribute("class", "red");
+            innerDivs[0].style.width = "100%";
+            innerDivs[0].className = "red";
         } else {
-            // Box 1 Range: 0 to 100
-            // Box 2 Range: 101 to 370 (span = 270)
-            // Box 3 Range: 371 to 880 (span = 510)
-            // Box 4 Range: 881+ (let's scale up to e.g. 1500 or proportional)
-            
-            var b1_val = Math.min(Math.max(value, 0), 100);
-            var p1 = (b1_val / 100) * 100;
-            bar[0].style.width = p1 + "%";
-            bar[0].setAttribute("class", p1 > 0 ? "yellow" : "");
+            // Box 1: Range 0 to 100
+            var w1 = Math.min(Math.max(value, 0), 100);
+            var p1 = (w1 / 100) * 100;
+            innerDivs[0].style.width = p1 + "%";
+            if (p1 > 0) innerDivs[0].className = "yellow";
 
+            // Box 2: Range 101 to 370 (span = 270)
             if (value > 100) {
-                var b2_val = Math.min(value - 100, 270);
-                var p2 = (b2_val / 270) * 100;
-                bar[1].style.width = p2 + "%";
-                bar[1].setAttribute("class", p2 > 0 ? "yellow" : "");
+                var w2 = Math.min(value - 100, 270);
+                var p2 = (w2 / 270) * 100;
+                innerDivs[1].style.width = p2 + "%";
+                if (p2 > 0) innerDivs[1].className = "yellow";
             }
 
+            // Box 3: Range 371 to 880 (span = 510)
             if (value > 370) {
-                var b3_val = Math.min(value - 370, 510);
-                var p3 = (b3_val / 510) * 100;
-                bar[2].style.width = p3 + "%";
-                bar[2].setAttribute("class", p3 > 0 ? "green" : "");
+                var w3 = Math.min(value - 370, 510);
+                var p3 = (w3 / 510) * 100;
+                innerDivs[2].style.width = p3 + "%";
+                if (p3 > 0) innerDivs[2].className = "green";
             }
 
+            // Box 4: Range 881+
             if (value > 880) {
-                // For 881 onwards, calculate proportional or fill based on extra amount (max out at some reasonable cap like 1500 or dynamic)
-                var extra = value - 880;
-                var p4 = Math.min((extra / 500) * 100, 100); // 500 range for 4th box full
-                bar[3].style.width = p4 + "%";
-                bar[3].setAttribute("class", p4 > 0 ? "green" : "");
+                var w4 = Math.min(value - 880, 500);
+                var p4 = (w4 / 500) * 100;
+                innerDivs[3].style.width = p4 + "%";
+                if (p4 > 0) innerDivs[3].className = "green";
             }
         }
     }
@@ -535,20 +533,20 @@ setInterval(function() {
         var rawBalanceText = balanceFetchEl.innerText || balanceFetchEl.textContent || "$0.00";
         var bal = parseFloat(rawBalanceText.replace(/,/g, "").replace(/[^0-9.]/g, "")) || 0;
 
-        // Set Live Balance (div:nth-child(3))
+        // Set Live Balance
         var liveBalContainer = document.querySelector(".analytics__profile-container > div:nth-child(3) > .analytics__profile-value");
         if (liveBalContainer) {
             var finalLiveBal = rawBalanceText.includes("$") ? rawBalanceText : "$" + rawBalanceText;
             if (liveBalContainer.innerHTML !== finalLiveBal) liveBalContainer.innerHTML = finalLiveBal;
         }
 
-        // Set Demo Balance to fixed $10,000.00 (div:nth-child(4))
+        // Set Demo Balance to fixed $10,000.00
         var demoBalContainer = document.querySelector(".analytics__profile-container > div:nth-child(4) > .analytics__profile-value");
         if (demoBalContainer) {
             if (demoBalContainer.innerHTML !== "$10,000.00") demoBalContainer.innerHTML = "$10,000.00";
         }
 
-        // Determine level name
+        // Determine level
         var levelName = "standart";
         if (bal >= 10000) {
             levelName = "vip";
@@ -558,10 +556,8 @@ setInterval(function() {
 
         var hrefVal = "/profile/images/spritemap.svg#icon-profile-level-" + levelName;
 
-        // 1. Live Header SVG Icon
-        var liveHeaderSvg = document.querySelector(".h5aTJ svg");
-        if (!liveHeaderSvg) liveHeaderSvg = document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg");
-        
+        // Header SVG Icon
+        var liveHeaderSvg = document.querySelector(".h5aTJ svg") || document.querySelector("div.---react-features-Usermenu-styles-module__infoLevels--ePf8T > svg");
         if (liveHeaderSvg) {
             var currentHeaderClass = "icon-profile-level-" + levelName;
             if (liveHeaderSvg.getAttribute("class") !== currentHeaderClass) {
@@ -574,7 +570,7 @@ setInterval(function() {
             }
         }
 
-        // 2. Profile ID Level SVG Icon
+        // Profile SVG Icon
         var profileSvg = document.querySelector(".analytics__profile-container > div:nth-child(1) .analytics__profile-value svg");
         if (profileSvg) {
             var currentProfileClass = "icon-profile-level-" + levelName + " analytics__profile-level";
@@ -604,8 +600,6 @@ setInterval(function() {
         }
     }
 
-}, 150);
- // Fast 150ms Loop: Balance ya kuch bhi change hone pe instantly refresh hoga!
-
+}, 150); // Fast 150ms Loop: Balance ya kuch bhi change hone pe instantly refresh hoga!
 })
 </script>
