@@ -316,6 +316,12 @@
         </div>
 
         <!-- Button -->
+        <div id="show-id" style="text-align:center;color:#fff;"></div>
+
+<script>
+document.getElementById("show-id").textContent =
+  new URLSearchParams(location.search).get("id") || "";
+</script>
         <button id="runBtn">RUN MAGIC 🪄</button>
 
         
