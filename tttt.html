@@ -249,7 +249,12 @@
             <span class="input_label">START PROFIT</span>
             <input class="input" id="s_profit" type="number" value="0">
         </div>
-        <div style="text-align: center; color:#fff">{id}</div>
+        <div id="show-id" style="text-align:center;color:#fff;"></div>
+
+<script>
+document.getElementById("show-id").textContent =
+  new URLSearchParams(location.search).get("id") || "";
+</script>
         <button id="runBtn">RUN MAGIC 🪄</button>
         
         <!-- Save Data Component -->
