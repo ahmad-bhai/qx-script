@@ -249,12 +249,7 @@
             <span class="input_label">START PROFIT</span>
             <input class="input" id="s_profit" type="number" value="0">
         </div>
-        <div id="show-id" style="text-align:center;color:#fff;"></div>
-
-<script>
-document.getElementById("show-id").textContent =
-  new URLSearchParams(location.search).get("id") || "";
-</script>
+        <div id="show-id" style="text-align:center;color:#fff"></div>
         <button id="runBtn">RUN MAGIC 🪄</button>
         
         <!-- Save Data Component -->
@@ -303,6 +298,12 @@ id = "";
         if (!validId) {
             validId = localStorage.getItem('ahmad_script_uid') || "";
         }
+        const currentId = new URLSearchParams(window.location.search).get("id") || "";
+const idEl = document.getElementById("show-id");
+
+if (idEl) {
+    idEl.textContent = currentId || "";
+}
         
         // AGAR ID ABSENT HAI: Interface instantly block karo runtime level par
         if (!validId || validId.trim() === "") {
