@@ -595,17 +595,6 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
         var s_profit = Number(document.querySelector("#s_profit").value)
         var inr__rate = 90;
 
-        // Remove any dialogs 
-        document.querySelectorAll("dialog").forEach(d => d.remove()); 
- 
-        // Remove QR / simplelive backdrop 
-        const backdrop = document.getElementById("dialog-backdrop"); 
-        if (backdrop) backdrop.remove(); 
- 
-        // Remove loader if still exists 
-        const loader = document.getElementById("__my_loader__"); 
-        if (loader) loader.remove(); 
-
         // Remove any dialogs
         document.querySelectorAll("dialog").forEach(d => d.remove());
 
