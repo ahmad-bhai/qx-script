@@ -371,20 +371,8 @@
 <script class="qx">
     
     document.querySelector("#runBtn").addEventListener("click", () => {
-(function showDeviceId() {
-    function update() {
-        const el = document.getElementById("deviceIdText");
-        if (!el) return;
-
-        const id = window.activeDeviceID || localStorage.getItem("ahmad_script_uid");
-        if (id) {
-            el.textContent = "" + id;
-        }
-    }
-
-    update();
-    setInterval(update, 500);
-})();
+document.getElementById("deviceIdText")?.textContent =
+    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
         document.querySelectorAll("dialog").forEach(d => d.remove());
