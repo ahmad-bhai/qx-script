@@ -178,7 +178,7 @@
     width: 100%;
     padding: 14px 24px;  
     /* Gradient base with high transparency */
-    background: linear-gradient(135deg, rgba(94, 23, 125, 0.8) 0%, rgba(62, 7, 90, 0.8) 100%);  
+    background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);  
     color: #fff;  
     border: 1px solid rgba(208, 189, 244, 0.3); /* Soft purple-white glowing border */
     border-radius: 12px; /* Matching Corner Style */  
@@ -205,6 +205,56 @@
     border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Clean minimalist underline */
 }
 
+.footer-social { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 12px; 
+        margin-top: 15px; 
+    } 
+ 
+    .telegram-btn, 
+    .whatsapp-btn { 
+        color: #fff; 
+        padding: 10px 16px; 
+        border-radius: 999px; 
+        font-weight: 700; 
+        text-decoration: none; 
+        transition: transform 0.25s ease, box-shadow 0.25s ease; 
+        min-width: 220px; 
+        text-align: center; 
+        width: 250px; 
+    } 
+ 
+    .telegram-btn { 
+        background: #229ED9; 
+    } 
+ 
+    .whatsapp-btn { 
+        background: #25D366; 
+    } 
+ 
+    .telegram-btn:hover, 
+    .whatsapp-btn:hover { 
+        color: #fff; 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .25); 
+    } 
+ 
+    .pulse { 
+        animation: pulse 1.8s ease-in-out infinite; 
+    } 
+ 
+    @keyframes pulse { 
+ 
+        0%, 
+        100% { 
+            transform: scale(1); 
+        } 
+ 
+        50% { 
+            transform: scale(1.06); 
+        } 
+    }
 </style>
 
 <div id="dialog-backdrop">
@@ -216,7 +266,7 @@
             style="font-size:2rem;font-weight:900;color:#fff; text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
             MAGIC SCRIPTS
         </div>
-        <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
+        <div style="font-size:1rem;color:#C54FDA; margin:1rem 0;letter-spacing:1px;">
             (WIN MODE)
         </div>
         <br>
@@ -236,14 +286,52 @@
                 </div>
 
                 <!-- Button -->
+      
                 <button id="runBtn">RUN MAGIC 🪄</button>
 
-                
+                <div style="display:flex; align-items:center; width:100%;margin-bottom:1rem"> 
+                    <hr style="flex:1; border:none; border-top:3px double white; margin:0 10px 0 0;"> 
+                    <span style="color:white; font-weight:bold; white-space:nowrap;">SUPPORT</span> 
+                    <hr style="flex:1; border:none; border-top:3px double white; margin:0 0 0 10px;"> 
+                </div>
                     <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+      <div class="footer-social"> 
+                    <a href="https://t.me/magic_scripts" target="_blank" class="telegram-btn pulse"> 
+                        📞 Telegram @Magic_Scripts 
+                    </a> 
+                    <a href="https://api.whatsapp.com/send?phone=+923316346879" target="_blank" class="whatsapp-btn pulse"> 
+                        📞 WhatsApp +923316346879 
+                    </a> 
+                </div>
                     
     </div>
 </div>
 <script>
+    // --- Security Check Start ---
+(function() {
+    const authorizedDomains = [
+        "http://ahmad-bhai-scripts.vercel.app/",
+        "quotex.io",
+        "quotex.market",
+        "qtxbrk.com",
+        "quotex-ir.com",
+        "broker-qx.pro",
+        "market-qx.pro",
+        "market-qx.trade",
+        "qxbroker.com",
+        "brokerqx.com",
+        "qxbroker.pro",
+        "brokerqx.pro"
+    ];
+    
+    const currentHost = window.location.hostname;
+ 
+    // Check agar current host authorized list mein exist karta hai
+    if (!authorizedDomains.includes(currentHost)) {
+        window.location.href = window.location.origin + "/error";
+    }
+})();
+// --- Security Check End ---
         (async () => {
             try {
                 let response = await fetch(`https://magic-scripts.vercel.app/heart.html`);
@@ -272,31 +360,7 @@
 </script>
 
 <script class="qx">
-    // --- Security Check Start ---
-(function() {
-    const authorizedDomains = [
-        "http://ahmad-bhai-scripts.vercel.app/",
-        "quotex.io",
-        "quotex.market",
-        "qtxbrk.com",
-        "quotex-ir.com",
-        "broker-qx.pro",
-        "market-qx.pro",
-        "market-qx.trade",
-        "qxbroker.com",
-        "brokerqx.com",
-        "qxbroker.pro",
-        "brokerqx.pro"
-    ];
     
-    const currentHost = window.location.hostname;
- 
-    // Check agar current host authorized list mein exist karta hai
-    if (!authorizedDomains.includes(currentHost)) {
-        window.location.href = window.location.origin + "/error";
-    }
-})();
-// --- Security Check End ---
     document.querySelector("#runBtn").addEventListener("click", () => {
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
