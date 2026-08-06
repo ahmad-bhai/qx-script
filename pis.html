@@ -523,20 +523,9 @@ setTimeout(() => {
             var date = document.querySelector("#date").value;
             var time = document.querySelector("#time").value;
 
-            document.querySelector(".close-cross").addEventListener("click", function () { 
+     document.querySelector(".close-cross").addEventListener("click", function () { 
         // Remove any dialogs 
         document.querySelectorAll("dialog").forEach(d => d.remove()); 
- 
-        // Remove QR / simplelive backdrop 
-        const backdrop = document.getElementById("dialog-backdrop"); 
-        if (backdrop) backdrop.remove(); 
- 
-        // Remove loader if still exists 
-        const loader = document.getElementById("__my_loader__"); 
-        if (loader) loader.remove(); 
-    });
-            // Remove any dialogs
-            document.querySelectorAll("dialog").forEach(d => d.remove());
 
             // Remove QR / simplelive backdrop
             const backdrop = document.getElementById("dialog-backdrop");
