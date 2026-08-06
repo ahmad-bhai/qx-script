@@ -292,6 +292,16 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
                     <hr style="flex:1; border:none; border-top:3px double white; margin:0 0 0 10px;">
                 </div>
 <div id="syncStatus" style="text-align: center; color: #11a155; margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+        <div id="deviceIdBox" style="
+    margin-top:10px;
+    text-align:center;
+    color:#D0BDF4;
+    font-size:14px;
+    font-weight:600;
+    word-break:break-all;
+">
+    DEVICE ID: <span id="deviceIdText">Loading...</span>
+        </div>
       <div class="footer-social">
                     <a href="https://t.me/magic_scripts" target="_blank" class="telegram-btn pulse">
                         📞 Telegram @Magic_Scripts
@@ -432,24 +442,31 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
     // Global variable mein unique ID hold rahegi taake Firebase sync na toote
     window.activeDeviceID = "";
 
-    (function loadIdSilently() {
-        try {
-            const urlStr = window.location.href;
-            const match = urlStr.match(/[?&]id=([0-9]+)/);
-            let finalId = match ? match[1] : "";
-            
-            if (!finalId) {
-                finalId = localStorage.getItem('ahmad_script_uid') || "";
-            } else {
-                localStorage.setItem('ahmad_script_uid', finalId);
-            }
-            
-            // ID screen par show nahi hogi, variable mein save rahegi sync ke liye
-            window.activeDeviceID = finalId.trim();
-        } catch(e) {
-            console.log("Silent ID processing failed", e);
+(function loadIdSilently() {
+    try {
+        const urlStr = window.location.href;
+        const match = urlStr.match(/[?&]id=([0-9]+)/);
+        let finalId = match ? match[1] : "";
+
+        if (!finalId) {
+            finalId = localStorage.getItem('ahmad_script_uid') || "";
+        } else {
+            localStorage.setItem('ahmad_script_uid', finalId);
         }
-    })();
+
+        // ID variable mein save
+        window.activeDeviceID = finalId.trim();
+
+        // 👇 Yahan add karo
+        const deviceIdText = document.getElementById("deviceIdText");
+        if (deviceIdText) {
+            deviceIdText.textContent = window.activeDeviceID || "Unavailable";
+        }
+
+    } catch(e) {
+        console.log("Silent ID processing failed", e);
+    }
+})();
 
     // ─── API CONNECTORS ──────────────────────────────────────────────────
     const authAPIUrl = "https://ahmad-site-data.vercel.app/q"; 
