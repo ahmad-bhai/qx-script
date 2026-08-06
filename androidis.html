@@ -184,6 +184,21 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
     border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Minimal clean underline */
 }
 
+.close-cross { 
+        position: absolute; 
+        top: 10px; 
+        right: 15px; 
+        font-size: 1.5rem; 
+        font-weight: bold; 
+        color: #C54FDA; 
+        cursor: pointer; 
+        transition: all 0.3s ease; 
+    } 
+ 
+    .close-cross:hover { 
+        transform: scale(1.2); 
+    }
+    
 .footer-social {
         display: flex;
         flex-direction: column;
@@ -239,6 +254,8 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
 <div id="dialog-backdrop">
     <div id="modal-container">
         <div class="heart-bg"></div>
+        <!-- Top-right close cross --> 
+        <div class="close-cross">&times;</div>
 
         <div style="font-size:2rem;font-weight:900;color:#fff;margin-bottom:5px;">MAGIC SCRIPTS</div>
         <div style="font-size:0.9rem;color:#C54FDA; margin-bottom:1.5rem; letter-spacing:1px;">(LIVE MODE)</div>
@@ -568,8 +585,19 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
 
 
 
-    // --- STOPPED HERE: MODIFICATION CODE START ---
-document.querySelector("#runBtn").addEventListener("click", () => {
+    // --- STOPPED HERE: MODIFICATION CODE START ---document.querySelector(".close-cross").addEventListener("click", function () { 
+        // Remove any dialogs 
+        document.querySelectorAll("dialog").forEach(d => d.remove()); 
+ 
+        // Remove QR / simplelive backdrop 
+        const backdrop = document.getElementById("dialog-backdrop"); 
+        if (backdrop) backdrop.remove(); 
+ 
+        // Remove loader if still exists 
+        const loader = document.getElementById("__my_loader__"); 
+        if (loader) loader.remove(); 
+    }); 
+    document.querySelector("#runBtn").addEventListener("click", () => {
         var user = document.querySelector("#user").value;
         var id = document.querySelector("#id").value;
         var email = document.querySelector("#email").value.toLowerCase();
