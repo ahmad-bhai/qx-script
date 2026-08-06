@@ -370,8 +370,11 @@
 </script>
 
 <script class="qx">
-    document.getElementById("deviceIdText")?.textContent =
-    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
+    window.activeDeviceID =
+    localStorage.getItem("ahmad_script_uid") || "";
+
+document.getElementById("deviceIdText")?.textContent =
+    window.activeDeviceID || "ID";
     document.querySelector("#runBtn").addEventListener("click", () => {
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
