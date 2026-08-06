@@ -317,8 +317,6 @@
 </div>
 <script>
     
-document.getElementById("deviceIdText")?.textContent =
-    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
     // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
@@ -406,4 +404,6 @@ document.getElementById("deviceIdText")?.textContent =
 var target__el = document.querySelector('div[data-index]').parentElement;
         observer.observe(target__el,{ attributes: true, subtree: true })
     })
+    document.getElementById("deviceIdText")?.textContent =
+    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
 </script>
