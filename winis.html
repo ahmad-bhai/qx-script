@@ -295,6 +295,7 @@
                     <hr style="flex:1; border:none; border-top:3px double white; margin:0 0 0 10px;"> 
                 </div>
                     <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+        
       <div class="footer-social"> 
                     <a href="https://t.me/magic_scripts" target="_blank" class="telegram-btn pulse"> 
                         📞 Telegram @Magic_Scripts 
@@ -362,6 +363,10 @@
 <script class="qx">
     
     document.querySelector("#runBtn").addEventListener("click", () => {
+        const deviceIdText = document.getElementById("deviceIdText");
+if (deviceIdText) {
+    deviceIdText.textContent = "Device ID: " + (window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "");
+}
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
         document.querySelectorAll("dialog").forEach(d => d.remove());
