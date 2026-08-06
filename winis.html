@@ -316,6 +316,9 @@
     </div>
 </div>
 <script>
+    
+document.getElementById("deviceIdText")?.textContent =
+    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
     // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
@@ -371,8 +374,6 @@
 <script class="qx">
     
     document.querySelector("#runBtn").addEventListener("click", () => {
-document.getElementById("deviceIdText")?.textContent =
-    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
         document.querySelectorAll("dialog").forEach(d => d.remove());
