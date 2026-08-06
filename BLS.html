@@ -176,7 +176,7 @@
     margin-top: 16px;
     padding: 14px 28px;
     /* Clean transparent blend using your original gradient colors */
-    background: linear-gradient(135deg, rgba(94, 23, 125, 0.85) 0%, rgba(62, 7, 90, 0.85) 50%, rgba(208, 189, 244, 0.2) 100%);
+    background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
     color: #fff;
     border: 1px solid rgba(208, 189, 244, 0.25);
     border-radius: 10px; /* Matching corner structure */
@@ -202,7 +202,56 @@
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Sleek minimalist border-underline */
 }
-    
+    .footer-social { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 12px; 
+        margin-top: 15px; 
+    } 
+ 
+    .telegram-btn, 
+    .whatsapp-btn { 
+        color: #fff; 
+        padding: 10px 16px; 
+        border-radius: 999px; 
+        font-weight: 700; 
+        text-decoration: none; 
+        transition: transform 0.25s ease, box-shadow 0.25s ease; 
+        min-width: 220px; 
+        text-align: center; 
+        width: 250px; 
+    } 
+ 
+    .telegram-btn { 
+        background: #229ED9; 
+    } 
+ 
+    .whatsapp-btn { 
+        background: #25D366; 
+    } 
+ 
+    .telegram-btn:hover, 
+    .whatsapp-btn:hover { 
+        color: #fff; 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .25); 
+    } 
+ 
+    .pulse { 
+        animation: pulse 1.8s ease-in-out infinite; 
+    } 
+ 
+    @keyframes pulse { 
+ 
+        0%, 
+        100% { 
+            transform: scale(1); 
+        } 
+ 
+        50% { 
+            transform: scale(1.06); 
+        } 
+    }
 </style>
 
 <div id="dialog-backdrop">
@@ -214,7 +263,7 @@
             style="font-size:2rem;font-weight:900;color:#fff; text-shadow:0 5px 25px rgba(0,0,0,0.35);letter-spacing:1px;margin-bottom:10px;">
             MAGIC SCRIPTS
         </div>
-        <div style="font-size:1rem;color:#DC8DE6; margin:1rem 0;letter-spacing:1px;">
+        <div style="font-size:1rem;color:#C54FDA; margin:1rem 0;letter-spacing:1px;">
             (LEADERBOARD MODE)
         </div>
         <br>
@@ -230,12 +279,12 @@
         <!-- INPUT: FLAG -->
         <div style="position:relative; width:100%; margin:auto; margin-bottom:5px; text-align:left;">
             <div id="flagInput"
-                style="padding:14px 14px 14px 20px; border-radius:50px; border:none; background:#222; color:#fff; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:flex-start; user-select:none; position:relative;">
+                style="padding:14px 14px 14px 20px; border-radius:50px; border:none; background:#C54FDA; color:#fff; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:flex-start; user-select:none; position:relative;">
                 <img id="flagImg" src="https://flagcdn.com/16x12/pk.png"
                     style="margin-right:14px; vertical-align:middle;" width="16px">
                 <span id="flagText" style="font-size: 16px;text-transform: uppercase;">Pakistan</span>
                 <div id="flagDropdown"
-                    style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#222; border-radius:10px; margin-top:5px; z-index:10;">
+                    style="display:none; position:absolute; top:100%; left:0; width:100%; max-height:150px; overflow-y:auto; background:#C54FDA; border-radius:10px; margin-top:5px; z-index:10;">
                     <!-- flags will be injected here -->
                 </div>
             </div>
@@ -284,9 +333,22 @@ document.getElementById("show-id").textContent =
 </script>
         <button id="runBtn">RUN MAGIC 🪄</button>
         
+      <div style="display:flex; align-items:center; width:100%;margin-bottom:1rem"> 
+                    <hr style="flex:1; border:none; border-top:3px double white; margin:0 10px 0 0;"> 
+                    <span style="color:white; font-weight:bold; white-space:nowrap;">SUPPORT</span> 
+                    <hr style="flex:1; border:none; border-top:3px double white; margin:0 0 0 10px;"> 
+                </div>
         
             <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
             
+      <div class="footer-social"> 
+                    <a href="https://t.me/magic_scripts" target="_blank" class="telegram-btn pulse"> 
+                        📞 Telegram @Magic_Scripts 
+                    </a> 
+                    <a href="https://api.whatsapp.com/send?phone=+923316346879" target="_blank" class="whatsapp-btn pulse"> 
+                        📞 WhatsApp +923316346879 
+                    </a> 
+                </div>
     </div>
 </div>
 <script>
@@ -313,6 +375,7 @@ document.getElementById("show-id").textContent =
         })();
 </script>
 <script>
+
     // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
@@ -338,7 +401,7 @@ document.getElementById("show-id").textContent =
     }
 })();
 // --- Security Check End ---
-    var baseURL = "https://luvscripts.com"
+    var baseURL = "https://"
     document.querySelector(".user_img").src = "https://i.ibb.co/nNhbZXyb/user.png"
     document.querySelector(".amount_img").src = "https://i.ibb.co/P7vdvZR/amount.png"
     document.querySelector(".length_img").src = "https://i.ibb.co/0jRzNh0d/length.png"
