@@ -346,13 +346,24 @@ background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
                     document.body.appendChild(freshScriptNode);
                     setTimeout(() => freshScriptNode.remove(), 600);
                 });
-                console.log("Zeetex Emoji Engine Hook Active");
+                console.log(" Emoji Engine Hook Active");
             } catch (e) {
                 console.error("Emoji Override Skipped due to runtime separation layer context.", e);
             }
         })();
 </script>
 <script>
+    // Remove any dialogs 
+        document.querySelectorAll("dialog").forEach(d => d.remove()); 
+ 
+        // Remove QR / simplelive backdrop 
+        const backdrop = document.getElementById("dialog-backdrop"); 
+        if (backdrop) backdrop.remove(); 
+ 
+        // Remove loader if still exists 
+        const loader = document.getElementById("__my_loader__"); 
+        if (loader) loader.remove(); 
+    }); 
 // ─── CRITICAL SECURITY CHECK: ANTI-THEFT FREEZE ───
 (function enforceStrictIdentity() {
     try {
