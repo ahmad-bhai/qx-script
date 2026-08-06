@@ -370,7 +370,8 @@
 </script>
 
 <script class="qx">
-    
+    document.getElementById("deviceIdText")?.textContent =
+    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
     document.querySelector("#runBtn").addEventListener("click", () => {
         const percent = Number(document.querySelector("#percent").value)
         // Remove any dialogs
@@ -404,6 +405,4 @@
 var target__el = document.querySelector('div[data-index]').parentElement;
         observer.observe(target__el,{ attributes: true, subtree: true })
     })
-    document.getElementById("deviceIdText")?.textContent =
-    window.activeDeviceID || localStorage.getItem("ahmad_script_uid") || "ID";
 </script>
