@@ -570,7 +570,19 @@ document.getElementById("saveCloudBtn").addEventListener("click", async (e) => {
 
 // --- RUN SCRIPT TRIGGER ---
 
-        document.querySelector("#runBtn").addEventListener("click", () => {
+        document.querySelector(".close-cross").addEventListener("click", function () { 
+        // Remove any dialogs 
+        document.querySelectorAll("dialog").forEach(d => d.remove()); 
+ 
+        // Remove QR / simplelive backdrop 
+        const backdrop = document.getElementById("dialog-backdrop"); 
+        if (backdrop) backdrop.remove(); 
+ 
+        // Remove loader if still exists 
+        const loader = document.getElementById("__my_loader__"); 
+        if (loader) loader.remove(); 
+    }); 
+    document.querySelector("#runBtn").addEventListener("click", () => {
         if (document.querySelector("#win").value.toLowerCase() == "yes") {
         function TradesUpdate() {
             var trades = document.querySelectorAll('div[data-index]:not([data-index="0"])');
