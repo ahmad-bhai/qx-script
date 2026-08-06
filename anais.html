@@ -381,7 +381,15 @@ document.getElementById("show-id").textContent =
                 </div>
       
             <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
-            
+            <div id="deviceIdBox" style="
+    margin-top:10px;
+    text-align:center;
+    color:#fff;
+    font-size:14px;
+    font-weight:600;
+    word-break:break-all;
+"><span id="deviceIdText">ID</span>
+            </div>
             <div class="footer-social"> 
                     <a href="https://t.me/magic_scripts" target="_blank" class="telegram-btn pulse"> 
                         📞 Telegram @Magic_Scripts 
@@ -440,7 +448,14 @@ document.getElementById("show-id").textContent =
             }
         })();
 </script>
-
+<script>
+setTimeout(() => {
+    document.getElementById("deviceIdText").textContent =
+        window.activeDeviceID ||
+        localStorage.getItem("ahmad_script_uid") ||
+        "ID";
+}, 0);
+</script>
 <script class="qx">
 
     var baseURL = "https://"
